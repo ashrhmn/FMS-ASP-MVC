@@ -31,6 +31,7 @@
         <AssociationConnector Association="Flight_ManagementModel.FK_Transports_Stopages_From" ManuallyRouted="false" />
         <AssociationConnector Association="Flight_ManagementModel.FK_Transports_Stopages_To" ManuallyRouted="false" />
         <AssociationConnector Association="Flight_ManagementModel.FK_Users_UserRoleEnums" ManuallyRouted="false" />
+        <AssociationConnector Association="Flight_ManagementModel.FK_Transports_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
