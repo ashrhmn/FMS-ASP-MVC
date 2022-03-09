@@ -6,9 +6,10 @@
 
     <h1>Sign In</h1>
 
+
     <form action="/Auth/Login" method="post" class="form-horizontal">
         <div class="form-group">
-            @Html.DisplayNameFor(m => m.Username, new { @class = "col-md-2 control-label" })
+            <label class="col-md-2 control-label">Username</label>
             <div class="col-md-10">
 
                 <input type="text" name="UserName" value="@Model.Username" placeholder="username" class="form-control" />
@@ -17,7 +18,7 @@
 
 
         <div class="form-group">
-            @Html.DisplayNameFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <label class="col-md-2 control-label">Password</label>
             <div class="col-md-10">
 
                 <input type="password" name="Password" value="@Model.Password" placeholder="password" class="form-control" />

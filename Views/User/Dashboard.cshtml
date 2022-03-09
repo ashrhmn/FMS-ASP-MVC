@@ -1,0 +1,52 @@
+﻿
+@model Flight_Management_System.Models.UserModel
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+<form action="/User/Dashboard" method="post" class="form-horizontal">
+    <input type="hidden" name="Id" value="@Model.Id" placeholder="Name" class="form-control" />
+    <div class="form-group">
+        <label class="col-md-2 control-label">Name</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })</span>
+            <input type="text" name="airline_name" value="@Model.Name" placeholder="Name" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Address</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })</span>
+            <input type="text" name="airline_name" value="@Model.Address" placeholder="Address" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">DateOfBirth</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })</span>
+            <input type="text" name="airline_name" value="@Model.DateOfBirth" placeholder="DateOfBirth" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Password</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</span>
+            <input type="text" name="password" value="@Model.Password" class="form-control" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Update" />
+        </div>
+    </div>
+
+</form>
