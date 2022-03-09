@@ -1,6 +1,34 @@
-﻿@{
-    Layout = "~/Views/Shared/_PublicLayout.cshtml";
-}
+﻿@model flight_management_system.Models.UserModel
+    @{
+        Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    }
 
 
-<h1>Sign In</h1>
+    <h1>Sign In</h1>
+
+    <form action="/Auth/Login" method="post" class="form-horizontal">
+        <div class="form-group">
+            @Html.DisplayNameFor(m => m.Username, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+
+                <input type="text" name="UserName" value="@Model.Username" placeholder="username" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.DisplayNameFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+
+                <input type="password" name="Password" value="@Model.Password" placeholder="password" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="SignIn" />
+            </div>
+        </div>
+
+    </form>
