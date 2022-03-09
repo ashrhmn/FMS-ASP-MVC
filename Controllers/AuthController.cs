@@ -31,7 +31,7 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult SignIn()
         {
-            return View();
+            return View(new UserModel());
         }
 
 
