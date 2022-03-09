@@ -156,6 +156,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminEntities\CityModel.cs" />
+    <Compile Include="Models\AdminEntities\EmailModel.cs" />
+    <Compile Include="Models\AdminEntities\UserModel.cs" />
     <Compile Include="Models\Database\AgeClassEnum.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
@@ -272,10 +275,13 @@
     <Content Include="Views\Shared\_PublicLayout.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\User\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Admin\Details.cshtml" />
+    <Content Include="Views\Admin\EditProfile.cshtml" />
+    <Content Include="Views\Admin\ChangePass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
