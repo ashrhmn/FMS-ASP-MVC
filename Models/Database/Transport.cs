@@ -24,9 +24,11 @@ namespace Flight_Management_System.Models.Database
         public Nullable<int> FromStopageId { get; set; }
         public Nullable<int> ToStopageId { get; set; }
         public Nullable<int> MaximumSeat { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
     
         public virtual ICollection<SeatInfo> SeatInfos { get; set; }
         public virtual Stopage Stopage { get; set; }
         public virtual Stopage Stopage1 { get; set; }
+        public virtual User User { get; set; }
     }
 }

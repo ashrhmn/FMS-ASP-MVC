@@ -19,6 +19,7 @@ namespace Flight_Management_System.Models.Database
             this.Emails = new HashSet<Email>();
             this.Phones = new HashSet<Phone>();
             this.PurchasedTickets = new HashSet<PurchasedTicket>();
+            this.Transports = new HashSet<Transport>();
         }
     
         public int Id { get; set; }
@@ -37,5 +38,6 @@ namespace Flight_Management_System.Models.Database
         public virtual ICollection<Phone> Phones { get; set; }
         public virtual ICollection<PurchasedTicket> PurchasedTickets { get; set; }
         public virtual UserRoleEnum UserRoleEnum { get; set; }
+        public virtual ICollection<Transport> Transports { get; set; }
     }
 }
