@@ -149,6 +149,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Auth\FlightManagerAccess.cs" />
+    <Compile Include="Auth\UserAccess.cs" />
+    <Compile Include="Auth\AdminAccess.cs" />
+    <Compile Include="Auth\Utils.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\FlightManagerController.cs" />
