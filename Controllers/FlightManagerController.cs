@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flight_Management_System.Auth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,8 +9,8 @@ namespace Flight_Management_System.Controllers
 {
     public class FlightManagerController : Controller
     {
-        // GET: FlightManager
-        public ActionResult Index()
+        [FlightManagerAccess]
+        public ActionResult Dashboard()
         {
             return View();
         }

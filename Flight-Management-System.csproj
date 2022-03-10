@@ -278,6 +278,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Index.cshtml.backup" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Auth\SignUp.cshtml" />
     <Content Include="Views\Auth\SignIn.cshtml" />
@@ -298,10 +299,11 @@
     <Content Include="Views\Admin\Flights.cshtml" />
     <Content Include="Views\Admin\TransportDetails.cshtml" />
     <Content Include="Views\User\Flights.cshtml" />
+    <Content Include="Views\FlightManager\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_FlightManagerLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\FlightManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
