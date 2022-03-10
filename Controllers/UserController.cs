@@ -47,29 +47,6 @@ namespace Flight_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                /*var airline = (from a in db.Airlines where a.airline_id == alrvm.airline_id select a).FirstOrDefault();
-                Airline newAl = new Airline();
-                newAl.airline_id = alrvm.airline_id;
-                newAl.airline_name = alrvm.airline_name;
-                newAl.airline_regno = alrvm.airline_regno;
-                newAl.airline_address = alrvm.airline_address;
-                newAl.airline_phone = alrvm.airline_phone;
-                newAl.airline_status = "Valid";
-                db.Entry(airline).CurrentValues.SetValues(newAl);
-                db.SaveChanges();
-                var login = (from als in db.Logins where als.airline_id == alrvm.airline_id select als).FirstOrDefault();
-                Login lg = new Login();
-                lg.login_id = login.login_id;
-                lg.airline_id = alrvm.airline_id;
-                lg.username = alrvm.username;
-                lg.password = alrvm.password;
-                lg.recovery_phone = alrvm.recovery_phone;
-                lg.email = alrvm.email;
-                lg.user_type = "airline";
-                db.Entry(login).CurrentValues.SetValues(lg);
-                db.SaveChanges();
-
-                return RedirectToAction("Dashboard");*/
                 int uid = 9;
                 UserModel nwUser = new UserModel();
                 var udata = GetUser(uid);
