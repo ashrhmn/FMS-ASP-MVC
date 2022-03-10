@@ -49,6 +49,7 @@ namespace Flight_Management_System.Utils
             }
             catch (Exception error)
             {
+                Console.WriteLine("JWT Decode error : "+error.ToString());
                 return null;
             }
         }

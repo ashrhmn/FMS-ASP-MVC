@@ -21,6 +21,7 @@ namespace Flight_Management_System.Models.Database
         public Nullable<int> TransportId { get; set; }
         public Nullable<int> AgeClass { get; set; }
         public Nullable<int> SeatClass { get; set; }
+        public string Status { get; set; }
     
         public virtual AgeClassEnum AgeClassEnum { get; set; }
         public virtual PurchasedTicket PurchasedTicket { get; set; }

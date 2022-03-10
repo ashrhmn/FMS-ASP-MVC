@@ -136,6 +136,7 @@ namespace Flight_Management_System.Controllers
 
                 AuthPayload payload = new AuthPayload() 
                 { 
+                    Id = user.Id,
                     Username = user.Username,
                     Role=user.UserRoleEnum.Value
                 };
