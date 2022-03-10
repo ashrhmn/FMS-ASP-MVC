@@ -70,6 +70,33 @@ namespace Flight_Management_System.Controllers
                 db.SaveChanges();
 
                 return RedirectToAction("Dashboard");*/
+                int uid = 9;
+                UserModel nwUser = new UserModel();
+                var udata = GetUser(uid);
+                nwUser.Id = userModel.Id;
+                nwUser.Name = userModel.Name;
+                nwUser.DateOfBirth = userModel.DateOfBirth;
+                nwUser.Address = userModel.Address;
+                nwUser.CityId = userModel.CityId;
+                nwUser.Username = userModel.Username;
+                nwUser.Password = userModel.Password;
+                nwUser.Role = 2;
+                db.Entry(udata).CurrentValues.SetValues(nwUser);
+                db.SaveChanges();
+                var edata = GetEmail(uid);
+                Email neEmail = new Email();
+                neEmail.Id = edata.Id;
+                neEmail.UserId = edata.UserId;
+                neEmail.Email1 = userModel.Mail;
+                db.Entry(edata).CurrentValues.SetValues(neEmail);
+                db.SaveChanges();
+                var pdata = GetPhone(uid);
+                Phone nePhone = new Phone();
+                nePhone.Id = pdata.Id;
+                nePhone.UserId = pdata.UserId;
+                nePhone.Phone1 = userModel.Cell;
+                db.Entry(pdata).CurrentValues.SetValues(nePhone);
+                db.SaveChanges();
             }
             return View(userModel);
         }
@@ -151,6 +178,22 @@ namespace Flight_Management_System.Controllers
             var data = (from u in db.Users
                         where u.Id == uid
                         select u).FirstOrDefault();
+            return data;
+        }
+
+        public Email GetEmail(int uid)
+        {
+            var data = (from m in db.Emails
+                        where m.UserId == uid
+                        select m).FirstOrDefault();
+            return data;
+        }
+
+        public Phone GetPhone(int uid)
+        {
+            var data = (from m in db.Phones
+                        where m.UserId == uid
+                        select m).FirstOrDefault();
             return data;
         }
     }

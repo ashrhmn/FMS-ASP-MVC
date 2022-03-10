@@ -28,7 +28,7 @@
         <label class="col-md-2 control-label">DateOfBirth</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })</span>
-            <input type="date" name="DateOfBirth" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" placeholder="DateOfBirth" class="form-control" />
+            <input type="date" name="DateOfBirth" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" class="form-control" />
         </div>
     </div>
 
