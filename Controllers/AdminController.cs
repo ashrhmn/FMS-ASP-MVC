@@ -1,5 +1,7 @@
 ﻿using Flight_Management_System.Models.AdminEntities;
+using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
+using Flight_Management_System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,13 @@ namespace Flight_Management_System.Controllers
 {
     public class AdminController : Controller
     {
+        private Flight_ManagementEntities db;
+        private JwtManage jwt;
+        public AdminController()
+        {
+            db = new Flight_ManagementEntities();
+            jwt = new JwtManage();
+        }
         // GET: Admin
         public ActionResult Index()
         {
@@ -17,8 +26,17 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult Details()
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
-            var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
+            AuthPayload payload = jwt.LoggedInUser(Request.Cookies);
+            var data = (from a in db.Users where a.Username.Equals(payload.Username) select a).FirstOrDefault();
+            if(data == null)
+            {
+                jwt.DeleteToken(Request.Cookies);
+                return RedirectToAction("Signin", "Auth");
+            }
+            if (data.UserRoleEnum.Value != "admin")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var user = new UserModel();
             user.Username = data.Username;
             user.DateOfBirth = data.DateOfBirth;
