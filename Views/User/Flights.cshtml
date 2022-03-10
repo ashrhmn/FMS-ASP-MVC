@@ -1,0 +1,77 @@
+﻿@model List<Flight_Management_System.Models.Database.Transport>
+@using Flight_Management_System.Models.Database;
+@{
+    Flight_ManagementEntities db = new Flight_ManagementEntities();
+    var fstopage = db.Stopages;
+}
+
+@{
+    ViewBag.Title = "Flights";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<h2>Flights</h2>
+
+<form action="/User/Flights" method="post" class="form-horizontal">
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">From</label>
+        <div class="col-md-10">
+           
+            <select name="FromStopageId">
+                @foreach (var fs in fstopage)
+                {
+                    <option selected value="@fs.Id">@fs.Name</option>
+                }
+
+
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">From</label>
+        <div class="col-md-10">
+
+            <select name="ToStopageId">
+                @foreach (var ts in fstopage)
+                {
+                    <option selected value="@ts.Id">@ts.Name</option>
+                }
+
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Search" />
+        </div>
+    </div>
+
+</form>
+
+<div class="tab-content">
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>From</th>
+            <th>Destination</th>
+            <th>Fare</th>
+            <th>Action</th>
+
+        </tr>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td>@f.Name</td>
+                <td>@f.Stopage.Name</td>
+                <td>@f.Stopage1.Name</td>
+                <td></td>
+                <td><a href="/User/Book/@f.Id">Book</a></td>
+            </tr>
+        }
+
+    </table>
+</div>
