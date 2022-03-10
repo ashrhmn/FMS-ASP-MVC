@@ -85,7 +85,7 @@ namespace Flight_Management_System.Controllers
                     {
                         Name = data.Name,
                         Username = data.Username,
-                        Password = BCrypt.Net.BCrypt.HashPassword(Password, 12),
+                        Password = BCrypt.Net.BCrypt.HashPassword(Password, 12),  // this Bcrypt
                         Address = data.Address,
                         DateOfBirth = data.DateOfBirth,
                         CityId = data.CityId,
