@@ -8,5 +8,6 @@ namespace Flight_Management_System.Models.AuthEntities
     public class AuthPayload
     {
         public string Username { get; set; }
+        public string Role { get; set; }
     }
 }

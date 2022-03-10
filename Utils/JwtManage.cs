@@ -54,6 +54,11 @@ namespace Flight_Management_System.Utils
             HttpCookie cookie = cookies["session"];
             var token = cookie["token"];
             var decodedObject = DecodeToken(token);
+            if (decodedObject == null)
+            {
+                cookies.Clear();
+                return null;
+            }
             var result = JsonConvert.DeserializeObject<AuthPayload>(decodedObject);
             return result;
         }

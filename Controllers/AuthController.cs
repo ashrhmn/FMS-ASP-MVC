@@ -1,4 +1,5 @@
-﻿using Flight_Management_System.Models;
+﻿using Flight_Management_System.Auth;
+using Flight_Management_System.Models;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Utils;
@@ -29,13 +30,47 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult SignUp()
         {
-            return View(new UserModel());
+            AuthPayload loggedInUser = jwt.LoggedInUser(Request.Cookies);
+
+            if (loggedInUser == null) return View(new UserModel());
+
+            switch (loggedInUser.Role)
+            {
+                case "admin":
+                    // return redirect to admin dashboard when complete
+                    return View(new UserModel());
+                case "user":
+                    // return redirect to user dashboard when complete
+                    return View(new UserModel());
+                case "flight_manager":
+                    // return redirect to f_manager dashboard when complete
+                    return View(new UserModel());
+                default:
+                    return View(new UserModel());
+            }
         }
 
         [HttpGet]
         public ActionResult SignIn()
         {
-            return View(new UserModel());
+            AuthPayload loggedInUser = jwt.LoggedInUser(Request.Cookies);
+
+            if(loggedInUser==null) return View(new UserModel());
+
+            switch (loggedInUser.Role)
+            {
+                case "admin":
+                    // return redirect to admin dashboard when complete
+                    return View(new UserModel());
+                case "user":
+                    // return redirect to user dashboard when complete
+                    return View(new UserModel());
+                case "flight_manager":
+                    // return redirect to f_manager dashboard when complete
+                    return View(new UserModel());
+                default:
+                    return View(new UserModel());
+            }
         }
 
 
@@ -101,7 +136,11 @@ namespace Flight_Management_System.Controllers
             if (isCorrectPassword)
             {
 
-                AuthPayload payload = new AuthPayload() { Username = user.Username};
+                AuthPayload payload = new AuthPayload() 
+                { 
+                    Username = user.Username,
+                    Role=user.UserRoleEnum.Value
+                };
 
                 var token = jwt.EncodeToken(payload);
                 HttpCookie cookie = new HttpCookie("session")
@@ -123,12 +162,12 @@ namespace Flight_Management_System.Controllers
             return cookie["token"];
         }
 
-
+        [UserAccess]
         [HttpGet]
         public string CurrentUser()
         {
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-            return user.Username;
+            return user.Username+user.Role;
         }
 
         // GET: Auth/Details/5
