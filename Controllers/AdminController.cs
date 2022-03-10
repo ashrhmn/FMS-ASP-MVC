@@ -331,7 +331,19 @@ namespace Flight_Management_System.Controllers
             return null;
             
         }
+        public ActionResult CancelTicket(int id)
+        {
+            var ticket = (from t in db.PurchasedTickets where t.Id == id select t).FirstOrDefault();
+            var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
 
+            db.SeatInfos.Remove(seat);
+            db.SaveChanges();
+            db.PurchasedTickets.Remove(ticket);
+            db.SaveChanges();
+
+            TempData["msg"] = "Ticket Cancel Successfully";
+            return RedirectToAction("PurchasedDetails");
+        }
 
 
 
