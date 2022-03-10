@@ -105,5 +105,28 @@ namespace Flight_Management_System.Controllers
             return View();
 
         }
+        public ActionResult Userlist()
+        {
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            var user = db.Users.ToList();
+            var users = new List<UserModel>();
+            foreach (var u in user)
+            {
+                users.Add(new UserModel()
+                {
+                    Name = u.Name,
+                    Username = u.Username,
+                    DateOfBirth = u.DateOfBirth,
+                    Address = u.Address,
+                    Role = u.Role,
+                    CityName = u.City == null ? "undefined" : u.City.Name,
+                    CountryName = u.City == null ? "undefined" : u.City.Country,
+                    Emails = u.Emails.Select(e => e.Email1).ToList(),
+                    Phone = u.Phones.Select(e => e.Phone1).ToList()
+
+                });
+            }
+            return View(users);
+        }
     }
 }
