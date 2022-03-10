@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +10,9 @@ namespace Flight_Management_System.Models.AdminEntities
     {
         public int Id { get; set; }
         public string Username { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         public string Name { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -20,5 +24,15 @@ namespace Flight_Management_System.Models.AdminEntities
         public string CountryName { get; set; }
         public List<string> Emails { get; set; }
         public List<string> Phone { get; set; }
+        public List<int> PurchasedTickets { get; set; }
+
+        [Required]
+        //[DataType(DataType.Password)]
+        public string OldPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password")]
+        public string ConPassword { get; set; }
     }
 }

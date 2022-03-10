@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="Models\AdminEntities\CityModel.cs" />
     <Compile Include="Models\AdminEntities\EmailModel.cs" />
+    <Compile Include="Models\AdminEntities\PurchasedTicketModel.cs" />
     <Compile Include="Models\AdminEntities\UserModel.cs" />
     <Compile Include="Models\AuthEntities\AuthPayload.cs" />
     <Compile Include="Models\Database\AgeClassEnum.cs">
@@ -283,6 +284,9 @@
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Admin\EditProfile.cshtml" />
     <Content Include="Views\Admin\ChangePass.cshtml" />
+    <Content Include="Views\Admin\PurchasedUserList.cshtml" />
+    <Content Include="Views\Admin\PurchasedDetails.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Userlist.cshtml" />
     <Content Include="Views\Admin\EditUserProfile.cshtml" />
     <Content Include="Views\Admin\ChangeUserPass.cshtml" />
