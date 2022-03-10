@@ -70,6 +70,7 @@
           <Property Name="TransportId" Type="int" />
           <Property Name="AgeClass" Type="int" />
           <Property Name="SeatClass" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Stopages">
           <Key>
@@ -106,7 +107,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
@@ -444,6 +445,7 @@
           <NavigationProperty Name="PurchasedTicket" Relationship="Self.FK_Seat_Infos_Purchased_Tickets" FromRole="SeatInfos" ToRole="PurchasedTickets" />
           <NavigationProperty Name="SeatClassEnum" Relationship="Self.FK_SeatInfos_SeatClassEnums" FromRole="SeatInfos" ToRole="SeatClassEnums" />
           <NavigationProperty Name="Transport" Relationship="Self.FK_SeatInfos_Transports" FromRole="SeatInfos" ToRole="Transports" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Stopage">
           <Key>
@@ -821,6 +823,7 @@
           <EntitySetMapping Name="SeatInfos">
             <EntityTypeMapping TypeName="Flight_ManagementModel.SeatInfo">
               <MappingFragment StoreEntitySet="SeatInfos">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="SeatNo" ColumnName="SeatNo" />
