@@ -41,7 +41,10 @@ namespace Flight_Management_System.Controllers
             var existingUser = db.Users.FirstOrDefault(u => u.Username == userModel.Username);
             if (existingUser == null)
             {
-                var user = new User()
+                
+                if(ModelState.IsValid)
+                {
+                    var user = new User()
                 {
                     Name = userModel.Name,
                     Username = userModel.Username,
@@ -73,6 +76,9 @@ namespace Flight_Management_System.Controllers
                 db.SaveChanges();
 
                 return RedirectToAction("SignIn");
+                //Ends
+                }
+                return View(userModel);
             }
             else
             {
