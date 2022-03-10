@@ -213,6 +213,7 @@
     <Compile Include="Models\Database\UserRoleEnum.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminEntities\TransportModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -280,6 +281,9 @@
     <Content Include="Views\Admin\EditProfile.cshtml" />
     <Content Include="Views\Admin\ChangePass.cshtml" />
     <Content Include="Views\Admin\Userlist.cshtml" />
+    <Content Include="Views\Admin\EditUserProfile.cshtml" />
+    <Content Include="Views\Admin\ChangeUserPass.cshtml" />
+    <Content Include="Views\Admin\Flights.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

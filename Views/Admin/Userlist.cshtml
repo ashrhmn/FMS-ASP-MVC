@@ -22,27 +22,32 @@
         if (u.Role == 2)
         {
 
-            <tr>
-                <td>@u.Name</td>
-                <td>@u.Username</td>
-                <td>@u.DateOfBirth</td>
-                <td>@u.Address</td>
-                <td>@u.CityName</td>
-                <td>@u.CountryName</td>
-                <td>
-                    @foreach (var i in u.Emails)
-                    {
-                        <li> @i </li>
-                    }
-                </td>
-                <td>
-                    @foreach (var i in u.Phone)
-                    {
-                        <li> @i </li>
-                    }
-                </td>
-            </tr>
-
+<tr>
+    <td>@u.Name</td>
+    <td>@u.Username</td>
+    <td>@u.DateOfBirth</td>
+    <td>@u.Address</td>
+    <td>@u.CityName</td>
+    <td>@u.CountryName</td>
+    <td>
+        @foreach (var i in u.Emails)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        @foreach (var i in u.Phone)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
+        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+    </td>
+</tr>
+            
         }
     }
 </table>
@@ -65,26 +70,31 @@
         if (u.Role == 3)
         {
 
-            <tr>
-                <td>@u.Name</td>
-                <td>@u.Username</td>
-                <td>@u.DateOfBirth</td>
-                <td>@u.Address</td>
-                <td>@u.CityName</td>
-                <td>@u.CountryName</td>
-                <td>
-                    @foreach (var i in u.Emails)
-                    {
-                        <li> @i </li>
-                    }
-                </td>
-                <td>
-                    @foreach (var i in u.Phone)
-                    {
-                        <li> @i </li>
-                    }
-                </td>
-            </tr>
+<tr>
+    <td>@u.Name</td>
+    <td>@u.Username</td>
+    <td>@u.DateOfBirth</td>
+    <td>@u.Address</td>
+    <td>@u.CityName</td>
+    <td>@u.CountryName</td>
+    <td>
+        @foreach (var i in u.Emails)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        @foreach (var i in u.Phone)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
+        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+    </td>
+</tr>
         }
 
     }
