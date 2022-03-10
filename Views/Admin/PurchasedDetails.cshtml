@@ -12,7 +12,7 @@
         <th>To</th>
         <th>Starte Time</th>
         <th>Seat Details</th>
-        <th>Transport Detail</th>
+        <th>Flight Detail</th>
         <th>Operation</th>
     </tr>
     <
@@ -25,7 +25,7 @@
             <td>@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
             <td>@pd.StartTime</td>
             <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
-            <td>Transport Name: @pd.TransportName<br /><a href="" class="btn-success">Transport Id: @pd.TransportId</a></td>
+            <td>Flight Name: @pd.TransportName<br /><a href="/Admin/TransportDetails/@pd.TransportId" class="btn-success">Flight Id: @pd.TransportId</a></td>
             <td><a href="" class="btn btn-danger">Cancel Ticket</td>
         </tr>
 

@@ -52,7 +52,6 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult EditProfile()
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
 
             var user = new UserModel();
@@ -73,7 +72,6 @@ namespace Flight_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                Flight_ManagementEntities db = new Flight_ManagementEntities();
                 var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
                 user.Password= data.Password;
                 user.CityId = data.CityId;
@@ -111,7 +109,6 @@ namespace Flight_Management_System.Controllers
         {
             if (Password.Equals(ConPassword))
             {
-                Flight_ManagementEntities db = new Flight_ManagementEntities();
                 var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
 
                 bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(OldPassword, data.Password);
@@ -145,7 +142,6 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult Userlist()
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var user = db.Users.ToList();
             var users = new List<UserModel>();
             foreach (var u in user)
@@ -170,7 +166,6 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult EditUserProfile(int id)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var u = (from us in db.Users where us.Id==id select us).FirstOrDefault();
 
             var user = new UserModel()
@@ -191,7 +186,6 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult DeleteUser(int id)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var user = (from u in db.Users where u.Id == id select u).FirstOrDefault();
             db.Users.Remove(user);
             db.SaveChanges();
@@ -209,7 +203,6 @@ namespace Flight_Management_System.Controllers
         {
             if (Password.Equals(ConPassword))
             {
-                Flight_ManagementEntities db = new Flight_ManagementEntities();
                 var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
 
                 bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(OldPassword, data.Password);
@@ -242,7 +235,6 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult PurchasedUserList()
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var data = db.Users.ToList();
             var user = new List<UserModel>();
             foreach(var u in data)
@@ -261,7 +253,6 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult PurchasedDetails(int id)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var purchasedetails = (from pd in db.PurchasedTickets where pd.PurchasedBy == id select pd).ToList();
             var user = (from u in db.Users where u.Id == id select u).FirstOrDefault();
         
@@ -297,7 +288,6 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult Flights()
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var flight = db.Transports.ToList();
             var flights = new List<TransportModel>();
             foreach (var f in flight)
@@ -315,5 +305,35 @@ namespace Flight_Management_System.Controllers
             }
             return View();
         }
+        public ActionResult TransportDetails(int id)
+        {
+            var transport = (from t in db.Transports where t.Id == id select t).FirstOrDefault();
+            if(transport == null)
+            {
+                var user = (from u in db.Users where u.Id == transport.CreatedBy select u).FirstOrDefault();
+                var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
+                var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
+
+                var trans = new TransportModel();
+                trans.Id = id;
+                trans.Name = transport.Name;
+                trans.From = fromstopage.Name;
+                trans.FromCountry = fromstopage.Country;
+                trans.Destination = tostopage.Name;
+                trans.DestinationCountry = tostopage.Country;
+                trans.CreatedBy = user.Id;
+                trans.CreatorName = user.Name;
+                trans.MaximumSeat = transport.MaximumSeat;
+
+
+                return View(trans);
+            }
+            return null;
+            
+        }
+
+
+
+
     }
 }
