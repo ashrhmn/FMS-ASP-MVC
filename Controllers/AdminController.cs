@@ -28,6 +28,15 @@ namespace Flight_Management_System.Controllers
         {
             AuthPayload payload = jwt.LoggedInUser(Request.Cookies);
             var data = (from a in db.Users where a.Username.Equals(payload.Username) select a).FirstOrDefault();
+            if(data == null)
+            {
+                jwt.DeleteToken(Request.Cookies);
+                return RedirectToAction("Signin", "Auth");
+            }
+            if (data.UserRoleEnum.Value != "admin")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var user = new UserModel();
             user.Username = data.Username;
             user.DateOfBirth = data.DateOfBirth;
