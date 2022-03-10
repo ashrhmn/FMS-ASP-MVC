@@ -1,0 +1,44 @@
+﻿@model Flight_Management_System.Models.AdminEntities.TransportModel
+@{
+    ViewBag.Title = "TransportDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Flight Details</h2>
+<table>
+    <tr>
+        <th><h3>Flight Name:</h3></th>
+        <td><h3>@Model.Name</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Flight Name:</h3></th>
+        <td><h3>@Model.Name</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Flight ID:</h3></th>
+        <td><h3>@Model.Id</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Maximum Seat:</h3></th>
+        <td><h3>@Model.MaximumSeat</h3></td>
+    </tr>
+    <tr>
+        <th><h3>From:</h3></th>
+        <td><h3>@Model.From, @Model.FromCountry</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Destination:</h3></th>
+        <td><h3>@Model.Destination, @Model.DestinationCountry</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Flight Name:</h3></th>
+        <td><h3>@Model.Name</h3></td>
+    </tr>
+    <tr>
+        <th><h3>Flight Created By:</h3></th>
+        <td><h3><a href="/Admin/EditUserProfile/@Model.CreatedBy" @Model.CreatorName</h3></td>
+    </tr>
+</table>
+
+
+
