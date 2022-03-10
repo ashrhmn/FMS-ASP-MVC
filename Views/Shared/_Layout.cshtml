@@ -24,6 +24,10 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Sign Up", "SignUp", "Auth", routeValues: null, htmlAttributes: new { id = "signuplink" })</li>
+                    <li>@Html.ActionLink("Sign In", "SignIn", "Auth", routeValues: null, htmlAttributes: new { id = "signinLink" })</li>
+                </ul>
             </div>
         </div>
     </div>
