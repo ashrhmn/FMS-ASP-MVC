@@ -49,22 +49,37 @@ namespace Flight_Management_System.Controllers
         }
 
         [FlightManagerAccess]
-        [HttpPost]
-        public ActionResult AddAircraft(string Name, int FromStopage, int ToStopage, int SeatCapacity)
+        [HttpGet]
+        public ActionResult AddAircraft()
         {
-            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-            if (user == null) return RedirectToAction("SignIn", "Auth");
-            Transport transport = new Transport()
+            return View(new AirlineModel());
+        }
+
+        [FlightManagerAccess]
+        [HttpPost]
+        public ActionResult AddAircraft(AirlineModel airline)
+        {
+            if (ModelState.IsValid)
             {
-                Name = Name,
-                FromStopageId = FromStopage,
-                ToStopageId= ToStopage,
-                MaximumSeat = SeatCapacity,
-                CreatedBy = user.Id
-            };
-            db.Transports.Add(transport);
-            db.SaveChanges();
-            return RedirectToAction("Dashboard");
+                AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+                if (user == null) return RedirectToAction("SignIn", "Auth");
+                Transport transport = new Transport()
+                {
+                    Name = airline.Name,
+                    FromStopageId = airline.FromStopageId,
+                    ToStopageId = airline.ToStopageId,
+                    MaximumSeat = airline.SeatCapacity,
+                    CreatedBy = user.Id
+                };
+                db.Transports.Add(transport);
+                db.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View(airline);
+            }
+
         }
     }
 }
