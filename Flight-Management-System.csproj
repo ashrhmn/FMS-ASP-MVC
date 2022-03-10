@@ -299,6 +299,7 @@
     <Content Include="Views\Admin\Flights.cshtml" />
     <Content Include="Views\User\Flights.cshtml" />
     <Content Include="Views\FlightManager\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_FlightManagerLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

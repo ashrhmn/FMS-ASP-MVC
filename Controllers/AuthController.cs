@@ -43,8 +43,7 @@ namespace Flight_Management_System.Controllers
                     // return redirect to user dashboard when complete
                     return View(new UserModel());
                 case "flight_manager":
-                    // return redirect to f_manager dashboard when complete
-                    return View(new UserModel());
+                    return RedirectToAction("Dashboard", "FlightManager");
                 default:
                     return View(new UserModel());
             }
@@ -66,8 +65,7 @@ namespace Flight_Management_System.Controllers
                     // return redirect to user dashboard when complete
                     return View(new UserModel());
                 case "flight_manager":
-                    // return redirect to f_manager dashboard when complete
-                    return View(new UserModel());
+                    return RedirectToAction("Dashboard", "FlightManager");
                 default:
                     return View(new UserModel());
             }
@@ -149,9 +147,23 @@ namespace Flight_Management_System.Controllers
                 };
                 cookie["token"] = token;
                 Response.Cookies.Add(cookie);
+
+                switch (payload.Role)
+                {
+                    case "admin":
+                        // return redirect to admin dashboard when complete
+                        return View(new UserModel());
+                    case "user":
+                        // return redirect to user dashboard when complete
+                        return View(new UserModel());
+                    case "flight_manager":
+                        return RedirectToAction("Dashboard", "FlightManager");
+                    default:
+                        return View(new UserModel());
+                }
             }
 
-            return RedirectToAction("SignUp");
+            return RedirectToAction("SignIn");
 
         }
 
@@ -161,13 +173,23 @@ namespace Flight_Management_System.Controllers
             HttpCookie cookie = Request.Cookies["session"];
             return cookie["token"];
         }
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpCookie cookie = Request.Cookies["session"];
+            if (cookie != null)
+            {
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(cookie);
+            }
+            return RedirectToAction("SignIn");
+        }
 
-        [UserAccess]
         [HttpGet]
         public string CurrentUser()
         {
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-            return user.Username+user.Role;
+            return user.Username+" "+user.Role;
         }
 
         // GET: Auth/Details/5
