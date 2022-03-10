@@ -73,7 +73,11 @@ namespace Flight_Management_System.Utils
         public bool DeleteToken(HttpCookieCollection cookies)
         {
             HttpCookie cookie = cookies["session"];
-            cookie["token"] = null;
+            if (cookie != null)
+            {
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                cookies.Add(cookie);
+            }
             return true;
         }
     }

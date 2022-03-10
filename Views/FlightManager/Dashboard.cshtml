@@ -1,11 +1,5 @@
 ﻿@model List<Flight_Management_System.Models.FlightManagerEntities.AirlineModel>
 
-@using Flight_Management_System.Models.Database;
-@{
-    Flight_ManagementEntities db = new Flight_ManagementEntities();
-    var stopages = db.Stopages.ToList();
-}
-
 @{
     ViewBag.Title = "Flight Manager Dashboard";
     Layout = "~/Views/Shared/_FlightManagerLayout.cshtml";
@@ -13,37 +7,7 @@
 <div class="container">
     <h2>Flight Manager Dashboard</h2>
 
-    <form class="form-horizontal" method="post" action="/FlightManager/AddAircraft/">
-        <div class="form-group">
-            <label class="control-label">Name</label>
-            <input class="form-control" type="text" name="Name" />
-        </div>
-        <div class="form-group">
-            <label class="control-label">From</label>
-            <select name="FromStopage">
-                @foreach (var item in stopages)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="control-label">To</label>
-            <select name="ToStopage">
-                @foreach (var item in stopages)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </select>
-        </div>
-        <div>
-            <label class="control-label">Seat Capacity</label>
-            <input class="form-control" type="number" name="SeatCapacity" />
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="submit" value="Add" />
-        </div>
-    </form>
+    <a href="/FlightManager/AddAircraft" class="navbar-link">Add New</a>
 
     <table class="table table-bordered">
         <thead>
