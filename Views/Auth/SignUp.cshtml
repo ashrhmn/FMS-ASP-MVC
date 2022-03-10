@@ -1,9 +1,103 @@
-﻿@{
+﻿@model Flight_Management_System.Models.UserModel
+
+@using Flight_Management_System.Models.Database;
+@{
+    Flight_ManagementEntities db = new Flight_ManagementEntities();
+    var cit = db.Cities;
+}
+
+@{
     Layout = "~/Views/Shared/_PublicLayout.cshtml";
 }
 
 <h1>Sign Up</h1>
 
-<form method="post">
+<form action="/Auth/SignUp" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label">Name</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">DateOfBirth</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })</span>
+            <input type="date" name="DateOfBirth" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Email</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Mail, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Mail" value="@Model.Mail" placeholder="Email" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Phone</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Cell, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Cell" value="@Model.Cell" placeholder="Phone" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Address</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Address" value="@Model.Address" placeholder="Address" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">City</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })</span>
+            <select name="CityId">
+                @foreach (var c in cit)
+                {
+                    <option selected value="@c.Id">@c.Name</option>
+                }
+                <option selected value="@Model.CityId">@Model.CityName</option>
+
+
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Username</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Username" value="@Model.Username" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Password</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Password" value="@Model.Password" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Confirm Password</label>
+        <div class="col-md-10">
+            <span>@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })</span>
+            <input type="text" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Sign Up" />
+        </div>
+    </div>
 
 </form>

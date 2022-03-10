@@ -25,7 +25,7 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult SignUp()
         {
-            return View();
+            return View(new UserModel());
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public User SignUp(UserModel userModel)
+        public ActionResult SignUp(UserModel userModel)
         {
             var existingUser = db.Users.FirstOrDefault(u => u.Username == userModel.Username);
             if (existingUser == null)
@@ -50,11 +50,29 @@ namespace Flight_Management_System.Controllers
                     DateOfBirth = userModel.DateOfBirth,
                     CityId = userModel.CityId,
                     FamilyId = userModel.FamilyId,
-                    Role = userModel.Role,
+                    Role = 2
+                    //Role = userModel.Role,
                 };
                 db.Users.Add(user);
                 db.SaveChanges();
-                return user;
+                var udata = GetUser(userModel.Username, userModel.Name);
+                var mail = new Email()
+                {
+                    Email1 = userModel.Mail,
+                    UserId = udata.Id
+                };
+                db.Emails.Add(mail);
+                db.SaveChanges();
+
+                var phn = new Phone()
+                {
+                    UserId = udata.Id,
+                    Phone1 = userModel.Cell
+                };
+                db.Phones.Add(phn);
+                db.SaveChanges();
+
+                return RedirectToAction("SignIn");
             }
             else
             {
@@ -187,6 +205,14 @@ namespace Flight_Management_System.Controllers
             {
                 return View();
             }
+        }
+
+        public User GetUser(string uname, string name)
+        {
+            var data = (from u in db.Users
+                        where u.Username.Equals(uname) && u.Name.Equals(name)
+                        select u).FirstOrDefault();
+            return data;
         }
     }
 }
