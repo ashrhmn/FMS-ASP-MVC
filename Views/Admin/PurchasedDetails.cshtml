@@ -1,0 +1,37 @@
+﻿@model List<Flight_Management_System.Models.AdminEntities.PurchasedTicketModel>
+@{
+    ViewBag.Title = "PurchasedDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<table>
+    <tr>
+        <th>Perchased By</th>
+        <th>Ticket ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Starte Time</th>
+        <th>Seat Details</th>
+        <th>Transport Detail</th>
+        <th>Operation</th>
+    </tr>
+    <
+    @foreach(var pd in Model)
+    {
+        <tr>
+            <td>@pd.PurchasedByName</td>
+            <td>@pd.Id</td>
+            <td>@pd.FromStopageCityName, @pd.FromStopageCountryName</td>
+            <td>@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
+            <td>@pd.StartTime</td>
+            <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
+            <td>Transport Name: @pd.TransportName<br /><a href="" class="btn-success">Transport Id: @pd.TransportId</a></td>
+            <td><a href="" class="btn btn-danger">Cancel Ticket</td>
+        </tr>
+
+    }
+</table>
+
+
+
+

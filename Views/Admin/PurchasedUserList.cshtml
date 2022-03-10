@@ -1,0 +1,30 @@
+﻿@model List<Flight_Management_System.Models.AdminEntities.UserModel>
+@{
+    ViewBag.Title = "PurchasedUserList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Purchased User List</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Operation</th>
+    </tr>
+    
+    @foreach (var u in Model)
+    {
+        if(u.PurchasedTickets.Count() > 0)
+        {
+            <tr>
+                <td>@u.Name</td>
+                <td><a href="">@u.Username</a></td>
+                <td><a href="/Admin/PurchasedDetails/@u.Id" class="btn btn-success">Purchased Details</a></td>
+            </tr>
+        }
+    }
+
+    
+</table>
+
