@@ -25,14 +25,19 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult Dashboard()
         {
-            //int aid = (int)(Session["aid"]);
-            int aid = 1;
+            //int aid = (int)(Session["uid"]);
+            int uid = 9;
             UserModel userModel = new UserModel();
-            var udata = GetUser(aid);
+            var udata = GetUser(uid);
             userModel.Id = udata.Id;
             userModel.Name = udata.Name;
+            userModel.Cell = udata.Phones.Select(p => p.Phone1).FirstOrDefault();
+            userModel.Mail = udata.Emails.Select(e => e.Email1).FirstOrDefault();
             userModel.Address = udata.Address;
-            userModel.DateOfBirth = udata.DateOfBirth;
+            userModel.CityId = udata.CityId;
+            userModel.CityName = udata.City.Name;
+            if (udata.DateOfBirth.HasValue) { userModel.DateOfBirth = udata.DateOfBirth.Value; }
+            userModel.Username = udata.Username;
             userModel.Password = udata.Password;
             return View(userModel);
         }
@@ -141,10 +146,10 @@ namespace Flight_Management_System.Controllers
             }
         }
 
-        public User GetUser(int aid)
+        public User GetUser(int uid)
         {
             var data = (from u in db.Users
-                        where u.Id == aid
+                        where u.Id == uid
                         select u).FirstOrDefault();
             return data;
         }
