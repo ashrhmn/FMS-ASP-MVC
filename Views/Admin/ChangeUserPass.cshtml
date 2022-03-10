@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "ChangeUserPass";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Change Password</h2>
+
+@if (TempData["msg"] != null)
+{
+    <span class="label-danger">@TempData["msg"]}</span>
+}
+
+<table>
+    <form action="/Admin/ChangePass" method="post">
+        <input type="hidden" name="id" value="@ViewBag.id" />
+        <tr>
+            <th>Old Password :</th>
+            <td><input type="text" name="OldPassword" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>New Password :</th>
+            <td><input type="text" name="Password" placeholder="New Password" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>Confirm Password :</th>
+            <td><input type="text" name="ConPassword" placeholder="Confirm Password" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Change Password" class="btn btn-danger" /></td>
+        </tr>
+
+    </form>
+</table>
+

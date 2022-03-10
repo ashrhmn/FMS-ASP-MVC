@@ -15,7 +15,7 @@
         <EntityTypeShape EntityType="Flight_ManagementModel.SeatInfo" Width="1.5" PointX="7.5" PointY="6.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Flight_ManagementModel.Stopage" Width="1.5" PointX="3" PointY="6.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Flight_ManagementModel.sysdiagram" Width="1.5" PointX="7.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Flight_ManagementModel.Transport" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Flight_ManagementModel.Transport" Width="1.5" PointX="5.5" PointY="6.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Flight_ManagementModel.UserRoleEnum" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Flight_ManagementModel.User" Width="1.5" PointX="3" PointY="1.75" IsExpanded="true" />
         <AssociationConnector Association="Flight_ManagementModel.FK_SeatInfos_AgeClassEnums" ManuallyRouted="false" />
