@@ -18,15 +18,35 @@ namespace Flight_Management_System.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var users = db.Users.ToList();
-            return View(users);
+            var udata = (from u in db.Users
+                         where u.Id == 14
+                         select u).FirstOrDefault();
+            return View(udata);
+        }
+
+        [HttpGet]
+        public ActionResult Flights()
+        {
+
+            var data = (from t in db.Transports
+                        select t).ToList();
+            return View(data);
+        }
+
+        [HttpPost]
+        public ActionResult Flights(Transport flMod)
+        {
+            var data = (from t in db.Transports
+                        where t.FromStopageId == flMod.FromStopageId && t.ToStopageId == flMod.ToStopageId
+                        select t).ToList();
+            return View(data);
         }
 
         [HttpGet]
         public ActionResult Dashboard()
         {
             //int aid = (int)(Session["uid"]);
-            int uid = 9;
+            int uid = 13;
             UserModel userModel = new UserModel();
             var udata = GetUser(uid);
             userModel.Id = udata.Id;
@@ -41,7 +61,7 @@ namespace Flight_Management_System.Controllers
             userModel.Password = udata.Password;
             return View(userModel);
         }
-
+        
         [HttpPost]
         public ActionResult Dashboard(UserModel userModel)
         {
@@ -78,77 +98,7 @@ namespace Flight_Management_System.Controllers
             return View(userModel);
         }
 
-        // GET: User/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: User/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: User/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: User/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: User/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: User/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
 
         public User GetUser(int uid)
         {

@@ -217,6 +217,7 @@
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminEntities\TransportModel.cs" />
+    <Compile Include="Models\FlightsModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\JwtManage.cs" />
@@ -291,6 +292,7 @@
     <Content Include="Views\Admin\EditUserProfile.cshtml" />
     <Content Include="Views\Admin\ChangeUserPass.cshtml" />
     <Content Include="Views\Admin\Flights.cshtml" />
+    <Content Include="Views\User\Flights.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
