@@ -1,5 +1,7 @@
 ﻿using Flight_Management_System.Models;
+using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
+using Flight_Management_System.Utils;
 using JWT;
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,11 @@ namespace Flight_Management_System.Controllers
     public class AuthController : Controller
     {
         private Flight_ManagementEntities db;
+        private JwtManage jwt;
         public AuthController()
         {
             db = new Flight_ManagementEntities();
+            jwt = new JwtManage();
         }
         // GET: Auth
         public ActionResult Index()
@@ -25,7 +29,7 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult SignUp()
         {
-            return View();
+            return View(new UserModel());
         }
 
         [HttpGet]
@@ -36,12 +40,15 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public User SignUp(UserModel userModel)
+        public ActionResult SignUp(UserModel userModel)
         {
             var existingUser = db.Users.FirstOrDefault(u => u.Username == userModel.Username);
             if (existingUser == null)
             {
-                var user = new User()
+                
+                if(ModelState.IsValid)
+                {
+                    var user = new User()
                 {
                     Name = userModel.Name,
                     Username = userModel.Username,
@@ -50,11 +57,32 @@ namespace Flight_Management_System.Controllers
                     DateOfBirth = userModel.DateOfBirth,
                     CityId = userModel.CityId,
                     FamilyId = userModel.FamilyId,
-                    Role = userModel.Role,
+                    Role = 2
+                    //Role = userModel.Role,
                 };
                 db.Users.Add(user);
                 db.SaveChanges();
-                return user;
+                var udata = GetUser(userModel.Username, userModel.Name);
+                var mail = new Email()
+                {
+                    Email1 = userModel.Mail,
+                    UserId = udata.Id
+                };
+                db.Emails.Add(mail);
+                db.SaveChanges();
+
+                var phn = new Phone()
+                {
+                    UserId = udata.Id,
+                    Phone1 = userModel.Cell
+                };
+                db.Phones.Add(phn);
+                db.SaveChanges();
+
+                return RedirectToAction("SignIn");
+                //Ends
+                }
+                return View(userModel);
             }
             else
             {
@@ -64,7 +92,7 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public string Login(UserModel userModel)
+        public ActionResult SignIn(UserModel userModel)
         {
             var user = db.Users.Where(u => u.Username == userModel.Username).First();
 
@@ -72,49 +100,35 @@ namespace Flight_Management_System.Controllers
 
             if (isCorrectPassword)
             {
-                const string secret = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
 
-                JWT.Algorithms.IJwtAlgorithm algorithm = new JWT.Algorithms.HMACSHA256Algorithm();
-                JWT.IJsonSerializer serializer = new JWT.Serializers.JsonNetSerializer();
-                JWT.IBase64UrlEncoder urlEncoder = new JWT.JwtBase64UrlEncoder();
-                JWT.IJwtEncoder encoder = new JWT.JwtEncoder(algorithm, serializer, urlEncoder);
+                AuthPayload payload = new AuthPayload() { Username = user.Username};
 
-                var token = encoder.Encode(user, secret);
-                return token;
+                var token = jwt.EncodeToken(payload);
+                HttpCookie cookie = new HttpCookie("session")
+                {
+                    Expires = DateTime.Now.AddDays(10)
+                };
+                cookie["token"] = token;
+                Response.Cookies.Add(cookie);
             }
 
-            return null;
+            return RedirectToAction("SignUp");
 
         }
 
-
-        [HttpPost]
-        public string CurrentUser(string token)
+        [HttpGet]
+        public string Token()
         {
-            const string secret = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
+            HttpCookie cookie = Request.Cookies["session"];
+            return cookie["token"];
+        }
 
-            try
-            {
-                IJsonSerializer serializer = new JWT.Serializers.JsonNetSerializer();
-                IDateTimeProvider provider = new UtcDateTimeProvider();
-                IJwtValidator validator = new JwtValidator(serializer, provider);
-                IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-                JWT.Algorithms.IJwtAlgorithm algorithm = new JWT.Algorithms.HMACSHA256Algorithm();
-                IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, algorithm);
 
-                var json = decoder.Decode(token, secret, verify: true);
-                return json;
-            }
-            catch (JWT.Exceptions.TokenExpiredException)
-            {
-                Console.WriteLine("Token has expired");
-                return null;
-            }
-            catch (JWT.Exceptions.SignatureVerificationException)
-            {
-                Console.WriteLine("Token has invalid signature");
-                return null;
-            }
+        [HttpGet]
+        public string CurrentUser()
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            return user.Username;
         }
 
         // GET: Auth/Details/5
@@ -187,6 +201,14 @@ namespace Flight_Management_System.Controllers
             {
                 return View();
             }
+        }
+
+        public User GetUser(string uname, string name)
+        {
+            var data = (from u in db.Users
+                        where u.Username.Equals(uname) && u.Name.Equals(name)
+                        select u).FirstOrDefault();
+            return data;
         }
     }
 }

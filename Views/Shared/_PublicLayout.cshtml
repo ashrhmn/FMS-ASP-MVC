@@ -4,6 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -18,7 +20,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/Auth/Login">Login</a></li>
+                    <li><a href="/Auth/SignIn">SignIn</a></li>
                     <li><a href="/Auth/SignUp">SignUp</a></li>
                 </ul>
             </div>
@@ -27,5 +29,6 @@
     <div>
         @RenderBody()
     </div>
+    @Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>

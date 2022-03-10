@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Userlist";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Customers</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Name</th>
+        <th>User Name</th>
+        <th>Date of birth</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Emails</th>
+        <th>Phones</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        if (u.Role == 2)
+        {
+
+<tr>
+    <td>@u.Name</td>
+    <td>@u.Username</td>
+    <td>@u.DateOfBirth</td>
+    <td>@u.Address</td>
+    <td>@u.CityName</td>
+    <td>@u.CountryName</td>
+    <td>
+        @foreach (var i in u.Emails)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        @foreach (var i in u.Phone)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
+        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+    </td>
+</tr>
+            
+        }
+    }
+</table>
+<br />
+<br />
+<h2>Flight managers</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Name</th>
+        <th>User Name</th>
+        <th>Date of birth</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Emails</th>
+        <th>Phones</th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        if (u.Role == 3)
+        {
+
+<tr>
+    <td>@u.Name</td>
+    <td>@u.Username</td>
+    <td>@u.DateOfBirth</td>
+    <td>@u.Address</td>
+    <td>@u.CityName</td>
+    <td>@u.CountryName</td>
+    <td>
+        @foreach (var i in u.Emails)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        @foreach (var i in u.Phone)
+        {
+            <li> @i </li>
+        }
+    </td>
+    <td>
+        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
+        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+    </td>
+</tr>
+        }
+
+    }
+</table>
+

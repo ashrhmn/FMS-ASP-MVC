@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Flights";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Flights</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Flight Name</th>
+        <th>From</th>
+        <th>Destination</th>
+        <th>Maximum seat</th>
+        <th>Created by</th>
+    </tr>
+    @foreach (var f in Model)
+    {
+
+            <tr>
+                <td>@f.Name</td>
+                <td>@f.From</td>
+                <td>@f.Destination</td>
+                <td>@f.MaximumSeat</td>
+                <td>@f.CreatorName</td>
+            </tr>
+    }
+    </table>

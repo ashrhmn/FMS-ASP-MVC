@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "EditUserProfile";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>EditUserProfile</h2>
+
+<table>
+    <form action="" method="post">
+        <tr>
+            <th>Name : </th>
+            <td><input type="text" value="@Model.Name" name="Name" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>Username : </th>
+            <td><input type="text" value="@Model.Username" name="Username" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>Emails : </th>
+            <td>
+                @foreach (var item in Model.Emails)
+                {
+                    <input type="text" value="@item" name="Email" class="form-control" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Phones : </th>
+            <td>
+                @foreach (var item in Model.Phone)
+                {
+                    <input type="text" value="@item" name="Phone" class="form-control" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Date of Birth : </th>
+            <td><input type="text" value="@Model.DateOfBirth" name="DateOfBirth" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>Address : </th>
+            <td><input type="text" value="@Model.Address" name="DateOfBirth" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Update" class="btn btn-success" /></td>
+        </tr>
+
+    </form>
+
+</table>

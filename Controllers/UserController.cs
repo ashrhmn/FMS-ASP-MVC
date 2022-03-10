@@ -25,14 +25,19 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult Dashboard()
         {
-            //int aid = (int)(Session["aid"]);
-            int aid = 1;
+            //int aid = (int)(Session["uid"]);
+            int uid = 9;
             UserModel userModel = new UserModel();
-            var udata = GetUser(aid);
+            var udata = GetUser(uid);
             userModel.Id = udata.Id;
             userModel.Name = udata.Name;
+            userModel.Cell = udata.Phones.Select(p => p.Phone1).FirstOrDefault();
+            userModel.Mail = udata.Emails.Select(e => e.Email1).FirstOrDefault();
             userModel.Address = udata.Address;
-            userModel.DateOfBirth = udata.DateOfBirth;
+            userModel.CityId = udata.CityId;
+            userModel.CityName = udata.City.Name;
+            if (udata.DateOfBirth.HasValue) { userModel.DateOfBirth = udata.DateOfBirth.Value; }
+            userModel.Username = udata.Username;
             userModel.Password = udata.Password;
             return View(userModel);
         }
@@ -42,29 +47,33 @@ namespace Flight_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                /*var airline = (from a in db.Airlines where a.airline_id == alrvm.airline_id select a).FirstOrDefault();
-                Airline newAl = new Airline();
-                newAl.airline_id = alrvm.airline_id;
-                newAl.airline_name = alrvm.airline_name;
-                newAl.airline_regno = alrvm.airline_regno;
-                newAl.airline_address = alrvm.airline_address;
-                newAl.airline_phone = alrvm.airline_phone;
-                newAl.airline_status = "Valid";
-                db.Entry(airline).CurrentValues.SetValues(newAl);
+                int uid = 9;
+                UserModel nwUser = new UserModel();
+                var udata = GetUser(uid);
+                nwUser.Id = userModel.Id;
+                nwUser.Name = userModel.Name;
+                nwUser.DateOfBirth = userModel.DateOfBirth;
+                nwUser.Address = userModel.Address;
+                nwUser.CityId = userModel.CityId;
+                nwUser.Username = userModel.Username;
+                nwUser.Password = userModel.Password;
+                nwUser.Role = 2;
+                db.Entry(udata).CurrentValues.SetValues(nwUser);
                 db.SaveChanges();
-                var login = (from als in db.Logins where als.airline_id == alrvm.airline_id select als).FirstOrDefault();
-                Login lg = new Login();
-                lg.login_id = login.login_id;
-                lg.airline_id = alrvm.airline_id;
-                lg.username = alrvm.username;
-                lg.password = alrvm.password;
-                lg.recovery_phone = alrvm.recovery_phone;
-                lg.email = alrvm.email;
-                lg.user_type = "airline";
-                db.Entry(login).CurrentValues.SetValues(lg);
+                var edata = GetEmail(uid);
+                Email neEmail = new Email();
+                neEmail.Id = edata.Id;
+                neEmail.UserId = edata.UserId;
+                neEmail.Email1 = userModel.Mail;
+                db.Entry(edata).CurrentValues.SetValues(neEmail);
                 db.SaveChanges();
-
-                return RedirectToAction("Dashboard");*/
+                var pdata = GetPhone(uid);
+                Phone nePhone = new Phone();
+                nePhone.Id = pdata.Id;
+                nePhone.UserId = pdata.UserId;
+                nePhone.Phone1 = userModel.Cell;
+                db.Entry(pdata).CurrentValues.SetValues(nePhone);
+                db.SaveChanges();
             }
             return View(userModel);
         }
@@ -141,11 +150,27 @@ namespace Flight_Management_System.Controllers
             }
         }
 
-        public User GetUser(int aid)
+        public User GetUser(int uid)
         {
             var data = (from u in db.Users
-                        where u.Id == aid
+                        where u.Id == uid
                         select u).FirstOrDefault();
+            return data;
+        }
+
+        public Email GetEmail(int uid)
+        {
+            var data = (from m in db.Emails
+                        where m.UserId == uid
+                        select m).FirstOrDefault();
+            return data;
+        }
+
+        public Phone GetPhone(int uid)
+        {
+            var data = (from m in db.Phones
+                        where m.UserId == uid
+                        select m).FirstOrDefault();
             return data;
         }
     }
