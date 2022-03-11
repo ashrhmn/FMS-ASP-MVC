@@ -44,7 +44,6 @@ namespace Flight_Management_System.Controllers
             //user.CityName = data.City==null?"Undefined":data.City.Name;
             //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
             user.Address= data.Address;
-
             user.Email = data.Email;
             user.Phone = data.Phone;
 
@@ -65,6 +64,7 @@ namespace Flight_Management_System.Controllers
             //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
             user.Address = data.Address;
             user.Email = data.Email;
+            user.Phone = data.Phone;
 
             return View(user);
         }
@@ -83,9 +83,6 @@ namespace Flight_Management_System.Controllers
 
                 db.Entry(data).CurrentValues.SetValues(user);
                 db.SaveChanges();
-
-
-
 
 
                 TempData["msg"] = "Profile Updated Successfully";
@@ -157,6 +154,10 @@ namespace Flight_Management_System.Controllers
                     Role = u.Role,
                     CityName = u.City == null ? "undefined" : u.City.Name,
                     CountryName = u.City == null ? "undefined" : u.City.Country,
+
+                    Email = u.Email,
+                    Phone = u.Phone
+
                     Email= u.Email,
                     Phone = u.Phone,
 
@@ -181,7 +182,11 @@ namespace Flight_Management_System.Controllers
                 //CityName = u.City == null ? "undefined" : u.City.Name,
                 //CountryName = u.City == null ? "undefined" : u.City.Country,
                 Email = u.Email,
+
+                Phone = u.Phone
+
                 Phone = u.Phone,
+
 
             };
             
@@ -338,7 +343,7 @@ namespace Flight_Management_System.Controllers
         {
             var ticket = (from t in db.PurchasedTickets where t.Id == id select t).FirstOrDefault();
             var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
-
+            
             db.SeatInfos.Remove(seat);
             db.SaveChanges();
             db.PurchasedTickets.Remove(ticket);
@@ -347,6 +352,56 @@ namespace Flight_Management_System.Controllers
             TempData["msg"] = "Ticket Cancel Successfully";
             return RedirectToAction("PurchasedDetails");
         }
+        [HttpGet]
+        public ActionResult SearchFlight()
+        {
+            var data = (from cs in db.Cities select cs).ToList();
+            var cities = new List<CityModel>();
+
+            foreach(var c in data)
+            {
+                cities.Add(new CityModel()
+                {
+                    Name = c.Name,
+                });
+            }
+
+            return View(cities);
+        }
+        [HttpPost]
+        public ActionResult SearchFlight(string Date, string From, string Destination)
+        {
+            
+            var cities = (from cs in db.Cities select cs);
+            if (From != null && Destination != null)
+            {
+                var fromcity = cities.Where(cs => cs.Name.Contains(From)).FirstOrDefault();
+                var destinationcity = cities.Where(cs => cs.Name.Contains(Destination)).FirstOrDefault();
+                var flights = (from fs in db.TransportSchedules where fs.FromStopageId == fromcity.Id 
+                               && fs.ToStopageId == destinationcity.Id && fs.Day.Equals(Date) select fs).FirstOrDefault();
+
+                if(flights != null)
+                {
+                    var transports = (from t in db.Transports where t.Id == flights.TransportId select t).FirstOrDefault();
+                    var trans = new TransportModel()
+                    {
+                        Name = transports.Name,
+                        Id = flights.TransportId,
+                    };
+                    return View(trans);
+
+                }
+                
+
+            }
+
+            return View();
+        }
+        public ActionResult FlightSeatDetails()
+        {
+            return View();
+        }
+
 
 
 

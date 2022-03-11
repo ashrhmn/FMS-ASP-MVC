@@ -32,19 +32,15 @@
         <tr>
             <th>Emails : </th>
             <td>
-                @foreach (var item in Model.Emails)
-                {
-                    <input type="text" value="@item" name="Emails" class="form-control" />
-                }
+                <input type="text" value="@Model.Email" name="Email" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
             <th>Phones : </th>
             <td>
-                @foreach (var item in Model.Phone)
-                {
-                    <input type="text" value="@item" name="Phone" class="form-control" />
-                }
+                <input type="text" value="@Model.Phone" name="Phone" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>

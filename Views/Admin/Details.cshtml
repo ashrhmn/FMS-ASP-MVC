@@ -15,18 +15,8 @@
 <ul>
     <li>Name : @Model.Name</li>
     <li>Username : @Model.Username</li>
-    <li>
-        Emails: @foreach (var item in Model.Emails)
-        {
-            <ul> @item</ul>
-        }
-    </li>
-    <li>
-        Phones: @foreach (var item in Model.Phone)
-        {
-            <ul> @item</ul>
-        }
-    </li>
+    <li>Emails: @Model.Email)</li>
+    <li>Phones: @Model.Phone)</li>
     <li>Date of Birth : @Model.DateOfBirth</li>
     <li>Address : @Model.Address</li>
 

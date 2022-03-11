@@ -417,6 +417,10 @@
           <Property Name="RouteIndex" Type="Int32" />
           <Property Name="FareFromRoot" Type="Int32" />
           <NavigationProperty Name="City" Relationship="Self.FK_Stopages_Cities" FromRole="Stopages" ToRole="Cities" />
+
+          <NavigationProperty Name="Transports" Relationship="Self.FK_Transports_Stopages_From" FromRole="Stopages" ToRole="Transports" />
+          <NavigationProperty Name="Transports1" Relationship="Self.FK_Transports_Stopages_To" FromRole="Stopages" ToRole="Transports" />
+
           <NavigationProperty Name="TransportSchedules" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages" FromRole="Stopage" ToRole="TransportSchedule" />
           <NavigationProperty Name="TransportSchedules1" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages1" FromRole="Stopage" ToRole="TransportSchedule" />
         </EntityType>
