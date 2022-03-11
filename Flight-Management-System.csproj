@@ -163,6 +163,8 @@
     </Compile>
     <Compile Include="Models\AdminEntities\CityModel.cs" />
     <Compile Include="Models\AdminEntities\PurchasedTicketModel.cs" />
+    <Compile Include="Models\AdminEntities\SeatInfosModel.cs" />
+    <Compile Include="Models\AdminEntities\TransportScheduleModel.cs" />
     <Compile Include="Models\AdminEntities\UserModel.cs" />
     <Compile Include="Models\AuthEntities\AuthPayload.cs" />
     <Compile Include="Models\Database\AgeClassEnum.cs">
@@ -278,6 +280,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\FlightManager\AddAircraft.cshtml" />
     <Content Include="Views\FlightManager\AddAircraftSchedule.cshtml" />
+    <Content Include="Views\Admin\UserDetails.cshtml" />
+    <Content Include="Views\Admin\BookedSeatsFlights.cshtml" />
     <None Include="Views\Home\Index.cshtml.backup" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Auth\SignUp.cshtml" />
@@ -299,13 +303,10 @@
     <Content Include="Views\Admin\Flights.cshtml" />
     <Content Include="Views\Admin\TransportDetails.cshtml" />
     <Content Include="Views\User\Flights.cshtml" />
-
     <Content Include="Views\Admin\SearchFlight.cshtml" />
     <Content Include="Views\Admin\FlightSeatDetails.cshtml" />
-
     <Content Include="Views\FlightManager\Dashboard.cshtml" />
     <Content Include="Views\Shared\_FlightManagerLayout.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

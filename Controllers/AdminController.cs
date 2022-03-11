@@ -138,9 +138,14 @@ namespace Flight_Management_System.Controllers
             return View();
 
         }
-        public ActionResult Userlist()
+        public ActionResult Userlist(string searching)
         {
-            var user = db.Users.ToList();
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            var user = (from u in db.Users select u).ToList();
+            if (!String.IsNullOrEmpty(searching))
+            {
+                user = user.Where(u => u.Name.Contains(searching)).ToList();
+            }
             var users = new List<UserModel>();
             foreach (var u in user)
             {
@@ -154,9 +159,8 @@ namespace Flight_Management_System.Controllers
                     Role = u.Role,
                     CityName = u.City == null ? "undefined" : u.City.Name,
                     CountryName = u.City == null ? "undefined" : u.City.Country,
-                    Email= u.Email,
-                    Phone = u.Phone,
-
+                    Email = u.Email == null ? "undefined" : u.Email,
+                    Phone = u.Phone == null ? "undefined" : u.Phone,
 
                 });
             }
@@ -287,25 +291,73 @@ namespace Flight_Management_System.Controllers
             }
             return View(pdetails);
         }
-        public ActionResult Flights()
+        public ActionResult Flights(string searching)
         {
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
             var flight = db.Transports.ToList();
+            if (!String.IsNullOrEmpty(searching))
+            {
+                flight = flight.Where(u => u.Name.Contains(searching)).ToList();
+            }
             var flights = new List<TransportModel>();
             foreach (var f in flight)
             {
+                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.Id && s.Status == "Booked" select s).Count();
+                var availableSeats = (f.MaximumSeat - occupiedSeats);
+
+
                 flights.Add(new TransportModel()
                 {
                     Id = f.Id,
                     Name = f.Name,
-                    //From = f.FromStopageId == null ? "undefined" : f.Stopage.City.Name,
-                    //Destination = f.ToStopageId == null ? "undefined" : f.Stopage1.City.Name,
+                    //From = f.TransportSchedules.Stopage,
+                    //Destination = f.ToStopageId == null ? "undefined" : f.TransportSchedules.s,
                     MaximumSeat = f.MaximumSeat,
-                    CreatorName = f.User.Name,
+                    CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
+                    AvailableSeats = availableSeats,
 
                 });
             }
-            return View();
+            return View(flights);
         }
+        public ActionResult BookedSeatsFlights(int id)
+        {
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            var seat = (from s in db.SeatInfos where s.Id == id && s.Status == "Booked" select s).ToList();
+            var seats = new List<SeatInfosModel>();
+            foreach (var s in seat)
+            {
+                seats.Add(new SeatInfosModel()
+                {
+                    Id = s.Id,
+                    SeatNo = s.SeatNo,
+                    SeatClassName = s.SeatClass == null ? "undefined" : s.SeatClassEnum.Value,
+                    PurchasedById = s.PurchasedTicket.PurchasedBy,
+                    PurchasedByName = s.TicketId == null ? "undefined" : s.PurchasedTicket.User.Name,
+                    Status = s.Status,
+
+                });
+            }
+
+            return View(seats);
+        }
+        public ActionResult UserDetails(int id)
+        {
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
+            var user = new UserModel();
+            user.Username = data.Username;
+            user.DateOfBirth = data.DateOfBirth;
+            //user.CityName = data.City==null?"Undefined":data.City.Name;
+            //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
+            user.Address = data.Address;
+            user.Email = data.Email;
+            user.Phone = data.Phone;
+
+            return View(user);
+        }
+
+
         public ActionResult TransportDetails(int id)
         {
             var transport = (from t in db.Transports where t.Id == id select t).FirstOrDefault();

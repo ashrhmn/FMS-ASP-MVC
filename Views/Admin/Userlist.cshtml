@@ -1,20 +1,21 @@
-﻿
+﻿@model IEnumerable<Flight_Management_System.Models.AdminEntities.UserModel>
 @{
     ViewBag.Title = "Userlist";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+<h4>Search</h4>
+@using (Html.BeginForm("Userlist", "Admin", FormMethod.Post))
+{
+    @Html.TextBox("searching")
+    <input type="submit" value="Search" />
+}
 <h2>Customers</h2>
 <table class="table table-bordered">
     <tr>
         <th>Name</th>
         <th>User Name</th>
-        <th>Date of birth</th>
         <th>Address</th>
-        <th>City</th>
-        <th>Country</th>
-        <th>Emails</th>
-        <th>Phones</th>
+        <th>Location</th>
         <th>Actions</th>
     </tr>
     @foreach (var u in Model)
@@ -22,32 +23,19 @@
         if (u.Role == 2)
         {
 
-<tr>
-    <td>@u.Name</td>
-    <td>@u.Username</td>
-    <td>@u.DateOfBirth</td>
-    <td>@u.Address</td>
-    <td>@u.CityName</td>
-    <td>@u.CountryName</td>
-    <td>
-        @foreach (var i in u.Emails)
-        {
-            <li> @i </li>
-        }
-    </td>
-    <td>
-        @foreach (var i in u.Phone)
-        {
-            <li> @i </li>
-        }
-    </td>
-    <td>
-        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
-        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
-        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
-    </td>
-</tr>
-            
+            <tr>
+                <td>@u.Name</td>
+                <td>@u.Username</td>
+                <td>@u.Address</td>
+                <td>@u.CityName, @u.CountryName</td>
+                <td>@u.CountryName</td>
+                <td>
+                    <a href="/Admin/UserDetails/@u.Id">View Details</a>
+                    <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+                    <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+                </td>
+            </tr>
+
         }
     }
 </table>
@@ -58,45 +46,31 @@
     <tr>
         <th>Name</th>
         <th>User Name</th>
-        <th>Date of birth</th>
         <th>Address</th>
-        <th>City</th>
-        <th>Country</th>
-        <th>Emails</th>
-        <th>Phones</th>
+        <th>Location</th>
+        <th>Actions</th>
     </tr>
     @foreach (var u in Model)
     {
-        if (u.Role == 3)
+        if (u.Role == 2)
         {
 
-<tr>
-    <td>@u.Name</td>
-    <td>@u.Username</td>
-    <td>@u.DateOfBirth</td>
-    <td>@u.Address</td>
-    <td>@u.CityName</td>
-    <td>@u.CountryName</td>
-    <td>
-        @foreach (var i in u.Emails)
-        {
-            <li> @i </li>
-        }
-    </td>
-    <td>
-        @foreach (var i in u.Phone)
-        {
-            <li> @i </li>
-        }
-    </td>
-    <td>
-        <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
-        <a href="/Admin/ChangeUserPass/@u.Id">Change Password</a>
-        <a href="/Admin/DeleteUser/@u.Id">Delete</a>
-    </td>
-</tr>
+            <tr>
+                <td>@u.Name</td>
+                <td>@u.Username</td>
+                <td>@u.Address</td>
+                <td>@u.CityName, @u.CountryName</td>
+                <td>@u.CountryName</td>
+                <td>
+                    <a href="/Admin/UserDetails/@u.Id">Edit</a>
+                    <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+                    <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+                </td>
+            </tr>
         }
 
     }
 </table>
+
+
 
