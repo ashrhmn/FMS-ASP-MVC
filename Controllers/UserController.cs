@@ -1,4 +1,4 @@
-﻿using Flight_Management_System.Auth;
+using Flight_Management_System.Auth;
 using Flight_Management_System.Models;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
@@ -123,7 +123,5 @@ namespace Flight_Management_System.Controllers
                         select u).FirstOrDefault();
             return data;
         }
-
-
     }
 }
