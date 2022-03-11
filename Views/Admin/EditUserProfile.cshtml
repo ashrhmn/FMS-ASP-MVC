@@ -11,7 +11,7 @@
     <span class="label-danger">@TempData["msg"]}</span>
 }
 
-<form action="/Admin/EditUserProfile" method="post">
+<form action="/Admin/EditUserProfile/@Model.Id" method="post">
     <input type="hidden" name="Id" value="@Model.Id" />
     <input type="hidden" name="Password" value="@Model.Password" />
     <table>
