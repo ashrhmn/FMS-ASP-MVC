@@ -51,8 +51,7 @@ namespace Flight_Management_System.Controllers
             var udata = GetUser(uid);
             userModel.Id = udata.Id;
             userModel.Name = udata.Name;
-            userModel.Cell = udata.Phones.Select(p => p.Phone1).FirstOrDefault();
-            userModel.Mail = udata.Emails.Select(e => e.Email1).FirstOrDefault();
+            userModel.Mail = udata.;
             userModel.Address = udata.Address;
             userModel.CityId = udata.CityId;
             userModel.CityName = udata.City.Name;
@@ -108,20 +107,5 @@ namespace Flight_Management_System.Controllers
             return data;
         }
 
-        public Email GetEmail(int uid)
-        {
-            var data = (from m in db.Emails
-                        where m.UserId == uid
-                        select m).FirstOrDefault();
-            return data;
-        }
-
-        public Phone GetPhone(int uid)
-        {
-            var data = (from m in db.Phones
-                        where m.UserId == uid
-                        select m).FirstOrDefault();
-            return data;
-        }
     }
 }
