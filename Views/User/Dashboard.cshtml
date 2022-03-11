@@ -36,7 +36,7 @@
         <label class="col-md-2 control-label">Email</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Mail" value="@Model.Email" placeholder="Email" class="form-control" />
+            <input type="text" name="Email" value="@Model.Email" placeholder="Email" class="form-control" />
         </div>
     </div>
 
@@ -44,7 +44,7 @@
         <label class="col-md-2 control-label">Phone</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Cell" value="@Model.Phone" placeholder="Phone" class="form-control" />
+            <input type="text" name="Phone" value="@Model.Phone" placeholder="Phone" class="form-control" />
         </div>
     </div>
 
@@ -78,10 +78,9 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-2 control-label">Password</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Password" value="@Model.Password" class="form-control" />
+            <input type="hidden" name="Password" value="@Model.Password" class="form-control" />
         </div>
     </div>
 
@@ -89,7 +88,7 @@
         <label class="col-md-2 control-label">Confirm Password</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })</span>
-            <input type="text" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
+            <input type="password" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
         </div>
     </div>
 
