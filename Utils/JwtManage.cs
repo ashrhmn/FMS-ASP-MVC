@@ -47,16 +47,23 @@ namespace Flight_Management_System.Utils
                 Console.WriteLine("Token has invalid signature");
                 return null;
             }
+            catch (Exception error)
+            {
+                Console.WriteLine("JWT Decode error : "+error.ToString());
+                return null;
+            }
         }
 
         public AuthPayload LoggedInUser(HttpCookieCollection cookies)
         {
             HttpCookie cookie = cookies["session"];
+            if (cookie == null) return null;
             var token = cookie["token"];
             var decodedObject = DecodeToken(token);
             if (decodedObject == null)
             {
-                cookies.Clear();
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                cookies.Add(cookie);
                 return null;
             }
             var result = JsonConvert.DeserializeObject<AuthPayload>(decodedObject);
@@ -66,7 +73,11 @@ namespace Flight_Management_System.Utils
         public bool DeleteToken(HttpCookieCollection cookies)
         {
             HttpCookie cookie = cookies["session"];
-            cookie["token"] = null;
+            if (cookie != null)
+            {
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                cookies.Add(cookie);
+            }
             return true;
         }
     }

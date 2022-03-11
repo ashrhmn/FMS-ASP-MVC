@@ -363,15 +363,6 @@
           <NavigationProperty Name="Stopages" Relationship="Self.FK_Stopages_Cities" FromRole="Cities" ToRole="Stopages" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Users_Cities" FromRole="Cities" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Email">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Email1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Emails_Users" FromRole="Emails" ToRole="Users" />
-        </EntityType>
         <EntityType Name="Family">
           <Key>
             <PropertyRef Name="Id" />
@@ -379,15 +370,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Users_Families" FromRole="Families" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="Phone">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Phone1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Phones_Users" FromRole="Phones" ToRole="Users" />
         </EntityType>
         <EntityType Name="PurchasedTicket">
           <Key>
@@ -435,8 +417,10 @@
           <Property Name="RouteIndex" Type="Int32" />
           <Property Name="FareFromRoot" Type="Int32" />
           <NavigationProperty Name="City" Relationship="Self.FK_Stopages_Cities" FromRole="Stopages" ToRole="Cities" />
+
           <NavigationProperty Name="Transports" Relationship="Self.FK_Transports_Stopages_From" FromRole="Stopages" ToRole="Transports" />
           <NavigationProperty Name="Transports1" Relationship="Self.FK_Transports_Stopages_To" FromRole="Stopages" ToRole="Transports" />
+
           <NavigationProperty Name="TransportSchedules" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages" FromRole="Stopage" ToRole="TransportSchedule" />
           <NavigationProperty Name="TransportSchedules1" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages1" FromRole="Stopage" ToRole="TransportSchedule" />
         </EntityType>
@@ -456,12 +440,8 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FromStopageId" Type="Int32" />
-          <Property Name="ToStopageId" Type="Int32" />
           <Property Name="MaximumSeat" Type="Int32" />
           <NavigationProperty Name="SeatInfos" Relationship="Self.FK_SeatInfos_Transports" FromRole="Transports" ToRole="SeatInfos" />
-          <NavigationProperty Name="Stopage" Relationship="Self.FK_Transports_Stopages_From" FromRole="Transports" ToRole="Stopages" />
-          <NavigationProperty Name="Stopage1" Relationship="Self.FK_Transports_Stopages_To" FromRole="Transports" ToRole="Stopages" />
           <Property Name="CreatedBy" Type="Int32" />
           <NavigationProperty Name="User" Relationship="Flight_ManagementModel.FK_Transports_Users" FromRole="Transport" ToRole="User" />
           <NavigationProperty Name="TransportSchedules" Relationship="Flight_ManagementModel.FK_TransportSchedules_Transports" FromRole="Transport" ToRole="TransportSchedule" />
@@ -488,9 +468,7 @@
           <Property Name="CityId" Type="Int32" />
           <Property Name="Role" Type="Int32" />
           <NavigationProperty Name="City" Relationship="Self.FK_Users_Cities" FromRole="Users" ToRole="Cities" />
-          <NavigationProperty Name="Emails" Relationship="Self.FK_Emails_Users" FromRole="Users" ToRole="Emails" />
           <NavigationProperty Name="Family" Relationship="Self.FK_Users_Families" FromRole="Users" ToRole="Families" />
-          <NavigationProperty Name="Phones" Relationship="Self.FK_Phones_Users" FromRole="Users" ToRole="Phones" />
           <NavigationProperty Name="PurchasedTickets" Relationship="Self.FK_PurchasedTickets_Users" FromRole="Users" ToRole="PurchasedTickets" />
           <NavigationProperty Name="UserRoleEnum" Relationship="Self.FK_Users_UserRoleEnums" FromRole="Users" ToRole="UserRoleEnums" />
           <NavigationProperty Name="Transports" Relationship="Flight_ManagementModel.FK_Transports_Users" FromRole="User" ToRole="Transport" />
@@ -533,18 +511,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Emails_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Emails" Type="Self.Email" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Emails">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Users_Families">
           <End Role="Families" Type="Self.Family" Multiplicity="0..1" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
@@ -554,18 +520,6 @@
             </Principal>
             <Dependent Role="Users">
               <PropertyRef Name="FamilyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Phones_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Phones" Type="Self.Phone" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Phones">
-              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -617,30 +571,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Transports_Stopages_From">
-          <End Role="Stopages" Type="Self.Stopage" Multiplicity="0..1" />
-          <End Role="Transports" Type="Self.Transport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stopages">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Transports">
-              <PropertyRef Name="FromStopageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Transports_Stopages_To">
-          <End Role="Stopages" Type="Self.Stopage" Multiplicity="0..1" />
-          <End Role="Transports" Type="Self.Transport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stopages">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Transports">
-              <PropertyRef Name="ToStopageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Users_UserRoleEnums">
           <End Role="UserRoleEnums" Type="Self.UserRoleEnum" Multiplicity="0..1" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
@@ -656,9 +586,7 @@
         <EntityContainer Name="Flight_ManagementEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AgeClassEnums" EntityType="Self.AgeClassEnum" />
           <EntitySet Name="Cities" EntityType="Self.City" />
-          <EntitySet Name="Emails" EntityType="Self.Email" />
           <EntitySet Name="Families" EntityType="Self.Family" />
-          <EntitySet Name="Phones" EntityType="Self.Phone" />
           <EntitySet Name="PurchasedTickets" EntityType="Self.PurchasedTicket" />
           <EntitySet Name="SeatClassEnums" EntityType="Self.SeatClassEnum" />
           <EntitySet Name="SeatInfos" EntityType="Self.SeatInfo" />
@@ -679,17 +607,9 @@
             <End Role="Cities" EntitySet="Cities" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="FK_Emails_Users" Association="Self.FK_Emails_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Emails" EntitySet="Emails" />
-          </AssociationSet>
           <AssociationSet Name="FK_Users_Families" Association="Self.FK_Users_Families">
             <End Role="Families" EntitySet="Families" />
             <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Phones_Users" Association="Self.FK_Phones_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Phones" EntitySet="Phones" />
           </AssociationSet>
           <AssociationSet Name="FK_PurchasedTickets_Users" Association="Self.FK_PurchasedTickets_Users">
             <End Role="Users" EntitySet="Users" />
@@ -706,14 +626,6 @@
           <AssociationSet Name="FK_SeatInfos_Transports" Association="Self.FK_SeatInfos_Transports">
             <End Role="Transports" EntitySet="Transports" />
             <End Role="SeatInfos" EntitySet="SeatInfos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transports_Stopages_From" Association="Self.FK_Transports_Stopages_From">
-            <End Role="Stopages" EntitySet="Stopages" />
-            <End Role="Transports" EntitySet="Transports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transports_Stopages_To" Association="Self.FK_Transports_Stopages_To">
-            <End Role="Stopages" EntitySet="Stopages" />
-            <End Role="Transports" EntitySet="Transports" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_UserRoleEnums" Association="Self.FK_Users_UserRoleEnums">
             <End Role="UserRoleEnums" EntitySet="UserRoleEnums" />

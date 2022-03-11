@@ -65,6 +65,7 @@ namespace Flight_Management_System.Controllers
             user.Address = data.Address;
             user.Email = data.Email;
             user.Phone = data.Phone;
+
             return View(user);
         }
         [HttpPost]
@@ -77,9 +78,12 @@ namespace Flight_Management_System.Controllers
                 user.CityId = data.CityId;
                 user.FamilyId = data.FamilyId;
                 user.Role = data.Role;
+                user.Email = data.Email;
+                user.Phone = data.Phone;
 
                 db.Entry(data).CurrentValues.SetValues(user);
                 db.SaveChanges();
+
 
                 TempData["msg"] = "Profile Updated Successfully";
                 return RedirectToAction("Details");
@@ -150,8 +154,13 @@ namespace Flight_Management_System.Controllers
                     Role = u.Role,
                     CityName = u.City == null ? "undefined" : u.City.Name,
                     CountryName = u.City == null ? "undefined" : u.City.Country,
+
                     Email = u.Email,
                     Phone = u.Phone
+
+                    Email= u.Email,
+                    Phone = u.Phone,
+
 
                 });
             }
@@ -173,7 +182,12 @@ namespace Flight_Management_System.Controllers
                 //CityName = u.City == null ? "undefined" : u.City.Name,
                 //CountryName = u.City == null ? "undefined" : u.City.Country,
                 Email = u.Email,
+
                 Phone = u.Phone
+
+                Phone = u.Phone,
+
+
             };
             
             return View(user);
@@ -290,8 +304,8 @@ namespace Flight_Management_System.Controllers
                 {
                     Id = f.Id,
                     Name = f.Name,
-                    From = f.FromStopageId == null ? "undefined" : f.Stopage.City.Name,
-                    Destination = f.ToStopageId == null ? "undefined" : f.Stopage1.City.Name,
+                    //From = f.FromStopageId == null ? "undefined" : f.Stopage.City.Name,
+                    //Destination = f.ToStopageId == null ? "undefined" : f.Stopage1.City.Name,
                     MaximumSeat = f.MaximumSeat,
                     CreatorName = f.User.Name,
 
@@ -305,16 +319,16 @@ namespace Flight_Management_System.Controllers
             if(transport == null)
             {
                 var user = (from u in db.Users where u.Id == transport.CreatedBy select u).FirstOrDefault();
-                var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
-                var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
+                //var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
+                //var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
 
                 var trans = new TransportModel();
                 trans.Id = id;
                 trans.Name = transport.Name;
-                trans.From = fromstopage.Name;
-                trans.FromCountry = fromstopage.Country;
-                trans.Destination = tostopage.Name;
-                trans.DestinationCountry = tostopage.Country;
+                //trans.From = fromstopage.Name;
+                //trans.FromCountry = fromstopage.Country;
+                //trans.Destination = tostopage.Name;
+                //trans.DestinationCountry = tostopage.Country;
                 trans.CreatedBy = user.Id;
                 trans.CreatorName = user.Name;
                 trans.MaximumSeat = transport.MaximumSeat;

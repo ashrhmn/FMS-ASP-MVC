@@ -162,7 +162,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminEntities\CityModel.cs" />
-    <Compile Include="Models\AdminEntities\EmailModel.cs" />
     <Compile Include="Models\AdminEntities\PurchasedTicketModel.cs" />
     <Compile Include="Models\AdminEntities\UserModel.cs" />
     <Compile Include="Models\AuthEntities\AuthPayload.cs" />
@@ -170,9 +169,6 @@
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Database\City.cs">
-      <DependentUpon>FMS_Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Email.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Database\Family.cs">
@@ -192,9 +188,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FMS_Model.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Phone.cs">
-      <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Database\PurchasedTicket.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
@@ -224,6 +217,8 @@
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminEntities\TransportModel.cs" />
+    <Compile Include="Models\FlightManagerEntities\AirlineModel.cs" />
+    <Compile Include="Models\FlightManagerEntities\TransportScheduleModel.cs" />
     <Compile Include="Models\FlightsModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -281,6 +276,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\FlightManager\AddAircraft.cshtml" />
+    <Content Include="Views\FlightManager\AddAircraftSchedule.cshtml" />
+    <None Include="Views\Home\Index.cshtml.backup" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Auth\SignUp.cshtml" />
     <Content Include="Views\Auth\SignIn.cshtml" />
@@ -301,12 +299,16 @@
     <Content Include="Views\Admin\Flights.cshtml" />
     <Content Include="Views\Admin\TransportDetails.cshtml" />
     <Content Include="Views\User\Flights.cshtml" />
+
     <Content Include="Views\Admin\SearchFlight.cshtml" />
     <Content Include="Views\Admin\FlightSeatDetails.cshtml" />
+
+    <Content Include="Views\FlightManager\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_FlightManagerLayout.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\FlightManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

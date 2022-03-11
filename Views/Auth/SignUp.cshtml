@@ -7,7 +7,7 @@
 }
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
 }
 
 <h1>Sign Up</h1>
@@ -32,16 +32,16 @@
     <div class="form-group">
         <label class="col-md-2 control-label">Email</label>
         <div class="col-md-10">
-            <span>@Html.ValidationMessageFor(m => m.Mail, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Mail" value="@Model.Mail" placeholder="Email" class="form-control" />
+            <span>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Email" value="@Model.Email" placeholder="Email" class="form-control" />
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-md-2 control-label">Phone</label>
         <div class="col-md-10">
-            <span>@Html.ValidationMessageFor(m => m.Cell, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Cell" value="@Model.Cell" placeholder="Phone" class="form-control" />
+            <span>@Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })</span>
+            <input type="text" name="Phone" value="@Model.Phone" placeholder="Phone" class="form-control" />
         </div>
     </div>
 
@@ -57,14 +57,12 @@
         <label class="col-md-2 control-label">City</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })</span>
+            <span></span>
             <select name="CityId">
                 @foreach (var c in cit)
                 {
-                    <option selected value="@c.Id">@c.Name</option>
+                    <option @(Model.CityId==c.Id?"selected":"") value="@c.Id">@c.Name</option>
                 }
-                <option selected value="@Model.CityId">@Model.CityName</option>
-
-
             </select>
         </div>
     </div>

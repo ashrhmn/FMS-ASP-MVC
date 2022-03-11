@@ -27,9 +27,7 @@ namespace Flight_Management_System.Models.Database
     
         public DbSet<AgeClassEnum> AgeClassEnums { get; set; }
         public DbSet<City> Cities { get; set; }
-        public DbSet<Email> Emails { get; set; }
         public DbSet<Family> Families { get; set; }
-        public DbSet<Phone> Phones { get; set; }
         public DbSet<PurchasedTicket> PurchasedTickets { get; set; }
         public DbSet<SeatClassEnum> SeatClassEnums { get; set; }
         public DbSet<SeatInfo> SeatInfos { get; set; }

@@ -1,0 +1,41 @@
+﻿@model List<Flight_Management_System.Models.FlightManagerEntities.AirlineModel>
+
+@{
+    ViewBag.Title = "Flight Manager Dashboard";
+    Layout = "~/Views/Shared/_FlightManagerLayout.cshtml";
+}
+<div class="container">
+    <h2>Flight Manager Dashboard</h2>
+
+    <a href="/FlightManager/AddAircraft" class="navbar-link">Add New</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Aircraft Name</th>
+                <th>Schedules</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>
+                @foreach (var schedule in item.TransportSchedules)
+                {
+                    <span> @schedule.FromAirport, @schedule.FromCity, @schedule.FromCountry to @schedule.ToAirport, @schedule.ToCity, @schedule.ToCountry - @schedule.Day - @((int)schedule.Time/100):@((schedule.Time%100).ToString("D2")) </span>
+                    <br/>
+                }
+                </td>
+                @*<td>@item.FromAirport , @item.FromCity , @item.FromCountry</td>
+                <td>@item.ToAirport , @item.ToCity , @item.ToCountry</td>*@
+                <td>@item.SeatCapacity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

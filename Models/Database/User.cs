@@ -16,8 +16,6 @@ namespace Flight_Management_System.Models.Database
     {
         public User()
         {
-            this.Emails = new HashSet<Email>();
-            this.Phones = new HashSet<Phone>();
             this.PurchasedTickets = new HashSet<PurchasedTicket>();
             this.Transports = new HashSet<Transport>();
         }
@@ -35,9 +33,7 @@ namespace Flight_Management_System.Models.Database
         public string Phone { get; set; }
     
         public virtual City City { get; set; }
-        public virtual ICollection<Email> Emails { get; set; }
         public virtual Family Family { get; set; }
-        public virtual ICollection<Phone> Phones { get; set; }
         public virtual ICollection<PurchasedTicket> PurchasedTickets { get; set; }
         public virtual UserRoleEnum UserRoleEnum { get; set; }
         public virtual ICollection<Transport> Transports { get; set; }
