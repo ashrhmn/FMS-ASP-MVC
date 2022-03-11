@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Flight_Management_System.Models.AdminEntities.SeatInfosModel>
+@{
+    ViewBag.Title = "BookedSeatsFlights";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>BookedSeatsFlights</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Seat No</th>
+        <th>Seat Class</th>
+        <th>Purchased By</th>
+        <th>Status</th>
+    </tr>
+    @foreach (var f in Model)
+    {
+
+        <tr>
+            <td>@f.SeatNo</td>
+            <td>@f.SeatClassName</td>
+            <td><a href="/Admin/UserDetails/@f.PurchasedById">Booked Seats Details</a></td>
+            <td>@f.Status</td>
+
+
+        </tr>
+    }
+</table>

@@ -1,0 +1,30 @@
+﻿@model Flight_Management_System.Models.AdminEntities.UserModel
+@{
+    ViewBag.Title = "UserDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>UserDetails</h2>
+@if (TempData["msg"] != null)
+{
+    <span class="label-success">@TempData["msg"]}</span>
+}
+
+<h1>Profile Details: </h1>
+
+<ul>
+    <li>Name : @Model.Name</li>
+    <li>Username : @Model.Username</li>
+    <li>
+        Emails: @Model.Email
+    </li>
+    <li>
+        Phones: @Model.Phone
+    </li>
+    <li>Date of Birth : @Model.DateOfBirth</li>
+    <li>Address : @Model.Address</li>
+
+</ul>
+
+
+<a href="/Admin/EditUserProfile/@Model.Id" class="btn btn-success">Edit User Details</a>

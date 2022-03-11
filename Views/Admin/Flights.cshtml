@@ -1,9 +1,14 @@
-﻿
+﻿@model List<Flight_Management_System.Models.AdminEntities.TransportModel>
 @{
     ViewBag.Title = "Flights";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+<h4>Search</h4>
+@using (Html.BeginForm("Flights", "Admin", FormMethod.Post))
+{
+    @Html.TextBox("searching")
+    <input type="submit" value="Search" />
+}
 <h2>Flights</h2>
 <table class="table table-bordered">
     <tr>
@@ -11,17 +16,23 @@
         <th>From</th>
         <th>Destination</th>
         <th>Maximum seat</th>
+        <th>Available Seats</th>
         <th>Created by</th>
+        <th>Booked Seats</th>
     </tr>
     @foreach (var f in Model)
     {
 
-            <tr>
-                <td>@f.Name</td>
-                <td>@f.From</td>
-                <td>@f.Destination</td>
-                <td>@f.MaximumSeat</td>
-                <td>@f.CreatorName</td>
-            </tr>
+        <tr>
+            <td>@f.Name</td>
+            <td>@f.From</td>
+            <td>@f.Destination</td>
+            <td>@f.MaximumSeat</td>
+            <td></td>
+            <td>@f.CreatorName</td>
+            <td><a href="/Admin/BookedSeatsFlights/@f.Id">Booked Seats Details</a></td>
+
+
+        </tr>
     }
-    </table>
+</table>
