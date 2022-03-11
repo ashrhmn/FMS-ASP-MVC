@@ -154,10 +154,6 @@ namespace Flight_Management_System.Controllers
                     Role = u.Role,
                     CityName = u.City == null ? "undefined" : u.City.Name,
                     CountryName = u.City == null ? "undefined" : u.City.Country,
-
-                    Email = u.Email,
-                    Phone = u.Phone
-
                     Email= u.Email,
                     Phone = u.Phone,
 
@@ -182,9 +178,6 @@ namespace Flight_Management_System.Controllers
                 //CityName = u.City == null ? "undefined" : u.City.Name,
                 //CountryName = u.City == null ? "undefined" : u.City.Country,
                 Email = u.Email,
-
-                Phone = u.Phone
-
                 Phone = u.Phone,
 
 

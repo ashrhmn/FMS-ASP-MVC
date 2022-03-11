@@ -16,10 +16,6 @@ namespace Flight_Management_System.Models.Database
     {
         public Stopage()
         {
-
-            this.Transports = new HashSet<Transport>();
-            this.Transports1 = new HashSet<Transport>();
-
             this.TransportSchedules = new HashSet<TransportSchedule>();
             this.TransportSchedules1 = new HashSet<TransportSchedule>();
         }
@@ -31,10 +27,6 @@ namespace Flight_Management_System.Models.Database
         public Nullable<int> FareFromRoot { get; set; }
     
         public virtual City City { get; set; }
-
-        public virtual ICollection<Transport> Transports { get; set; }
-        public virtual ICollection<Transport> Transports1 { get; set; }
-
         public virtual ICollection<TransportSchedule> TransportSchedules { get; set; }
         public virtual ICollection<TransportSchedule> TransportSchedules1 { get; set; }
     }
