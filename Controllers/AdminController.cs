@@ -44,8 +44,9 @@ namespace Flight_Management_System.Controllers
             //user.CityName = data.City==null?"Undefined":data.City.Name;
             //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
             user.Address= data.Address;
-            user.Emails = data.Emails.Select(e => e.Email1).ToList();
-            user.Phone = data.Phones.Select(e => e.Phone1).ToList();
+
+            user.Email = data.Email;
+            user.Phone = data.Phone;
 
             return View(user);
         }
@@ -63,8 +64,8 @@ namespace Flight_Management_System.Controllers
             //user.CityName = data.City==null?"Undefined":data.City.Name;
             //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
             user.Address = data.Address;
-            user.Emails = data.Emails.Select(e => e.Email1).ToList();
-            user.Phone = data.Phones.Select(e => e.Phone1).ToList();
+            user.Email = data.Email;
+
             return View(user);
         }
         [HttpPost]
@@ -77,14 +78,14 @@ namespace Flight_Management_System.Controllers
                 user.CityId = data.CityId;
                 user.FamilyId = data.FamilyId;
                 user.Role = data.Role;
+                user.Email = data.Email;
+                user.Phone = data.Phone;
 
                 db.Entry(data).CurrentValues.SetValues(user);
                 db.SaveChanges();
 
 
 
-                var emails = (from e in db.Emails where e.UserId == data.Id select e).ToList();
-                var phone = (from p in db.Phones where p.UserId == data.Id select p).ToList();
 
 
                 TempData["msg"] = "Profile Updated Successfully";
@@ -156,8 +157,9 @@ namespace Flight_Management_System.Controllers
                     Role = u.Role,
                     CityName = u.City == null ? "undefined" : u.City.Name,
                     CountryName = u.City == null ? "undefined" : u.City.Country,
-                    Emails = u.Emails.Select(e => e.Email1).ToList(),
-                    Phone = u.Phones.Select(e => e.Phone1).ToList()
+                    Email= u.Email,
+                    Phone = u.Phone,
+
 
                 });
             }
@@ -178,8 +180,9 @@ namespace Flight_Management_System.Controllers
                 Role = u.Role,
                 //CityName = u.City == null ? "undefined" : u.City.Name,
                 //CountryName = u.City == null ? "undefined" : u.City.Country,
-                Emails = u.Emails.Select(e => e.Email1).ToList(),
-                Phone = u.Phones.Select(e => e.Phone1).ToList()
+                Email = u.Email,
+                Phone = u.Phone,
+
             };
             
             return View(user);
@@ -296,8 +299,8 @@ namespace Flight_Management_System.Controllers
                 {
                     Id = f.Id,
                     Name = f.Name,
-                    From = f.FromStopageId == null ? "undefined" : f.Stopage.City.Name,
-                    Destination = f.ToStopageId == null ? "undefined" : f.Stopage1.City.Name,
+                    //From = f.FromStopageId == null ? "undefined" : f.Stopage.City.Name,
+                    //Destination = f.ToStopageId == null ? "undefined" : f.Stopage1.City.Name,
                     MaximumSeat = f.MaximumSeat,
                     CreatorName = f.User.Name,
 
@@ -311,16 +314,16 @@ namespace Flight_Management_System.Controllers
             if(transport == null)
             {
                 var user = (from u in db.Users where u.Id == transport.CreatedBy select u).FirstOrDefault();
-                var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
-                var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
+                //var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
+                //var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
 
                 var trans = new TransportModel();
                 trans.Id = id;
                 trans.Name = transport.Name;
-                trans.From = fromstopage.Name;
-                trans.FromCountry = fromstopage.Country;
-                trans.Destination = tostopage.Name;
-                trans.DestinationCountry = tostopage.Country;
+                //trans.From = fromstopage.Name;
+                //trans.FromCountry = fromstopage.Country;
+                //trans.Destination = tostopage.Name;
+                //trans.DestinationCountry = tostopage.Country;
                 trans.CreatedBy = user.Id;
                 trans.CreatorName = user.Name;
                 trans.MaximumSeat = transport.MaximumSeat;

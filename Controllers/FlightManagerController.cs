@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
 {
+    [FlightManagerAccess]
     public class FlightManagerController : Controller
     {
         private Flight_ManagementEntities db;
@@ -20,7 +21,7 @@ namespace Flight_Management_System.Controllers
             db = new Flight_ManagementEntities();
             jwt = new JwtManage();
         }
-        [FlightManagerAccess]
+
         [HttpGet]
         public ActionResult Dashboard()
         {
@@ -29,18 +30,29 @@ namespace Flight_Management_System.Controllers
             List<AirlineModel> airlines = new List<AirlineModel>();
             foreach (var airline in dbAirlines)
             {
+                List<TransportScheduleModel> transportSchedules = new List<TransportScheduleModel>();
+                foreach (var transportSchedule in airline.TransportSchedules)
+                {
+                    transportSchedules.Add(new TransportScheduleModel()
+                    {
+                        Id = transportSchedule.Id,
+                        Day = transportSchedule.Day,
+                        Time = transportSchedule.Time ?? 0,
+                        FromStopageId = transportSchedule.FromStopageId,
+                        FromAirport = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.Name,
+                        FromCity = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.City.Name,
+                        FromCountry = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.City.Country,
+                        ToStopageId = transportSchedule.ToStopageId,
+                        ToAirport = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.Name,
+                        ToCity = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.City.Name,
+                        ToCountry = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.City.Country,
+                    });
+                }
                 AirlineModel airlineModel = new AirlineModel()
                 {
                     Id = airline.Id,
                     Name = airline.Name,
-                    FromStopageId = airline.FromStopageId,
-                    FromAirport = airline.Stopage == null ? "Undefined" : airline.Stopage.Name,
-                    ToAirport = airline.Stopage1 == null ? "Undefined" : airline.Stopage1.Name,
-                    FromCity = airline.Stopage==null?"Undefined": airline.Stopage.City.Name,
-                    FromCountry = airline.Stopage == null ? "Undefined" : airline.Stopage.City.Country,
-                    ToStopageId =  airline.ToStopageId,
-                    ToCity = airline.Stopage1 == null ? "Undefined" : airline.Stopage1.City.Name,
-                    ToCountry = airline.Stopage1 == null ? "Undefined" : airline.Stopage1.City.Country,
+                    TransportSchedules = transportSchedules,
                     SeatCapacity = airline.MaximumSeat ?? 0
                 };
                 airlines.Add(airlineModel);
@@ -48,14 +60,36 @@ namespace Flight_Management_System.Controllers
             return View(airlines);
         }
 
-        [FlightManagerAccess]
         [HttpGet]
         public ActionResult AddAircraft()
         {
             return View(new AirlineModel());
         }
 
-        [FlightManagerAccess]
+        [HttpGet] public ActionResult AddAircraftSchedule(int id)
+        {
+            var aircraft = db.Transports.FirstOrDefault(t => t.Id == id);
+            List<TransportScheduleModel> schedules = new List<TransportScheduleModel>();
+            foreach (var item in aircraft.TransportSchedules)
+            {
+                schedules.Add(new TransportScheduleModel() 
+                { 
+                    Id=item.Id,
+                    Day = item.Day,
+                    Time = item.Time ?? 0,
+                    FromStopageId = item.FromStopageId,
+                    FromAirport = item.Stopage.Name,
+                    FromCity = item.Stopage==null?"Undefined":item.Stopage.City.Name,
+                    FromCountry = item.Stopage==null?"Undefined":item.Stopage.City.Country,
+                    ToStopageId = item.ToStopageId,
+                    ToAirport = item.Stopage1.Name,
+                    ToCity = item.Stopage1==null?"Undefined":item.Stopage1.City.Name,
+                    ToCountry = item.Stopage1==null?"Undefined":item.Stopage1.City.Country,
+                });
+            }
+            return View(schedules);
+        }
+
         [HttpPost]
         public ActionResult AddAircraft(AirlineModel airline)
         {
@@ -63,11 +97,26 @@ namespace Flight_Management_System.Controllers
             {
                 AuthPayload user = jwt.LoggedInUser(Request.Cookies);
                 if (user == null) return RedirectToAction("SignIn", "Auth");
+
+                List<TransportSchedule> transportSchedules = new List<TransportSchedule>();
+                foreach (TransportScheduleModel transportScheduleModel in airline.TransportSchedules)
+                {
+                    TransportSchedule transportSchedule = new TransportSchedule()
+                    {
+                        Time = transportScheduleModel.Time,
+                        Day = transportScheduleModel.Day,
+                        FromStopageId = transportScheduleModel.FromStopageId,
+                        ToStopageId = transportScheduleModel.ToStopageId
+                    };
+                    transportSchedules.Add(transportSchedule);
+                }
+
                 Transport transport = new Transport()
                 {
                     Name = airline.Name,
-                    FromStopageId = airline.FromStopageId,
-                    ToStopageId = airline.ToStopageId,
+                    TransportSchedules = transportSchedules,
+                    //FromStopageId = airline.FromStopageId,
+                    //ToStopageId = airline.ToStopageId,
                     MaximumSeat = airline.SeatCapacity,
                     CreatedBy = user.Id
                 };
