@@ -18,6 +18,8 @@ namespace Flight_Management_System.Models.Database
         {
             this.Transports = new HashSet<Transport>();
             this.Transports1 = new HashSet<Transport>();
+            this.TransportSchedules = new HashSet<TransportSchedule>();
+            this.TransportSchedules1 = new HashSet<TransportSchedule>();
         }
     
         public int Id { get; set; }
@@ -29,5 +31,7 @@ namespace Flight_Management_System.Models.Database
         public virtual City City { get; set; }
         public virtual ICollection<Transport> Transports { get; set; }
         public virtual ICollection<Transport> Transports1 { get; set; }
+        public virtual ICollection<TransportSchedule> TransportSchedules { get; set; }
+        public virtual ICollection<TransportSchedule> TransportSchedules1 { get; set; }
     }
 }

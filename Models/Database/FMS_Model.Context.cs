@@ -38,5 +38,6 @@ namespace Flight_Management_System.Models.Database
         public DbSet<Transport> Transports { get; set; }
         public DbSet<UserRoleEnum> UserRoleEnums { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<TransportSchedule> TransportSchedules { get; set; }
     }
 }

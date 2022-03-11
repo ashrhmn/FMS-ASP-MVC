@@ -214,6 +214,9 @@
     <Compile Include="Models\Database\Transport.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Database\TransportSchedule.cs">
+      <DependentUpon>FMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Database\User.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
@@ -298,6 +301,8 @@
     <Content Include="Views\Admin\Flights.cshtml" />
     <Content Include="Views\Admin\TransportDetails.cshtml" />
     <Content Include="Views\User\Flights.cshtml" />
+    <Content Include="Views\Admin\SearchFlight.cshtml" />
+    <Content Include="Views\Admin\FlightSeatDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

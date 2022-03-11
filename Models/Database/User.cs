@@ -31,6 +31,8 @@ namespace Flight_Management_System.Models.Database
         public string Address { get; set; }
         public Nullable<int> CityId { get; set; }
         public Nullable<int> Role { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     
         public virtual City City { get; set; }
         public virtual ICollection<Email> Emails { get; set; }

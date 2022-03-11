@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "SearchFlight";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>SearchFlight</h2>
+
+<form action="/Admin/SearchFlight" method="post">
+    <table>
+        <tr>
+            <th>Date</th>
+            <td><input type="date" name="Date" class="form-control" /></td>
+        </tr>
+        <tr>
+            <th>From</th> 
+            <td><select name="From">
+                    @foreach (var c in Model)
+                    {
+                        <option value="@c.Name">@c.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>To</th>
+            <td>
+                <select name="Destination">
+                    @foreach (var c in Model)
+                    {
+                        <option value="@c.Name">@c.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr> <td><input type="submit" value="search" /></td></tr>
+    </table>
+</form>
+
+<table>
+
+</table>
+
+
+
+

@@ -7,7 +7,7 @@ namespace Flight_Management_System.Models.AdminEntities
 {
     public class TransportModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public Nullable<int> FromStopageId { get; set; }
         public Nullable<int> ToStopageId { get; set; }
