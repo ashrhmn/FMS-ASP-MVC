@@ -1,4 +1,4 @@
-﻿
+﻿@model Flight_Management_System.Models.AdminEntities.UserModel
 @{
     ViewBag.Title = "EditUserProfile";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -6,46 +6,72 @@
 
 <h2>EditUserProfile</h2>
 
-<table>
-    <form action="" method="post">
+@if (TempData["msg"] != null)
+{
+    <span class="label-danger">@TempData["msg"]}</span>
+}
+
+<form action="/Admin/EditUserProfile" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="Password" value="@Model.Password" />
+    <table>
+        <input type="hidden" value="@Model.Id" name="Id" class="form-control" />
+
         <tr>
             <th>Name : </th>
-            <td><input type="text" value="@Model.Name" name="Name" class="form-control" /></td>
+            <td>
+                <input type="text" value="@Model.Name" name="Name" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </td>
         </tr>
         <tr>
             <th>Username : </th>
-            <td><input type="text" value="@Model.Username" name="Username" class="form-control" /></td>
+            <td>
+                <input type="text" value="@Model.Username" name="Username" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </td>
         </tr>
         <tr>
             <th>Emails : </th>
             <td>
-                @foreach (var item in Model.Emails)
-                {
-                    <input type="text" value="@item" name="Email" class="form-control" />
-                }
+                <input type="text" value="@Model.Email" name="Email" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
             <th>Phones : </th>
             <td>
-                @foreach (var item in Model.Phone)
-                {
-                    <input type="text" value="@item" name="Phone" class="form-control" />
-                }
+                <input type="text" value="@Model.Phone" name="Phone" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
             <th>Date of Birth : </th>
-            <td><input type="text" value="@Model.DateOfBirth" name="DateOfBirth" class="form-control" /></td>
+            <td>
+                <input type="date" value="@Model.DateOfBirth" name="DateOfBirth" class="form-control" />
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            </td>
         </tr>
         <tr>
             <th>Address : </th>
-            <td><input type="text" value="@Model.Address" name="DateOfBirth" class="form-control" /></td>
+            <td>
+                <input type="text" value="@Model.Address" name="Address" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </td>
         </tr>
         <tr>
-            <td><input type="submit" value="Update" class="btn btn-success" /></td>
+            <th>Role: </th>
+            <td>
+                <select name="Role">
+                    <option value="1" if (@Model.Role= =1){ selected }>Admin</option>
+                    <option value="2" if (@Model.Role= =2){ selected}>User</option>
+                    <option value="3" if (@Model.Role= =2){ selected}>Flight manager</option>
+                </select>
+            </td>
         </tr>
+        <tr>
+            <td><input type="submit" value="Update" class="btn btn-danger" /></td>
+        </tr>
+    </table>
 
-    </form>
-
-</table>
+</form>
