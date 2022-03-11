@@ -24,9 +24,9 @@ namespace Flight_Management_System.Controllers
         // GET: User
         public ActionResult Index()
         {
-            var udata = (from u in db.Users
-                         where u.Id == 14
-                         select u).FirstOrDefault();
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
+            var udata = GetUser(uid);
             return View(udata);
         }
 
