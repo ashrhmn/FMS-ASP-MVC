@@ -151,7 +151,7 @@ namespace Flight_Management_System.Controllers
                         // return redirect to admin dashboard when complete
                         return View(new UserModel());
                     case "user":
-                        return RedirectToAction("Dashboard", "User");
+                        return RedirectToAction("Index", "User");
                     case "flight_manager":
                         return RedirectToAction("Dashboard", "FlightManager");
                     default:
