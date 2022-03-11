@@ -34,26 +34,40 @@ namespace Flight_Management_System.Controllers
         public ActionResult Flights()
         {
 
-            var data = (from t in db.Transports
-                        select t).ToList();
-            return View(data);
+            return View(new List<TransportModelSR>());
         }
+        
+        [HttpPost]
+        public ActionResult Flights(TransportModelSR flMod)
+        {
+            var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
+                               && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(flMod.Day) select fs).ToList();
+            var flights = new List<TransportModelSR>();
+            foreach (var f in transports) 
+            {
+                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.Id && s.Status == "Available" select s).Count();
+                var maxSeat = (from s in db.Transports where s.Id == f.Id select s.MaximumSeat).FirstOrDefault();
+                var availableSeats = (maxSeat - occupiedSeats);
+                flights.Add(new TransportModelSR()
+                {
+                    Id = f.Id,
+                    Name = f.Transport.Name,
+                    FromStopage = (from s in db.Stopages where s.Id == f.FromStopageId select s.Name).FirstOrDefault(),
+                    ToStopage = (from s in db.Stopages where s.Id == f.ToStopageId select s.Name).FirstOrDefault(),
+                    Day = f.Day,
+                    AvailableSeat = availableSeats
 
-        //[HttpPost]
-        //public ActionResult Flights(Transport flMod)
-        //{
-        //    var data = (from t in db.Transports
-        //                where t.FromStopageId == flMod.FromStopageId && t.ToStopageId == flMod.ToStopageId
-        //                select t).ToList();
-        //    return View(data);
-        //}
+                });
+            }
+            return View(flights);
+        }
 
         [HttpGet]
         public ActionResult Dashboard()
         {
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
             int uid = user.Id;
-            UserModel userModel = new UserModel();
+            UserModelSR userModel = new UserModelSR();
             var udata = GetUser(uid);
             userModel.Id = udata.Id;
             userModel.Name = udata.Name;
@@ -69,13 +83,13 @@ namespace Flight_Management_System.Controllers
         }
         
         [HttpPost]
-        public ActionResult Dashboard(UserModel userModel)
+        public ActionResult Dashboard(UserModelSR userModel)
         {
             if (ModelState.IsValid)
             {
                 AuthPayload user = jwt.LoggedInUser(Request.Cookies);
                 int uid = user.Id;
-                UserModel nwUser = new UserModel();
+                UserModelSR nwUser = new UserModelSR();
                 var udata = GetUser(uid);
                 bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(userModel.ConfirmPassword, udata.Password);
                 if (isCorrectPassword)

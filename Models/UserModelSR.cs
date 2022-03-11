@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Flight_Management_System.Models
 {
-    public class UserModel
+    public class UserModelSR
     {
         public int Id { get; set; }
         [Required]
