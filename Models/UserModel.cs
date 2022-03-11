@@ -40,7 +40,6 @@ namespace Flight_Management_System.Models
         public string Email { get; set; }
 
         [Required]
-        [Compare("Password", ErrorMessage="Dosen't match with Password")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using Flight_Management_System.Auth;
+﻿using Flight_Management_System.Auth;
 using Flight_Management_System.Models;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
@@ -77,32 +77,23 @@ namespace Flight_Management_System.Controllers
                 int uid = user.Id;
                 UserModel nwUser = new UserModel();
                 var udata = GetUser(uid);
-                nwUser.Id = userModel.Id;
-                nwUser.Name = userModel.Name;
-                nwUser.DateOfBirth = userModel.DateOfBirth;
-                nwUser.Address = userModel.Address;
-                nwUser.CityId = userModel.CityId;
-                nwUser.Username = userModel.Username;
-                nwUser.Password = userModel.Password;
-                nwUser.Email = userModel.Email;
-                nwUser.Phone = userModel.Phone;
-                nwUser.Role = 2;
-                db.Entry(udata).CurrentValues.SetValues(nwUser);
-                //db.SaveChanges();
-                //var edata = GetEmail(uid);
-                //Email neEmail = new Email();
-                //neEmail.Id = edata.Id;
-                //neEmail.UserId = edata.UserId;
-                //neEmail.Email1 = userModel.Mail;
-                //db.Entry(edata).CurrentValues.SetValues(neEmail);
-                //db.SaveChanges();
-                //var pdata = GetPhone(uid);
-                //Phone nePhone = new Phone();
-                //nePhone.Id = pdata.Id;
-                //nePhone.UserId = pdata.UserId;
-                //nePhone.Phone1 = userModel.Cell;
-                //db.Entry(pdata).CurrentValues.SetValues(nePhone);
-                db.SaveChanges();
+                bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(userModel.ConfirmPassword, udata.Password);
+                if (isCorrectPassword)
+                {
+                    nwUser.Id = userModel.Id;
+                    nwUser.Name = userModel.Name;
+                    nwUser.DateOfBirth = userModel.DateOfBirth;
+                    nwUser.Address = userModel.Address;
+                    nwUser.CityId = userModel.CityId;
+                    nwUser.Username = userModel.Username;
+                    nwUser.Password = userModel.Password;
+                    nwUser.Email = userModel.Email;
+                    nwUser.Phone = userModel.Phone;
+                    nwUser.Role = 2;
+                    db.Entry(udata).CurrentValues.SetValues(nwUser);
+                    db.SaveChanges();
+                }
+                TempData["msg"] = "Incorrect Password";
             }
             return View(userModel);
         }
