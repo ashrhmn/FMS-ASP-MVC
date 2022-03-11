@@ -27,20 +27,20 @@ namespace Flight_Management_System.Controllers
         {
             AuthPayload loggedInUser = jwt.LoggedInUser(Request.Cookies);
 
-            if (loggedInUser == null) return View(new UserModel());
+            if (loggedInUser == null) return View(new UserModelSR());
 
             switch (loggedInUser.Role)
             {
                 case "admin":
                     // return redirect to admin dashboard when complete
-                    return View(new UserModel());
+                    return View(new UserModelSR());
                 case "user":
                     // return redirect to user dashboard when complete
-                    return View(new UserModel());
+                    return View(new UserModelSR());
                 case "flight_manager":
                     return RedirectToAction("Dashboard", "FlightManager");
                 default:
-                    return View(new UserModel());
+                    return View(new UserModelSR());
             }
         }
 
@@ -49,25 +49,25 @@ namespace Flight_Management_System.Controllers
         {
             AuthPayload loggedInUser = jwt.LoggedInUser(Request.Cookies);
 
-            if(loggedInUser==null) return View(new UserModel());
+            if(loggedInUser==null) return View(new UserModelSR());
 
             switch (loggedInUser.Role)
             {
                 case "admin":
                     // return redirect to admin dashboard when complete
-                    return View(new UserModel());
+                    return View(new UserModelSR());
                 case "user":
                     return RedirectToAction("Dashboard", "User");
                 case "flight_manager":
                     return RedirectToAction("Dashboard", "FlightManager");
                 default:
-                    return View(new UserModel());
+                    return View(new UserModelSR());
             }
         }
 
 
         [HttpPost]
-        public ActionResult SignUp(UserModel userModel)
+        public ActionResult SignUp(UserModelSR userModel)
         {
             var existingUser = db.Users.FirstOrDefault(u => u.Username == userModel.Username);
             if (existingUser == null)
@@ -121,7 +121,7 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public ActionResult SignIn(UserModel userModel)
+        public ActionResult SignIn(UserModelSR userModel)
         {
             var user = db.Users.Where(u => u.Username == userModel.Username).First();
 
@@ -149,13 +149,13 @@ namespace Flight_Management_System.Controllers
                 {
                     case "admin":
                         // return redirect to admin dashboard when complete
-                        return View(new UserModel());
+                        return View(new UserModelSR());
                     case "user":
                         return RedirectToAction("Index", "User");
                     case "flight_manager":
                         return RedirectToAction("Dashboard", "FlightManager");
                     default:
-                        return View(new UserModel());
+                        return View(new UserModelSR());
                 }
             }
 
