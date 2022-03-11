@@ -29,22 +29,18 @@ namespace Flight_Management_System.Models
         [Required]
         public int? CityId { get; set; }
 
-        //public virtual City CityName { get; set; }
         public int? Role { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
 
         [Required]
-        public string Cell { get; set; }
+        public string Phone { get; set; }
 
         [Required]
-        public string Mail { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [Compare("Password", ErrorMessage="Dosen't match with Password")]
-
         public string ConfirmPassword { get; set; }
-        public List<string> Emails { get; set; }
-        public List<string> Phone { get; set; }
     }
 }

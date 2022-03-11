@@ -22,8 +22,8 @@ namespace Flight_Management_System.Models.AdminEntities
         public int? Role { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
-        public List<string> Emails { get; set; }
-        public List<string> Phone { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
         public List<int> PurchasedTickets { get; set; }
 
         [Required]

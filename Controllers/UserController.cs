@@ -1,5 +1,8 @@
-﻿using Flight_Management_System.Models;
+using Flight_Management_System.Auth;
+using Flight_Management_System.Models;
+using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
+using Flight_Management_System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +11,15 @@ using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
 {
+    [UserAccess]
     public class UserController : Controller
     {
         private Flight_ManagementEntities db;
+        private JwtManage jwt;
         public UserController()
         {
             db = new Flight_ManagementEntities();
+            jwt = new JwtManage();
         }
         // GET: User
         public ActionResult Index()
@@ -33,28 +39,29 @@ namespace Flight_Management_System.Controllers
             return View(data);
         }
 
-        [HttpPost]
-        public ActionResult Flights(Transport flMod)
-        {
-            var data = (from t in db.Transports
-                        where t.FromStopageId == flMod.FromStopageId && t.ToStopageId == flMod.ToStopageId
-                        select t).ToList();
-            return View(data);
-        }
+        //[HttpPost]
+        //public ActionResult Flights(Transport flMod)
+        //{
+        //    var data = (from t in db.Transports
+        //                where t.FromStopageId == flMod.FromStopageId && t.ToStopageId == flMod.ToStopageId
+        //                select t).ToList();
+        //    return View(data);
+        //}
 
         [HttpGet]
         public ActionResult Dashboard()
         {
-            //int aid = (int)(Session["uid"]);
-            int uid = 13;
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
             UserModel userModel = new UserModel();
             var udata = GetUser(uid);
             userModel.Id = udata.Id;
             userModel.Name = udata.Name;
-            userModel.Mail = udata.;
+            userModel.Phone = udata.Phone;
+            userModel.Email = udata.Email;
             userModel.Address = udata.Address;
             userModel.CityId = udata.CityId;
-            userModel.CityName = udata.City.Name;
+            userModel.CityName = udata.CityId==null?"Undefined": udata.City.Name;
             if (udata.DateOfBirth.HasValue) { userModel.DateOfBirth = udata.DateOfBirth.Value; }
             userModel.Username = udata.Username;
             userModel.Password = udata.Password;
@@ -66,7 +73,8 @@ namespace Flight_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                int uid = 9;
+                AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+                int uid = user.Id;
                 UserModel nwUser = new UserModel();
                 var udata = GetUser(uid);
                 nwUser.Id = userModel.Id;
@@ -76,25 +84,34 @@ namespace Flight_Management_System.Controllers
                 nwUser.CityId = userModel.CityId;
                 nwUser.Username = userModel.Username;
                 nwUser.Password = userModel.Password;
+                nwUser.Email = userModel.Email;
+                nwUser.Phone = userModel.Phone;
                 nwUser.Role = 2;
                 db.Entry(udata).CurrentValues.SetValues(nwUser);
-                db.SaveChanges();
-                var edata = GetEmail(uid);
-                Email neEmail = new Email();
-                neEmail.Id = edata.Id;
-                neEmail.UserId = edata.UserId;
-                neEmail.Email1 = userModel.Mail;
-                db.Entry(edata).CurrentValues.SetValues(neEmail);
-                db.SaveChanges();
-                var pdata = GetPhone(uid);
-                Phone nePhone = new Phone();
-                nePhone.Id = pdata.Id;
-                nePhone.UserId = pdata.UserId;
-                nePhone.Phone1 = userModel.Cell;
-                db.Entry(pdata).CurrentValues.SetValues(nePhone);
+                //db.SaveChanges();
+                //var edata = GetEmail(uid);
+                //Email neEmail = new Email();
+                //neEmail.Id = edata.Id;
+                //neEmail.UserId = edata.UserId;
+                //neEmail.Email1 = userModel.Mail;
+                //db.Entry(edata).CurrentValues.SetValues(neEmail);
+                //db.SaveChanges();
+                //var pdata = GetPhone(uid);
+                //Phone nePhone = new Phone();
+                //nePhone.Id = pdata.Id;
+                //nePhone.UserId = pdata.UserId;
+                //nePhone.Phone1 = userModel.Cell;
+                //db.Entry(pdata).CurrentValues.SetValues(nePhone);
                 db.SaveChanges();
             }
             return View(userModel);
+        }
+
+        [HttpGet]
+        public string BookFlight(int transportId, string dateTime)
+        {
+            DateTime dt = DateTime.Parse(dateTime);
+            return dt.ToString() + transportId.ToString();
         }
 
         
@@ -106,6 +123,5 @@ namespace Flight_Management_System.Controllers
                         select u).FirstOrDefault();
             return data;
         }
-
     }
 }
