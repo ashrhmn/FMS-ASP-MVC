@@ -3,6 +3,7 @@
     @{
         Flight_ManagementEntities db = new Flight_ManagementEntities();
         var fstopage = db.Stopages;
+        var sclass = db.SeatClassEnums;
         string[] days = { "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
     }
 
@@ -23,7 +24,7 @@
                 <select name="FromStopageId">
                     @foreach (var fs in fstopage)
                     {
-                        <option selected value="@fs.Id">@fs.Name</option>
+                        <option  selected value="@fs.Id">@fs.Name</option>
                     }
 
 
@@ -44,17 +45,26 @@
                 </select>
             </div>
         </div>
+
         <div class="form-group">
-            <label class="col-md-2 control-label">From</label>
+            <label class="col-md-2 control-label">Select Seat Class</label>
             <div class="col-md-10">
 
-                <select name="Day">
-                    @foreach (string d in days)
+                <select name="ClassId">
+                    @foreach (var fs in sclass)
                     {
-                        <option selected value="@d">@d</option>
+                        <option selected value="@fs.Id">@fs.Value</option>
                     }
 
+
                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Travel Date</label>
+            <div class="col-md-10">
+
+             <input type="date" name="Date"  class="form-control" />
             </div>
         </div>
 
@@ -73,8 +83,11 @@
                 <th>From</th>
                 <th>Destination</th>
                 <th>Day</th>
-                <th>Seats</th>
-                <th>Action</th>
+                <th>Available Seats</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Starting Fare</th>
+                <th>Go To</th>
 
             </tr>
             @foreach (var f in Model)
@@ -85,7 +98,10 @@
                     <td>@f.ToStopage</td>
                     <td>@f.Day</td>
                     <td>@f.AvailableSeats</td>
-                    <td><a href="/User/Book/@f.TransportId">Book</a></td>
+                    <td>@f.Date</td>
+                    <td>@((int)f.Time / 100):@((f.Time % 100).ToString())</td>
+                    <td>@f.SFare</td>
+                    <td><a href="/User/Book/@f.Id">Book</a></td>
                 </tr>
             }
 

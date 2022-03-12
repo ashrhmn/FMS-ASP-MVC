@@ -16,6 +16,9 @@ namespace Flight_Management_System.Controllers
     {
         private Flight_ManagementEntities db;
         private JwtManage jwt;
+        private static dynamic Fare;
+        private static dynamic startDate;
+        private static dynamic sClass;
         public UserController()
         {
             db = new Flight_ManagementEntities();
@@ -40,41 +43,114 @@ namespace Flight_Management_System.Controllers
         [HttpPost]
         public ActionResult Flights(TransportModelSR flMod)
         {
+            string Day = flMod.Date.ToString("dddd");
             var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
-                               && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(flMod.Day) select fs).ToList();
+                               && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(Day) select fs).ToList();
             var flights = new List<TransportModelSR>();
             foreach (var f in transports) 
             {
-                //var ocSeats = (from s in db.SeatInfos where s.TransportId == f.Id select s.SeatNo).ToList();
 
                 var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.TransportId && s.Status == "Booked" select s).Count();
                 var maxSeat = (from s in db.Transports where s.Id == f.TransportId select s.MaximumSeat).FirstOrDefault();
-
-                //List<int> availeSeats = new List<int>();
-
-                //for (int i = 0; i < maxSeat; ++i)
-                //{
-                //    if (!ocSeats.Contains(i))
-                //    {
-                //        availeSeats.Add(i);
-                //    }
-                //}
-
                 var availableSeats = maxSeat - occupiedSeats;
+                var FromRootFare = (from t in db.Stopages where t.Id == f.FromStopageId select t.FareFromRoot).FirstOrDefault();
+                var ToRootFare = (from t in db.Stopages where t.Id == f.ToStopageId select t.FareFromRoot).FirstOrDefault();
+                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+
+                if (flMod.ClassId == 1) 
+                {
+                    sClass = "Business";
+                    Fare = baseFare * 15;
+                }
+                else if (flMod.ClassId == 2)
+                {
+                    Fare = baseFare * 10;
+                    sClass = "Economy";
+                }
+                else 
+                {
+                    sClass = "Business Economy";
+                    Fare = baseFare * 12;
+                }
+                startDate = flMod.Date.ToString();
                // return availableSeats ?? -1;
                 flights.Add(new TransportModelSR()
                 {
+                    Id = f.Id,
                     TransportId = f.TransportId,
                     Name = f.Transport.Name,
                     FromStopage = (from s in db.Stopages where s.Id == f.FromStopageId select s.Name).FirstOrDefault(),
                     ToStopage = (from t in db.Stopages where t.Id == f.ToStopageId select t.Name).FirstOrDefault(),
                     Day = f.Day,
                     AvailableSeats = availableSeats,
+                    Date = flMod.Date,
+                    Time = f.Time,
+                    SFare = Fare,
 
                 });
             }
             return View(flights);
         }
+
+        [HttpGet]
+        public ActionResult Book(int Id)
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
+            var transport = (from fs in db.TransportSchedules
+                             where fs.Id == Id
+                             select fs).FirstOrDefault();
+
+            var occupiedSeats = (from s in db.SeatInfos where s.TransportId == transport.TransportId && s.Status == "Booked" select s).Count();
+            var maxSeat = (from s in db.Transports where s.Id == transport.TransportId select s.MaximumSeat).FirstOrDefault();
+            var availableSeats = maxSeat - occupiedSeats;
+            var vFlit = new TransportModelSR()
+            {
+                Id = transport.Id,
+                Name = (from t in db.Transports where t.Id == transport.TransportId select t.Name).FirstOrDefault(),
+                TransportId = transport.TransportId,
+                FromStopageId = transport.FromStopageId ?? -1,
+                ToStopageId = transport.ToStopageId ?? -1,
+                FromStopage = (from t in db.Stopages where t.Id == transport.FromStopageId select t.Name).FirstOrDefault(),
+                ToStopage = (from t in db.Stopages where t.Id == transport.ToStopageId select t.Name).FirstOrDefault(),
+                SFare = Fare,
+                Class = sClass,
+                AvailableSeats = availableSeats,
+                DateSt = startDate,
+            };
+
+            return View(vFlit);
+        }
+
+        //[HttpPost]
+        //public ActionResult Book(TransportModelSR flMod)
+        //{
+        //    AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+        //    int uid = user.Id;
+            
+        //    var tickt = new PurchasedTicket()
+        //    {
+        //        FromStopageId = flMod.FromStopageId,
+        //        ToStopageId = flMod.ToStopageId,
+        //        PurchasedBy = uid,
+        //    };
+        //    var tkt = db.PurchasedTickets.Add(tickt);
+        //    db.SaveChanges();
+
+        //    var seat = new SeatInfo()
+        //    {
+        //        SeatNo = flMod.AvailableSeats - 1,
+        //        //StartTime = flMod.Date,
+        //        TicketId = tkt.Id,
+        //        SeatClass = flMod.ClassId,
+        //        AgeClass = 1,
+        //        Status = "Booked",
+        //    };
+        //    db.SeatInfos.Add(seat);
+        //    db.SaveChanges();
+
+        //    return View();
+        //}
 
         [HttpGet]
         public ActionResult Dashboard()
@@ -95,6 +171,7 @@ namespace Flight_Management_System.Controllers
             userModel.Password = udata.Password;
             return View(userModel);
         }
+
         
         [HttpPost]
         public ActionResult Dashboard(UserModelSR userModel)

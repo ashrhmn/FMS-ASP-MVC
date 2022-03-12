@@ -167,6 +167,7 @@
     <Compile Include="Models\AdminEntities\TransportScheduleModel.cs" />
     <Compile Include="Models\AdminEntities\UserModel.cs" />
     <Compile Include="Models\AuthEntities\AuthPayload.cs" />
+    <Compile Include="Models\CustomerFlightSR.cs" />
     <Compile Include="Models\Database\AgeClassEnum.cs">
       <DependentUpon>FMS_Model.tt</DependentUpon>
     </Compile>
@@ -308,6 +309,7 @@
     <Content Include="Views\Admin\FlightSeatDetails.cshtml" />
     <Content Include="Views\FlightManager\Dashboard.cshtml" />
     <Content Include="Views\Shared\_FlightManagerLayout.cshtml" />
+    <Content Include="Views\User\Book.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

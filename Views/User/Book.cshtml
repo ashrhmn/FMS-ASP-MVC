@@ -1,0 +1,90 @@
+﻿@model Flight_Management_System.Models.TransportModelSR
+    @using Flight_Management_System.Models.Database;
+    @{
+        Flight_ManagementEntities db = new Flight_ManagementEntities();
+        var sclass = db.SeatClassEnums;
+    }
+
+    @{
+        ViewBag.Title = "Book";
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+    <h2>Book</h2>
+
+    <form action="/User/Book" method="post" class="form-horizontal">
+        
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                <input type="hidden" name="Id" value="@Model.Id" placeholder="Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Date</label>
+            <div class="col-md-10">
+                <input type="Date" name="Date" value="@Model.Date" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Name</label>
+            <div class="col-md-10">
+                <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">From</label>
+            <div class="col-md-10">
+                <input type="text" name="FromStopage" value="@Model.FromStopage"  class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">To</label>
+            <div class="col-md-10">
+                <input type="text" name="ToStopage" value="@Model.ToStopage" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                <input type="hidden" name="FromStopageId" value="@Model.FromStopageId" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                <input type="hidden" name="ToStopageId" value="@Model.ToStopageId" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Seat Class</label>
+            <div class="col-md-10">
+                <input type="Text" name="Class" value="@Model.Class" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                <input type="hidden" name="ClassId" value="@Model.ClassId" class="form-control" />
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-md-2 control-label">Fare</label>
+            <div class="col-md-10">
+                <input type="text" name="SFare" value="@Model.SFare" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Confirm" />
+            </div>
+        </div>
+
+    </form>
+
