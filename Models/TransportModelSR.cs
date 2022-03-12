@@ -8,9 +8,9 @@ namespace Flight_Management_System.Models
     public class TransportModelSR
     {
 
-        public int Id { get; set; }
+        public Nullable<int> TransportId { get; set; }
         public string Name { get; set; }
-        public Nullable<int> AvailableSeat { get; set; }
+        public Nullable<int> AvailableSeats { get; set; }
         public string FromStopage { get; set; }
         public string ToStopage { get; set; }
         public int FromStopageId { get; set; }

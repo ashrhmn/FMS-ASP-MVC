@@ -3,6 +3,7 @@
     @{
         Flight_ManagementEntities db = new Flight_ManagementEntities();
         var fstopage = db.Stopages;
+        string[] days = { "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
     }
 
     @{
@@ -31,13 +32,26 @@
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label">From</label>
+            <label class="col-md-2 control-label">Destination</label>
             <div class="col-md-10">
 
                 <select name="ToStopageId">
                     @foreach (var ts in fstopage)
                     {
                         <option selected value="@ts.Id">@ts.Name</option>
+                    }
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">From</label>
+            <div class="col-md-10">
+
+                <select name="Day">
+                    @foreach (string d in days)
+                    {
+                        <option selected value="@d">@d</option>
                     }
 
                 </select>
@@ -68,10 +82,10 @@
                 <tr>
                     <td>@f.Name</td>
                     <td>@f.FromStopage</td>
-                    <td>@f.FromStopage</td>
+                    <td>@f.ToStopage</td>
                     <td>@f.Day</td>
-                    <td>@f.AvailableSeat</td>
-                    <td><a href="/User/Book/@f.Id">Book</a></td>
+                    <td>@f.AvailableSeats</td>
+                    <td><a href="/User/Book/@f.TransportId">Book</a></td>
                 </tr>
             }
 

@@ -45,17 +45,31 @@ namespace Flight_Management_System.Controllers
             var flights = new List<TransportModelSR>();
             foreach (var f in transports) 
             {
-                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.Id && s.Status == "Available" select s).Count();
-                var maxSeat = (from s in db.Transports where s.Id == f.Id select s.MaximumSeat).FirstOrDefault();
-                var availableSeats = (maxSeat - occupiedSeats);
+                //var ocSeats = (from s in db.SeatInfos where s.TransportId == f.Id select s.SeatNo).ToList();
+
+                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.TransportId && s.Status == "Booked" select s).Count();
+                var maxSeat = (from s in db.Transports where s.Id == f.TransportId select s.MaximumSeat).FirstOrDefault();
+
+                //List<int> availeSeats = new List<int>();
+
+                //for (int i = 0; i < maxSeat; ++i)
+                //{
+                //    if (!ocSeats.Contains(i))
+                //    {
+                //        availeSeats.Add(i);
+                //    }
+                //}
+
+                var availableSeats = maxSeat - occupiedSeats;
+               // return availableSeats ?? -1;
                 flights.Add(new TransportModelSR()
                 {
-                    Id = f.Id,
+                    TransportId = f.TransportId,
                     Name = f.Transport.Name,
                     FromStopage = (from s in db.Stopages where s.Id == f.FromStopageId select s.Name).FirstOrDefault(),
-                    ToStopage = (from s in db.Stopages where s.Id == f.ToStopageId select s.Name).FirstOrDefault(),
+                    ToStopage = (from t in db.Stopages where t.Id == f.ToStopageId select t.Name).FirstOrDefault(),
                     Day = f.Day,
-                    AvailableSeat = availableSeats
+                    AvailableSeats = availableSeats,
 
                 });
             }
