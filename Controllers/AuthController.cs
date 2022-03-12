@@ -89,7 +89,8 @@ namespace Flight_Management_System.Controllers
                     Role = 2
                     //Role = userModel.Role,
                 };
-                db.Users.Add(user);
+               var u = db.Users.Add(user);
+
                 //db.SaveChanges();
                 //var udata = GetUser(userModel.Username, userModel.Name);
                 //var mail = new Email()
