@@ -68,30 +68,12 @@ namespace Flight_Management_System.Controllers
 
 
 
-        [HttpGet] public ActionResult AddAircraftSchedule(int? id)
+        [HttpGet] 
+        public ActionResult AddAircraftSchedule(int? id)
         {
             if (id == null) return RedirectToAction("Dashboard");
             var aircraft = db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
-            //TransportScheduleModel scheduleModel = new TransportScheduleModel() { TransportId=aircraft.Id };
-            //List<TransportScheduleModel> schedules = new List<TransportScheduleModel>();
-            //foreach (var item in aircraft.TransportSchedules)
-            //{
-            //    schedules.Add(new TransportScheduleModel()
-            //    {
-            //        Id = item.Id,
-            //        Day = item.Day,
-            //        Time = item.Time ?? 0,
-            //        FromStopageId = item.FromStopageId,
-            //        FromAirport = item.Stopage.Name,
-            //        FromCity = item.Stopage == null ? "Undefined" : item.Stopage.City.Name,
-            //        FromCountry = item.Stopage == null ? "Undefined" : item.Stopage.City.Country,
-            //        ToStopageId = item.ToStopageId,
-            //        ToAirport = item.Stopage1.Name,
-            //        ToCity = item.Stopage1 == null ? "Undefined" : item.Stopage1.City.Name,
-            //        ToCountry = item.Stopage1 == null ? "Undefined" : item.Stopage1.City.Country,
-            //    });
-            //}
             return View(new TransportScheduleModel() { TransportId = aircraft.Id });
         }
 
@@ -169,8 +151,6 @@ namespace Flight_Management_System.Controllers
                 {
                     Name = airline.Name,
                     TransportSchedules = transportSchedules,
-                    //FromStopageId = airline.FromStopageId,
-                    //ToStopageId = airline.ToStopageId,
                     MaximumSeat = airline.SeatCapacity,
                     CreatedBy = user.Id
                 };
@@ -178,10 +158,7 @@ namespace Flight_Management_System.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Dashboard");
             }
-            else
-            {
-                return View(airline);
-            }
+            return View(airline);
 
         }
     }
