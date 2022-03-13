@@ -12,6 +12,8 @@ namespace Flight_Management_System.Models
         public int TktId { get; set; }
         public string TName { get; set; }
         public Nullable<int> SeatNo { get; set; }
+
+        public Nullable<int> TFare { get; set; }
         public string SeatClass { get; set; }
         public string ToStopage { get; set; }
         public string FromStopage { get; set; }

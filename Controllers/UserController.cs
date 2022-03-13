@@ -143,7 +143,7 @@ namespace Flight_Management_System.Controllers
                 ClassId = (int)Session["classId"],
                 Class = sClass,
                 AvailableSeats = availableSeats,
-                Date = (DateTime)Session["jTime"],
+                Date = (DateTime)Session["jTime"],//*Possible Error between AM/PM
             };
 
             return View(vFlit);
@@ -177,7 +177,10 @@ namespace Flight_Management_System.Controllers
             db.SeatInfos.Add(seat);
             db.SaveChanges();
 
-            return View(flMod);
+            Session["classId"] = null;
+            Session["jTime"] = null;
+            return RedirectToAction("Tickets", "User");
+
         }
 
         [HttpGet]
@@ -193,27 +196,77 @@ namespace Flight_Management_System.Controllers
                 var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id select s).FirstOrDefault();
                 var sno = seatIn.SeatNo;
                 var scId = seatIn.SeatClass;
-                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f.Name).FirstOrDefault();
-                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft.Name).FirstOrDefault();
-                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft.Value).FirstOrDefault();
+                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f).FirstOrDefault();
+                var fromN = from.City.Name +","+ from.Name + "," + from.City.Country;
+                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft).FirstOrDefault();
+                var toN = to.City.Name + "," + to.Name + "," + to.City.Country;
+                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft).FirstOrDefault();
+                var sClsN = sCls.Value;
+                var sClsI = sCls.Id;
+                var FromRootFare = from.FareFromRoot;
+                var ToRootFare = to.FareFromRoot;
+                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
                 var sTime = seatIn.StartTime;
                 var tName = (from n in db.Transports where n.Id == seatIn.TransportId select n.Name).FirstOrDefault();
+                var Fare = 0;
+                if (sClsI == 1)
+                {
+                    Fare = baseFare * 15;
+
+                }
+                else if (sClsI == 2)
+                {
+                    Fare = baseFare * 10;
+                }
+                else
+                {
+                    Fare = baseFare * 12;
+                }
 
              custTik.Add(new CustomerFlightSR()
             {
                 SeatNo = sno,
                 StartTime = sTime,
-                SeatClass = sCls,
-                ToStopage = to,
-                FromStopage = from,
+                SeatClass = sClsN,
+                ToStopage = toN,
+                FromStopage = fromN,
                 Status = seatIn.Status,
                 TName = tName,
+                TFare = Fare,
             });
 
 
             }
             return View(custTik);
         }
+
+        [HttpGet]
+        public ActionResult Cancel(int id)
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
+            var udata = GetUser(uid);
+            var t = (from tkt in db.PurchasedTickets where tkt.Id == id && tkt.PurchasedBy == udata.Id select tkt).FirstOrDefault();
+            var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id select s).FirstOrDefault();
+            var newSeatIn = new SeatInfo()
+            {
+                Id = seatIn.Id,
+                StartTime = seatIn.StartTime,
+                SeatNo = seatIn.SeatNo,
+                TicketId = seatIn.TicketId,
+                TransportId = seatIn.TransportId,
+                AgeClass = seatIn.AgeClass,
+                SeatClass = seatIn.SeatClass,
+                Status = "Canceled",
+            };
+            db.Entry(seatIn).CurrentValues.SetValues(newSeatIn);
+            db.SaveChanges();
+            
+            return RedirectToAction("Tickets", "User");
+                
+
+         }
+
 
         [HttpGet]
         public ActionResult Dashboard()
