@@ -4,9 +4,10 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>BookedSeatsFlights</h2>
+<h2>Booked Seats</h2>
 <table class="table table-bordered">
     <tr>
+        <th>Aircraft Name</th>
         <th>Seat No</th>
         <th>Seat Class</th>
         <th>Purchased By</th>
@@ -14,14 +15,15 @@
     </tr>
     @foreach (var f in Model)
     {
+        
+<tr>
+    <td>@f.AircraftName</td>
+    <td>@f.SeatNo</td>
+    <td>@f.SeatClassName</td>
+    <td><a href="/Admin/UserDetails/@f.PurchasedById">@f.PurchasedByName</a></td>
+    <td>@f.Status</td>
 
-        <tr>
-            <td>@f.SeatNo</td>
-            <td>@f.SeatClassName</td>
-            <td><a href="/Admin/UserDetails/@f.PurchasedById">Booked Seats Details</a></td>
-            <td>@f.Status</td>
 
-
-        </tr>
+</tr>
     }
 </table>

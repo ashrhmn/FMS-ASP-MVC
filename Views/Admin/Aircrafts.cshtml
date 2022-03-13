@@ -1,0 +1,27 @@
+﻿@model List<Flight_Management_System.Models.AdminEntities.TransportModel>
+@{
+    ViewBag.Title = "Aircrafts";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>All Aircrafts</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Aircraft Name</th>
+        <th>Maximum seat</th>
+        <th>Added by</th>
+    </tr>
+    @foreach (var f in Model)
+    {
+
+        <tr>
+            <td>@f.Name</td>
+            <td>@f.MaximumSeat</td>
+            <td>@f.CreatorName</td>
+            
+
+
+        </tr>
+    }
+</table>
+<div class="col-md-10 center-block"><a href="/Admin/Flights" class="btn btn-success">Show Scheduled Aircrafts</a></div>

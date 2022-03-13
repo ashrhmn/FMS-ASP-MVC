@@ -18,5 +18,6 @@ namespace Flight_Management_System.Models.AdminEntities
         public int PurchasedById { get; set; }
         public string PurchasedByName { get; set; }
         public string SeatClassName { get; set; }
+        public string AircraftName { get; set; }
     }
 }
