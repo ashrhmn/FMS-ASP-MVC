@@ -54,7 +54,7 @@
     </tr>
     @foreach (var u in Model)
     {
-        if (u.Role == 2)
+        if (u.Role == 3)
         {
 
             <tr>
@@ -64,7 +64,40 @@
                 <td>@u.CityName, @u.CountryName</td>
                 <td>@u.CountryName</td>
                 <td>
-                    <a href="/Admin/UserDetails/@u.Id">Edit</a>
+                    <a href="/Admin/UserDetails/@u.Id">View Details</a>
+                    <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
+                    <a href="/Admin/DeleteUser/@u.Id">Delete</a>
+                </td>
+            </tr>
+        }
+
+    }
+</table>
+<br />
+<br />
+<h2>Admins</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Name</th>
+        <th>User Name</th>
+        <th>Location</th>
+        <th>Address</th>
+        <th>Country name</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        if (u.Role == 1)
+        {
+
+            <tr>
+                <td>@u.Name</td>
+                <td>@u.Username</td>
+                <td>@u.Address</td>
+                <td>@u.CityName, @u.CountryName</td>
+                <td>@u.CountryName</td>
+                <td>
+                    <a href="/Admin/UserDetails/@u.Id">View Details</a>
                     <a href="/Admin/EditUserProfile/@u.Id">Edit</a>
                     <a href="/Admin/DeleteUser/@u.Id">Delete</a>
                 </td>
