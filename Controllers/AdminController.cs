@@ -444,6 +444,7 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult FlightSeatDetails()
         {
+
             return View();
         }
 
