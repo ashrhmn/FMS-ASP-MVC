@@ -32,11 +32,9 @@ namespace Flight_Management_System.Controllers
             switch (loggedInUser.Role)
             {
                 case "admin":
-                    // return redirect to admin dashboard when complete
-                    return View(new UserModelSR());
+                    return RedirectToAction("Index", "Admin");
                 case "user":
-                    // return redirect to user dashboard when complete
-                    return View(new UserModelSR());
+                    return RedirectToAction("Dashboard", "User");
                 case "flight_manager":
                     return RedirectToAction("Dashboard", "FlightManager");
                 default:
@@ -54,8 +52,7 @@ namespace Flight_Management_System.Controllers
             switch (loggedInUser.Role)
             {
                 case "admin":
-                    // return redirect to admin dashboard when complete
-                    return View(new UserModelSR());
+                    return RedirectToAction("Index", "Admin");
                 case "user":
                     return RedirectToAction("Dashboard", "User");
                 case "flight_manager":
@@ -146,19 +143,21 @@ namespace Flight_Management_System.Controllers
                 cookie["token"] = token;
                 Response.Cookies.Add(cookie);
 
-                switch (payload.Role)
-                {
-                    case "admin":
-                        // return redirect to admin dashboard when complete
-                        return View(new UserModelSR());
-                    case "user":
-                        return RedirectToAction("Index", "User");
-                    case "flight_manager":
-                        return RedirectToAction("Dashboard", "FlightManager");
-                    default:
-                        return View(new UserModelSR());
-                }
+                //switch (payload.Role)
+                //{
+                //    case "admin":
+                //        // return redirect to admin dashboard when complete
+                //        return View(new UserModelSR());
+                //    case "user":
+                //        return RedirectToAction("Index", "User");
+                //    case "flight_manager":
+                //        return RedirectToAction("Dashboard", "FlightManager");
+                //    default:
+                //        return View(new UserModelSR());
+                //}
             }
+
+            if (!isCorrectPassword) return RedirectToAction("Index", "Home");
 
             return RedirectToAction("SignIn");
 

@@ -1,4 +1,5 @@
-﻿using Flight_Management_System.Models.AdminEntities;
+﻿using Flight_Management_System.Auth;
+using Flight_Management_System.Models.AdminEntities;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Utils;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
 {
+    [AdminAccess]
     public class AdminController : Controller
     {
         private Flight_ManagementEntities db;
