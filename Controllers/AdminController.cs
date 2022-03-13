@@ -25,6 +25,11 @@ namespace Flight_Management_System.Controllers
             return View();
         }
 
+        public ActionResult Home()
+        {
+            return View();
+        }
+
 
 
         /////////////// Evan Start/////////////////////// 
