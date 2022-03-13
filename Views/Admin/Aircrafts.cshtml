@@ -3,7 +3,12 @@
     ViewBag.Title = "Aircrafts";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+<h4>Search</h4>
+@using (Html.BeginForm("Aircrafts", "Admin", FormMethod.Post))
+{
+    @Html.TextBox("searching")
+    <input type="submit" value="Search" />
+}
 <h2>All Aircrafts</h2>
 <table class="table table-bordered">
     <tr>
@@ -17,8 +22,8 @@
         <tr>
             <td>@f.Name</td>
             <td>@f.MaximumSeat</td>
-            <td>@f.CreatorName</td>
-            
+            <td><a href="/Admin/UserDetails/@f.CreatedBy">@f.CreatorName</a></td>
+
 
 
         </tr>
