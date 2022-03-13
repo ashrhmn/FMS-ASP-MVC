@@ -26,17 +26,17 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult Details()
         {
-            AuthPayload payload = jwt.LoggedInUser(Request.Cookies);
-            var data = (from a in db.Users where a.Username.Equals(payload.Username) select a).FirstOrDefault();
-            if(data == null)
-            {
-                jwt.DeleteToken(Request.Cookies);
-                return RedirectToAction("Signin", "Auth");
-            }
-            if (data.UserRoleEnum.Value != "admin")
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            //AuthPayload payload = jwt.LoggedInUser(Request.Cookies); payload.Username
+            var data = (from a in db.Users where a.Username.Equals("evan") select a).FirstOrDefault();
+            //if(data == null)
+            //{
+            //    //jwt.DeleteToken(Request.Cookies);
+            //    //return RedirectToAction("Signin", "Auth");
+            //}
+            //if (data.UserRoleEnum.Value != "admin")
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
             var user = new UserModel();
             user.Name = data.Name;
             user.Username = data.Username;
@@ -52,7 +52,7 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult EditProfile()
         {
-            var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
+            var data = (from a in db.Users where a.Username.Equals("evan") select a).FirstOrDefault();
 
             var user = new UserModel();
             user.Id = data.Id;
@@ -73,7 +73,7 @@ namespace Flight_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = (from a in db.Users where a.Username.Equals("Ashik") select a).FirstOrDefault();
+                var data = (from a in db.Users where a.Username.Equals("evan") select a).FirstOrDefault();
                 user.Password= data.Password;
                 user.CityId = data.CityId;
                 user.FamilyId = data.FamilyId;
@@ -447,6 +447,8 @@ namespace Flight_Management_System.Controllers
 
             return View();
         }
+
+
 
 
 
