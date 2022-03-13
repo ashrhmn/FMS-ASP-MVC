@@ -15,7 +15,9 @@
                 <th>Destination</th>
                 <th>Day</th>
                 <th>Seat No</th>
+                <th>Fare</th>
                 <th>Status</th>
+                <th>Action</th>
                 
 
             </tr>
@@ -27,7 +29,9 @@
                     <td>@f.ToStopage</td>
                     <td>@f.StartTime</td>
                     <td>@f.SeatNo</td>
+                    <td>@f.TFare</td>
                     <td>@f.Status</td>
+                    <td><a href="/User/Cancel/@f.TktId">Cancel</a></td>
                 </tr>
             }
 

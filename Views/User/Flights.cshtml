@@ -24,7 +24,7 @@
                 <select name="FromStopageId">
                     @foreach (var fs in fstopage)
                     {
-                        <option  selected value="@fs.Id">@fs.Name</option>
+                        <option  selected value="@fs.Id">@fs.City.Name , @fs.Name , @fs.City.Country</option>
                     }
 
 
@@ -39,7 +39,7 @@
                 <select name="ToStopageId">
                     @foreach (var ts in fstopage)
                     {
-                        <option selected value="@ts.Id">@ts.Name</option>
+                        <option selected value="@ts.Id">@ts.City.Name , @ts.Name , @ts.City.Country</option>
                     }
 
                 </select>
@@ -76,7 +76,9 @@
 
     </form>
 
-    <div class="tab-content">
+    @if (Model?.Any() != false)
+      {
+          <div class="tab-content">
         <table class="table">
             <tr>
                 <th>Name</th>
@@ -105,3 +107,7 @@
 
         </table>
     </div>
+ 
+      }
+          
+      
