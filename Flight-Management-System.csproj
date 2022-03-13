@@ -284,6 +284,7 @@
     <Content Include="Views\FlightManager\AddAircraftSchedule.cshtml" />
     <Content Include="Views\Admin\UserDetails.cshtml" />
     <Content Include="Views\Admin\BookedSeatsFlights.cshtml" />
+    <Content Include="Views\Admin\Aircrafts.cshtml" />
     <None Include="Views\Home\Index.cshtml.backup" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Auth\SignUp.cshtml" />

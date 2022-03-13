@@ -1,4 +1,5 @@
 ﻿@model List<Flight_Management_System.Models.AdminEntities.TransportModel>
+@using Flight_Management_System.Models.Database;
 @{
     ViewBag.Title = "Flights";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -9,7 +10,7 @@
     @Html.TextBox("searching")
     <input type="submit" value="Search" />
 }
-<h2>Flights</h2>
+<h2>Scheduled Flights</h2>
 <table class="table table-bordered">
     <tr>
         <th>Flight Name</th>
@@ -28,7 +29,7 @@
             <td>@f.From</td>
             <td>@f.Destination</td>
             <td>@f.MaximumSeat</td>
-            <td></td>
+            <td>@f.AvailableSeats</td>
             <td>@f.CreatorName</td>
             <td><a href="/Admin/BookedSeatsFlights/@f.Id">Booked Seats Details</a></td>
 

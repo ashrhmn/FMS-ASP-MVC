@@ -197,47 +197,7 @@ namespace Flight_Management_System.Controllers
             return RedirectToAction("Userlist", "Admin");
         }
         [HttpGet]
-        public ActionResult ChangeUserPass(int id)
-        {
-            ViewBag.id = id;
-            return View();
-
-        }
-        [HttpPost]
-        public ActionResult ChangeUserPass(int id,string OldPassword, string Password, string ConPassword)
-        {
-            if (Password.Equals(ConPassword))
-            {
-                var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
-
-                bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(OldPassword, data.Password);
-
-                if (isCorrectPassword)
-                {
-                    var user = new UserModel()
-                    {
-                        Name = data.Name,
-                        Username = data.Username,
-                        Password = BCrypt.Net.BCrypt.HashPassword(Password, 12),  // this Bcrypt
-                        Address = data.Address,
-                        DateOfBirth = data.DateOfBirth,
-                        CityId = data.CityId,
-                        FamilyId = data.FamilyId,
-                        Role = data.Role,
-                    };
-                    db.Entry(data).CurrentValues.SetValues(user);
-                    db.SaveChanges();
-                    TempData["msg"] = "Password Changed Successfully";
-                    return RedirectToAction("Dtails");
-                }
-                TempData["msg"] = "Old Password is not correct";
-                return View();
-
-            }
-            TempData["msg"] = "Password & Confirm Password Not Matched";
-            return View();
-
-        }
+        
         public ActionResult PurchasedUserList()
         {
             var data = db.Users.ToList();
@@ -291,6 +251,24 @@ namespace Flight_Management_System.Controllers
             }
             return View(pdetails);
         }
+        public ActionResult Aircrafts()
+        {
+            var ac = db.Transports.ToList();
+            var acs = new List<TransportModel>();
+            foreach (var a in ac)
+            {
+                acs.Add(new TransportModel()
+                {
+                    
+                    Name = a.Name,
+                   
+                    MaximumSeat = a.MaximumSeat,
+                    CreatorName = a.CreatedBy == null ? "undefined" : a.User.Name,
+
+                });
+            }
+            return View(acs);
+        }
         public ActionResult Flights(string searching)
         {
             Flight_ManagementEntities db = new Flight_ManagementEntities();
@@ -304,38 +282,45 @@ namespace Flight_Management_System.Controllers
             {
                 var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.Id && s.Status == "Booked" select s).Count();
                 var availableSeats = (f.MaximumSeat - occupiedSeats);
-
-
-                flights.Add(new TransportModel()
+                var schedule = (from fs in db.TransportSchedules
+                                 where fs.Id == f.Id
+                                 select fs).FirstOrDefault();
+                
+                if (schedule != null)
                 {
-                    Id = f.Id,
-                    Name = f.Name,
-                    //From = f.TransportSchedules.Stopage,
-                    //Destination = f.ToStopageId == null ? "undefined" : f.TransportSchedules.s,
-                    MaximumSeat = f.MaximumSeat,
-                    CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
-                    AvailableSeats = availableSeats,
+                    flights.Add(new TransportModel()
+                    {
+                        Id = f.Id,
+                        Name = f.Name,
+                        From = (from t in db.Stopages where t.Id == schedule.FromStopageId select t.Name).FirstOrDefault(),
+                        Destination = (from t in db.Stopages where t.Id == schedule.ToStopageId select t.Name).FirstOrDefault(),
+                        MaximumSeat = f.MaximumSeat,
+                        CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
+                        AvailableSeats = availableSeats,
 
-                });
+                    });
+                } 
+                
             }
             return View(flights);
         }
         public ActionResult BookedSeatsFlights(int id)
         {
             Flight_ManagementEntities db = new Flight_ManagementEntities();
-            var seat = (from s in db.SeatInfos where s.Id == id && s.Status == "Booked" select s).ToList();
+            var seat = (from s in db.SeatInfos where s.TransportId == id && s.Status == "Booked" select s).ToList();
+
             var seats = new List<SeatInfosModel>();
             foreach (var s in seat)
             {
                 seats.Add(new SeatInfosModel()
                 {
-                    Id = s.Id,
+                    //Id = s.Id,
                     SeatNo = s.SeatNo,
                     SeatClassName = s.SeatClass == null ? "undefined" : s.SeatClassEnum.Value,
-                    PurchasedById = s.PurchasedTicket.PurchasedBy,
+                    PurchasedById = s.TicketId == null ? 0 : s.PurchasedTicket.PurchasedBy,
                     PurchasedByName = s.TicketId == null ? "undefined" : s.PurchasedTicket.User.Name,
                     Status = s.Status,
-
+                    AircraftName = s.Transport.Name,
                 });
             }
 
@@ -446,7 +431,7 @@ namespace Flight_Management_System.Controllers
         {
             return View();
         }
-
+        
 
 
 
