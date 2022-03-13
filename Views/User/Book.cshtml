@@ -17,74 +17,90 @@
         <div class="form-group">
             
             <div class="col-md-10">
-                <input type="hidden" name="Id" value="@Model.Id" placeholder="Name" class="form-control" />
+                <input type="hidden" name="Id" value="@Model.Id"  class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 control-label">Date</label>
             <div class="col-md-10">
-                <input type="Date" name="Date" value="@Model.Date" class="form-control" />
+                <input type="hidden" name="TransportId" value="@Model.TransportId" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 control-label">Name</label>
             <div class="col-md-10">
-                <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" />
+                <input type="hidden" name="AvailableSeats" value="@Model.AvailableSeats" class="form-control" />
             </div>
         </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Date</label>
+                <div class="col-md-10">
+                    <input type="date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Time</label>
+                <div class="col-md-10">
+                    <input type="text" name="Time" value="@Model.Date.TimeOfDay" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Name</label>
+                <div class="col-md-10">
+                    <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" />
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">From</label>
-            <div class="col-md-10">
-                <input type="text" name="FromStopage" value="@Model.FromStopage"  class="form-control" />
+            <div class="form-group">
+                <label class="col-md-2 control-label">From</label>
+                <div class="col-md-10">
+                    <input type="text" name="FromStopage" value="@Model.FromStopage" class="form-control" />
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">To</label>
-            <div class="col-md-10">
-                <input type="text" name="ToStopage" value="@Model.ToStopage" class="form-control" />
+            <div class="form-group">
+                <label class="col-md-2 control-label">To</label>
+                <div class="col-md-10">
+                    <input type="text" name="ToStopage" value="@Model.ToStopage" class="form-control" />
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            
-            <div class="col-md-10">
-                <input type="hidden" name="FromStopageId" value="@Model.FromStopageId" class="form-control" />
-            </div>
-        </div>
+            <div class="form-group">
 
-        <div class="form-group">
-            
-            <div class="col-md-10">
-                <input type="hidden" name="ToStopageId" value="@Model.ToStopageId" class="form-control" />
+                <div class="col-md-10">
+                    <input type="hidden" name="FromStopageId" value="@Model.FromStopageId" class="form-control" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label">Seat Class</label>
-            <div class="col-md-10">
-                <input type="Text" name="Class" value="@Model.Class" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            
-            <div class="col-md-10">
-                <input type="hidden" name="ClassId" value="@Model.ClassId" class="form-control" />
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-md-2 control-label">Fare</label>
-            <div class="col-md-10">
-                <input type="text" name="SFare" value="@Model.SFare" class="form-control" />
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-default" value="Confirm" />
-            </div>
-        </div>
+            <div class="form-group">
 
-    </form>
+                <div class="col-md-10">
+                    <input type="hidden" name="ToStopageId" value="@Model.ToStopageId" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Seat Class</label>
+                <div class="col-md-10">
+                    <input type="Text" name="Class" value="@Model.Class" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    <input type="hidden" name="ClassId" value="@Model.ClassId" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">Fare</label>
+                <div class="col-md-10">
+                    <input type="text" name="SFare" value="@Model.SFare" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Confirm" />
+                </div>
+            </div>
+
+</form>
 

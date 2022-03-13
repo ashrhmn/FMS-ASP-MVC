@@ -84,8 +84,7 @@
                 <th>Destination</th>
                 <th>Day</th>
                 <th>Available Seats</th>
-                <th>Date</th>
-                <th>Time</th>
+                <th>Date Time</th>
                 <th>Starting Fare</th>
                 <th>Go To</th>
 
@@ -99,7 +98,6 @@
                     <td>@f.Day</td>
                     <td>@f.AvailableSeats</td>
                     <td>@f.Date</td>
-                    <td>@((int)f.Time / 100):@((f.Time % 100).ToString())</td>
                     <td>@f.SFare</td>
                     <td><a href="/User/Book/@f.Id">Book</a></td>
                 </tr>

@@ -5,6 +5,7 @@ using Flight_Management_System.Models.Database;
 using Flight_Management_System.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,9 +17,6 @@ namespace Flight_Management_System.Controllers
     {
         private Flight_ManagementEntities db;
         private JwtManage jwt;
-        private static dynamic Fare;
-        private static dynamic startDate;
-        private static dynamic sClass;
         public UserController()
         {
             db = new Flight_ManagementEntities();
@@ -56,6 +54,9 @@ namespace Flight_Management_System.Controllers
                 var FromRootFare = (from t in db.Stopages where t.Id == f.FromStopageId select t.FareFromRoot).FirstOrDefault();
                 var ToRootFare = (from t in db.Stopages where t.Id == f.ToStopageId select t.FareFromRoot).FirstOrDefault();
                 var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+                var Fare = 0;
+                var sClass = "class";
+                Session["classId"] = flMod.ClassId;
 
                 if (flMod.ClassId == 1) 
                 {
@@ -72,8 +73,12 @@ namespace Flight_Management_System.Controllers
                     sClass = "Business Economy";
                     Fare = baseFare * 12;
                 }
-                startDate = flMod.Date.ToString();
-               // return availableSeats ?? -1;
+                string time = ((int)f.Time / 100) + ":" + ((f.Time % 100).ToString() + ":" + 00);
+                var result = Convert.ToDateTime(time);
+                var dateOnly = flMod.Date.Date;
+                DateTime startDate = dateOnly.Add(result.TimeOfDay);
+                Session["jTime"] = startDate;
+              
                 flights.Add(new TransportModelSR()
                 {
                     Id = f.Id,
@@ -83,8 +88,7 @@ namespace Flight_Management_System.Controllers
                     ToStopage = (from t in db.Stopages where t.Id == f.ToStopageId select t.Name).FirstOrDefault(),
                     Day = f.Day,
                     AvailableSeats = availableSeats,
-                    Date = flMod.Date,
-                    Time = f.Time,
+                    Date = startDate,
                     SFare = Fare,
 
                 });
@@ -104,6 +108,28 @@ namespace Flight_Management_System.Controllers
             var occupiedSeats = (from s in db.SeatInfos where s.TransportId == transport.TransportId && s.Status == "Booked" select s).Count();
             var maxSeat = (from s in db.Transports where s.Id == transport.TransportId select s.MaximumSeat).FirstOrDefault();
             var availableSeats = maxSeat - occupiedSeats;
+            var FromRootFare = (from t in db.Stopages where t.Id == transport.FromStopageId select t.FareFromRoot).FirstOrDefault();
+            var ToRootFare = (from t in db.Stopages where t.Id == transport.ToStopageId select t.FareFromRoot).FirstOrDefault();
+            var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+            var Fare = 0;
+            var sclId = (int)Session["classId"];
+            var sClass = "Test";
+            if (sclId == 1)
+            {
+                sClass = "Business";
+                Fare = baseFare * 15;
+                
+            }
+            else if (sclId == 2)
+            {
+                Fare = baseFare * 10;
+                sClass = "Economy";
+            }
+            else
+            {
+                sClass = "Economic Business";
+                Fare = baseFare * 12;
+            }
             var vFlit = new TransportModelSR()
             {
                 Id = transport.Id,
@@ -114,43 +140,45 @@ namespace Flight_Management_System.Controllers
                 FromStopage = (from t in db.Stopages where t.Id == transport.FromStopageId select t.Name).FirstOrDefault(),
                 ToStopage = (from t in db.Stopages where t.Id == transport.ToStopageId select t.Name).FirstOrDefault(),
                 SFare = Fare,
+                ClassId = (int)Session["classId"],
                 Class = sClass,
                 AvailableSeats = availableSeats,
-                DateSt = startDate,
+                Date = (DateTime)Session["jTime"],
             };
 
             return View(vFlit);
         }
 
-        //[HttpPost]
-        //public ActionResult Book(TransportModelSR flMod)
-        //{
-        //    AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-        //    int uid = user.Id;
-            
-        //    var tickt = new PurchasedTicket()
-        //    {
-        //        FromStopageId = flMod.FromStopageId,
-        //        ToStopageId = flMod.ToStopageId,
-        //        PurchasedBy = uid,
-        //    };
-        //    var tkt = db.PurchasedTickets.Add(tickt);
-        //    db.SaveChanges();
+        [HttpPost]
+        public ActionResult Book(TransportModelSR flMod)
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
 
-        //    var seat = new SeatInfo()
-        //    {
-        //        SeatNo = flMod.AvailableSeats - 1,
-        //        //StartTime = flMod.Date,
-        //        TicketId = tkt.Id,
-        //        SeatClass = flMod.ClassId,
-        //        AgeClass = 1,
-        //        Status = "Booked",
-        //    };
-        //    db.SeatInfos.Add(seat);
-        //    db.SaveChanges();
+            var tickt = new PurchasedTicket()
+            {
+                FromStopageId = flMod.FromStopageId,
+                ToStopageId = flMod.ToStopageId,
+                PurchasedBy = uid,
+            };
+            var tkt = db.PurchasedTickets.Add(tickt);
+            db.SaveChanges();
 
-        //    return View();
-        //}
+            var seat = new SeatInfo()
+            {
+                SeatNo = flMod.AvailableSeats - 1,
+                StartTime = flMod.Date,
+                TicketId = tkt.Id,
+                SeatClass = flMod.ClassId,
+                AgeClass = 1,
+                Status = "Booked",
+                TransportId = flMod.TransportId,
+            };
+            db.SeatInfos.Add(seat);
+            db.SaveChanges();
+
+            return View(flMod);
+        }
 
         [HttpGet]
         public ActionResult Dashboard()
