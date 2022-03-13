@@ -165,8 +165,55 @@ namespace Flight_Management_System.Controllers
 
             return View(user);
         }
+
         [HttpPost]
         public ActionResult PurchasedUserList(string Uname, string Purchase)
+        {
+            List<User> data;
+            if(Uname == "" && Purchase != "true")
+            {
+                data = (from u in db.Users where u.Role == 2 select u).ToList();
+            }
+            else if(Uname != "" && Purchase != "true")
+            {
+                data = (from u in db.Users where u.Role == 2 && u.Username.Contains(@"/"+Uname+"/") select u).ToList();
+            }
+            else if (Uname == "" && Purchase == "true")
+            {
+                data = db.PurchasedTickets.Select(pb => pb.User).ToList();
+            }
+            else if (Uname != "" && Purchase == "true")
+            {
+                data = db.PurchasedTickets.Select(pb => pb.User).Where(pw=>pw.Username.Contains(Uname)).ToList();
+            }
+            else
+            {
+                data = null;
+            }
+            if (data!=null)
+            {
+                var users = new List<UserModel>();
+                foreach (var disUser in data)
+                {
+                    if (!users.Select(u => u.Id).ToList().Contains(disUser.Id))
+                    {
+                        users.Add(new UserModel()
+                        {
+                            Name = disUser.Name,
+                            Username = disUser.Username,
+                            Id = disUser.Id,
+                            PurchasedTickets = disUser.PurchasedTickets.Select(e => e.Id).ToList(),
+                        });
+                    }
+                }
+                return View(users);
+            }
+            return null;
+
+
+        }
+        [HttpPost]
+        public ActionResult PurchasedUserList2(string Uname, string Purchase)
         {
             if(Uname == "" && Purchase != "true")
             {
@@ -206,47 +253,72 @@ namespace Flight_Management_System.Controllers
             }
             else if (Uname == "" && Purchase == "true")
             {
-                //var data = (from u in db.Users where u.Role == 2 select u).ToList();
-                var purchaseby = db.PurchasedTickets.Distinct().ToList();
-                var user = new List<UserModel>();
-                foreach (var p in purchaseby)
+                var purchaseby = db.PurchasedTickets.Select(pb => pb.User).ToList();
+                var users = new List<UserModel>();
+                foreach (var disUser in purchaseby)
                 {
-                    var u = (from ur in db.Users where ur.Id == p.PurchasedBy select ur).FirstOrDefault();
-                    user.Add(new UserModel()
+                    if (!users.Select(u => u.Id).ToList().Contains(disUser.Id))
                     {
-                        Id = u.Id,
-                        Name = u.Name,
-                        Username = u.Username,
-                        PurchasedTickets = u.PurchasedTickets.Select(e => e.Id).ToList(),
-
-                    });
+                        users.Add(new UserModel()
+                        {
+                            Name = disUser.Name,
+                            Username = disUser.Username,
+                            Id = disUser.Id,
+                            PurchasedTickets = disUser.PurchasedTickets.Select(e => e.Id).ToList(),
+                        });
+                    }
                 }
+                //foreach (var p in purchaseby)
+                //{
+                //    var u = (from ur in db.Users where ur.Id == p.PurchasedBy select ur).FirstOrDefault();
+                //    user.Add(new UserModel()
+                //    {
+                //        Id = u.Id,
+                //        Name = u.Name,
+                //        Username = u.Username,
+                //        PurchasedTickets = u.PurchasedTickets.Select(e => e.Id).ToList(),
 
-                return View(user);
+                //    });
+                //}
+
+                return View(users);
             }
             else if (Uname != "" && Purchase == "true")
             {
                 //var data = (from u in db.Users where u.Role == 2 select u).ToList();
-                var purchaseby = db.PurchasedTickets.Distinct().ToList();
-                var user = new List<UserModel>();
-                foreach (var p in purchaseby)
+                var purchaseby = db.PurchasedTickets.Select(pb => pb.User).Where(pw=>pw.Username.Contains(Uname)).ToList();
+                var users = new List<UserModel>();
+                foreach (var disUser in purchaseby)
                 {
-                    var u = (from ur in db.Users where ur.Id == p.PurchasedBy && ur.Username.Contains(@"/" + Uname + "/") select ur).FirstOrDefault();
-                    if(u != null)
+                    if (!users.Select(u => u.Id).ToList().Contains(disUser.Id))
                     {
-                        user.Add(new UserModel()
+                        users.Add(new UserModel()
                         {
-                            Id = u.Id,
-                            Name = u.Name,
-                            Username = u.Username,
-                            PurchasedTickets = u.PurchasedTickets.Select(e => e.Id).ToList(),
-
+                            Name = disUser.Name,
+                            Username = disUser.Username,
+                            Id = disUser.Id,
+                            PurchasedTickets = disUser.PurchasedTickets.Select(e => e.Id).ToList(),
                         });
                     }
-                    
                 }
+                //foreach (var p in purchaseby)
+                //{
+                //    var u = (from ur in db.Users where ur.Id == p.PurchasedBy && ur.Username.Contains(@"/" + Uname + "/") select ur).FirstOrDefault();
+                //    if(u != null)
+                //    {
+                //        users.Add(new UserModel()
+                //        {
+                //            Id = u.Id,
+                //            Name = u.Name,
+                //            Username = u.Username,
+                //            PurchasedTickets = u.PurchasedTickets.Select(e => e.Id).ToList(),
 
-                return View(user);
+                //        });
+                //    }
+                    
+                //}
+
+                return View(users);
             }
             return null;
 
@@ -380,13 +452,6 @@ namespace Flight_Management_System.Controllers
         public ActionResult searchuser()
         {
             return View();
-        }
-        [HttpGet]
-        public JsonResult TestQ(string Uname)
-        {
-
-            var u = (from ur in db.Users where ur.Username.Contains(@"/" + Uname + "/") select ur).FirstOrDefault();
-            return Json(u);
         }
 
 
