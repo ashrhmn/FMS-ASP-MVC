@@ -181,6 +181,41 @@ namespace Flight_Management_System.Controllers
         }
 
         [HttpGet]
+        public ActionResult Tickets()
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
+            var custTik = new List<CustomerFlightSR>();
+            var udata = GetUser(uid);
+            var tkts = (from t in db.PurchasedTickets where t.PurchasedBy == udata.Id select t).ToList();
+            foreach(var t in tkts)
+            {
+                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id select s).FirstOrDefault();
+                var sno = seatIn.SeatNo;
+                var scId = seatIn.SeatClass;
+                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f.Name).FirstOrDefault();
+                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft.Name).FirstOrDefault();
+                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft.Value).FirstOrDefault();
+                var sTime = seatIn.StartTime;
+                var tName = (from n in db.Transports where n.Id == seatIn.TransportId select n.Name).FirstOrDefault();
+
+             custTik.Add(new CustomerFlightSR()
+            {
+                SeatNo = sno,
+                StartTime = sTime,
+                SeatClass = sCls,
+                ToStopage = to,
+                FromStopage = from,
+                Status = seatIn.Status,
+                TName = tName,
+            });
+
+
+            }
+            return View(custTik);
+        }
+
+        [HttpGet]
         public ActionResult Dashboard()
         {
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);

@@ -1,0 +1,35 @@
+﻿
+@model List<Flight_Management_System.Models.CustomerFlightSR>
+    @{
+    ViewBag.Title = "Tickets";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+    <h2>Tickets</h2>
+
+    <div class="tab-content">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>From</th>
+                <th>Destination</th>
+                <th>Day</th>
+                <th>Seat No</th>
+                <th>Status</th>
+                
+
+            </tr>
+            @foreach (var f in Model)
+            {
+                <tr>
+                    <td>@f.TName</td>
+                    <td>@f.FromStopage</td>
+                    <td>@f.ToStopage</td>
+                    <td>@f.StartTime</td>
+                    <td>@f.SeatNo</td>
+                    <td>@f.Status</td>
+                </tr>
+            }
+
+        </table>
+    </div>

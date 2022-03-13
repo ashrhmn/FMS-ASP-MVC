@@ -8,15 +8,16 @@ namespace Flight_Management_System.Models
     public class CustomerFlightSR
     {
         public Nullable<int> TransportId { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> SeatNo { get; set; }
-        public Nullable<int> SeatClass { get; set; }
-        public string ToStopage { get; set; }
-        public int FromStopageId { get; set; }
-        public int ToStopageId { get; set; }
-        public string Day { get; set; }
 
-        public DateTime StartTime { get; set; }
-        public DateTime Date { get; set; }
+        public int TktId { get; set; }
+        public string TName { get; set; }
+        public Nullable<int> SeatNo { get; set; }
+        public string SeatClass { get; set; }
+        public string ToStopage { get; set; }
+        public string FromStopage { get; set; }
+
+        public string Status { get; set; }
+        public Nullable<DateTime> StartTime { get; set; }
+       
     }
 }
