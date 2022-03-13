@@ -225,6 +225,7 @@ namespace Flight_Management_System.Controllers
 
              custTik.Add(new CustomerFlightSR()
             {
+                TktId = t.Id,
                 SeatNo = sno,
                 StartTime = sTime,
                 SeatClass = sClsN,
