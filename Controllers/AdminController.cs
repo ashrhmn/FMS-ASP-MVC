@@ -272,7 +272,7 @@ namespace Flight_Management_System.Controllers
 
         public ActionResult Userlist(string searching)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            //Flight_ManagementEntities db = new Flight_ManagementEntities();
             var user = (from u in db.Users select u).ToList();
             if (!String.IsNullOrEmpty(searching))
             {
@@ -306,7 +306,7 @@ namespace Flight_Management_System.Controllers
             var user = new UserModel()
             {
                 Id = u.Id,
-                Name = u.Username,
+                Name = u.Name,
                 Username = u.Username,
                 DateOfBirth = u.DateOfBirth,
                 Address = u.Address,
@@ -320,6 +320,30 @@ namespace Flight_Management_System.Controllers
             };
             
             return View(user);
+        }
+        [HttpPost]
+        public ActionResult EditUserProfile(UserModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var data = (from u in db.Users where u.Id == user.Id select u).FirstOrDefault();
+                user.Password = data.Password;
+                user.CityId = data.CityId;
+                user.FamilyId = data.FamilyId;
+                //user.Role = data.Role;
+                user.Email = data.Email;
+                user.Phone = data.Phone;
+
+                db.Entry(data).CurrentValues.SetValues(user);
+                db.SaveChanges();
+
+
+                TempData["msg"] = "Profile Updated Successfully";
+                return RedirectToAction("Userlist", "Admin");
+            }
+            //TempData["msg"] = "Information is not correct";
+            return View(user);
+
         }
         public ActionResult DeleteUser(int id)
         {
@@ -375,7 +399,8 @@ namespace Flight_Management_System.Controllers
                         MaximumSeat = f.MaximumSeat,
                         CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
                         AvailableSeats = availableSeats,
-
+                        Day = schedule.Day,
+                        Time = schedule.Time
                     });
                 } 
                 
