@@ -36,5 +36,6 @@ namespace Flight_Management_System.Models.AdminEntities
 
         
         public string ConPassword { get; set; }
+
     }
 }

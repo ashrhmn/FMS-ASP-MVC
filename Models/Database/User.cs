@@ -11,7 +11,7 @@ namespace Flight_Management_System.Models.Database
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class User
     {
         public User()

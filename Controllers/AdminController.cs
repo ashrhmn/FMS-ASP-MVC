@@ -1,4 +1,5 @@
-﻿using Flight_Management_System.Models.AdminEntities;
+﻿using Flight_Management_System.Auth;
+using Flight_Management_System.Models.AdminEntities;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Utils;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
 {
+    [AdminAccess]
     public class AdminController : Controller
     {
         private Flight_ManagementEntities db;
@@ -21,11 +23,6 @@ namespace Flight_Management_System.Controllers
         }
         // GET: Admin
         public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Home()
         {
             return View();
         }
@@ -154,7 +151,7 @@ namespace Flight_Management_System.Controllers
 
         public ActionResult PurchasedUserList()
         {
-            var data = db.Users.ToList();
+            var data = (from u in db.Users where u.Role == 2 select u).ToList();
             var user = new List<UserModel>();
             foreach (var u in data)
             {
@@ -170,37 +167,118 @@ namespace Flight_Management_System.Controllers
 
             return View(user);
         }
+
+        [HttpPost]
+        public ActionResult PurchasedUserList(string Uname, string Purchase)
+        {
+            List<User> data;
+            if(Uname == "" && Purchase != "true")
+            {
+                data = (from u in db.Users where u.Role == 2 select u).ToList();
+            }
+            else if(Uname != "" && Purchase != "true")
+            {
+                data = (from u in db.Users where u.Role == 2 && u.Username.Contains(@"/"+Uname+"/") select u).ToList();
+            }
+            else if (Uname == "" && Purchase == "true")
+            {
+                data = db.PurchasedTickets.Select(pb => pb.User).ToList();
+            }
+            else if (Uname != "" && Purchase == "true")
+            {
+                data = db.PurchasedTickets.Select(pb => pb.User).Where(pw=>pw.Username.Contains(Uname)).ToList();
+            }
+            else
+            {
+                data = null;
+            }
+            if (data!=null)
+            {
+                var users = new List<UserModel>();
+                foreach (var disUser in data)
+                {
+                    if (!users.Select(u => u.Id).ToList().Contains(disUser.Id))
+                    {
+                        users.Add(new UserModel()
+                        {
+                            Name = disUser.Name,
+                            Username = disUser.Username,
+                            Id = disUser.Id,
+                            PurchasedTickets = disUser.PurchasedTickets.Select(e => e.Id).ToList(),
+                        });
+                    }
+                }
+                return View(users);
+            }
+            return null;
+
+
+        }
+        
+
+
+
+
         public ActionResult PurchasedDetails(int id)
         {
             var purchasedetails = (from pd in db.PurchasedTickets where pd.PurchasedBy == id select pd).ToList();
-            var user = (from u in db.Users where u.Id == id select u).FirstOrDefault();
 
             var pdetails = new List<PurchasedTicketModel>();
 
             foreach (var pd in purchasedetails)
             {
-                var fromstopage = (from fs in db.Cities where fs.Id == pd.FromStopageId select fs).FirstOrDefault();
-                var tostopage = (from ts in db.Cities where ts.Id == pd.ToStopageId select ts).FirstOrDefault();
+                var fromstopage = (from fs in db.Stopages where fs.Id == pd.FromStopageId select fs).FirstOrDefault();
+                var fromstopagecity = (from fs in db.Cities where fs.Id == fromstopage.CityId select fs).FirstOrDefault();
+                var tostopage = (from fs in db.Stopages where fs.Id == pd.ToStopageId select fs).FirstOrDefault();
+                var tostopagecity = (from fs in db.Cities where fs.Id == tostopage.CityId select fs).FirstOrDefault();
+
                 var seatInfo = (from si in db.SeatInfos where si.TicketId == pd.Id select si).FirstOrDefault();
+
                 var seatclass = (from sc in db.SeatClassEnums where sc.Id == seatInfo.SeatClass select sc).FirstOrDefault();
                 var ageclass = (from ac in db.AgeClassEnums where ac.Id == seatInfo.AgeClass select ac).FirstOrDefault();
                 var trans = (from t in db.Transports where t.Id == seatInfo.TransportId select t).FirstOrDefault();
+                var creator = (from cr in db.Users where cr.Id == trans.CreatedBy select cr.Name).FirstOrDefault();
+
+                var FromRootFare = fromstopage.FareFromRoot;
+                var ToRootFare = tostopage.FareFromRoot;
+                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+                var cost = 0;
+                if(seatclass.Value == "Business")
+                {
+                    cost = baseFare * 15;
+                }
+                else if (seatclass.Value == "Economic")
+                {
+                    cost = baseFare * 10;
+                }
+                else
+                {
+                    cost = baseFare * 12;
+                }
+
 
                 pdetails.Add(new PurchasedTicketModel()
                 {
                     Id = pd.Id,
-                    PurchasedByName = user.Name,
-                    FromStopageCityName = fromstopage.Name,
-                    FromStopageCountryName = fromstopage.Country,
-                    ToStopageCityName = tostopage.Name,
-                    ToStopageCountryName = tostopage.Country,
+                    PurchasedBy = pd.PurchasedBy,
+                    FromStopageName = fromstopage.Name,
+                    FromStopageCityName = fromstopagecity.Name,
+                    FromStopageCountryName = fromstopagecity.Country,
+                    ToStopageName = tostopage.Name,
+                    ToStopageCityName = tostopagecity.Name,
+                    ToStopageCountryName = tostopagecity.Country,
+
                     StartTime = seatInfo.StartTime,
                     SeatNo = seatInfo.SeatNo,
                     SeatClass = seatclass.Value,
                     AgeClass = ageclass.Value,
                     TransportCreatedBy = trans.CreatedBy,
+                    TransportCreatorName= creator,
                     TransportName = trans.Name,
                     TransportId = trans.Id,
+                    Cost = cost
+                    
+
                 });
             }
             return View(pdetails);
@@ -244,6 +322,11 @@ namespace Flight_Management_System.Controllers
 
             TempData["msg"] = "Ticket Cancel Successfully";
             return RedirectToAction("PurchasedDetails");
+        }
+
+        public ActionResult searchuser()
+        {
+            return View();
         }
 
 
@@ -302,7 +385,7 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult EditUserProfile(int id)
         {
-            var u = (from us in db.Users where us.Id==id select us).FirstOrDefault();
+            var u = (from us in db.Users where us.Id == id select us).FirstOrDefault();
 
             var user = new UserModel()
             {
