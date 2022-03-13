@@ -14,6 +14,7 @@ namespace Flight_Management_System.Models.AdminEntities
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
         public string Name { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public int? FamilyId { get; set; }
@@ -34,5 +35,6 @@ namespace Flight_Management_System.Models.AdminEntities
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConPassword { get; set; }
+
     }
 }

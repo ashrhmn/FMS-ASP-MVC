@@ -10,30 +10,34 @@
     <span class="label-danger">@TempData["msg"]}</span>
 }
 
-<table>
+
+<table class="table table-bordered">
     <tr>
-        <th>Perchased By</th>
         <th>Ticket ID</th>
         <th>From</th>
         <th>To</th>
-        <th>Starte Time</th>
+        <th>Start Time</th>
         <th>Seat Details</th>
+        <th>Ticket Cost</th>
         <th>Flight Detail</th>
+        <th>This Flight Created By</th>
         <th>Operation</th>
     </tr>
     <
     @foreach (var pd in Model)
     {
-        <tr>
-            <td>@pd.PurchasedByName</td>
-            <td>@pd.Id</td>
-            <td>@pd.FromStopageCityName, @pd.FromStopageCountryName</td>
-            <td>@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
-            <td>@pd.StartTime</td>
-            <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
-            <td>Flight Name: @pd.TransportName<br /><a href="/Admin/TransportDetails/@pd.TransportId" class="btn-success">Flight Id: @pd.TransportId</a></td>
-            <td><a href="/Admin/CacelTicket/@pd.Id" class="btn btn-danger">Cancel Ticket</td>
-        </tr>
+<tr>
+    <td>@pd.Id</td>
+    <td>@pd.FromStopageName, @pd.FromStopageCityName, @pd.FromStopageCountryName</td>
+    <td>@pd.ToStopageName ,@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
+    <td>@pd.StartTime</td>
+    <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
+    <td>BDT @pd.Cost</td>
+    <td>Flight Name: @pd.TransportName<br />Flight Id: <a href="/Admin/TransportDetails/@pd.TransportId" class="btn-success">Flight Id: @pd.TransportId</a></td>
+    <td><a href="/Admin/UserDetails/@pd.TransportCreatedBy" class="btn-success">@pd.TransportCreatorName</a></td>
+    <td><a href="/Admin/CacelTicket/@pd.Id" class="btn btn-danger">Cancel Ticket</td>
+    <td><a href="" class="btn btn-danger">Edit Ticket</td>
+</tr>
 
     }
 </table>
