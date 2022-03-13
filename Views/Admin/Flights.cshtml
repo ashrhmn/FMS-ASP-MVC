@@ -1,5 +1,5 @@
 ﻿@model List<Flight_Management_System.Models.AdminEntities.TransportModel>
-@using Flight_Management_System.Models.Database;
+
 @{
     ViewBag.Title = "Flights";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -16,6 +16,7 @@
         <th>Flight Name</th>
         <th>From</th>
         <th>Destination</th>
+        <th>Time</th>
         <th>Maximum seat</th>
         <th>Available Seats</th>
         <th>Created by</th>
@@ -28,6 +29,7 @@
             <td>@f.Name</td>
             <td>@f.From</td>
             <td>@f.Destination</td>
+            <td>@f.Day, @f.Time</td>
             <td>@f.MaximumSeat</td>
             <td>@f.AvailableSeats</td>
             <td>@f.CreatorName</td>

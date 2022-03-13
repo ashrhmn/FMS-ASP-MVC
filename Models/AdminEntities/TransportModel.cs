@@ -19,5 +19,7 @@ namespace Flight_Management_System.Models.AdminEntities
         public int? AvailableSeats { get; set; }
         public string FromCountry { get; set; }
         public string DestinationCountry { get; set; }
+        public string Day { get; set; }
+        public int? Time { get; set; }
     }
 }
