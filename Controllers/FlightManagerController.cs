@@ -3,10 +3,8 @@ using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Models.FlightManagerEntities;
 using Flight_Management_System.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
@@ -14,19 +12,19 @@ namespace Flight_Management_System.Controllers
     [FlightManagerAccess]
     public class FlightManagerController : Controller
     {
-        private Flight_ManagementEntities db;
-        private JwtManage jwt;
+        private readonly Flight_ManagementEntities _db;
+        private readonly JwtManage _jwt;
         public FlightManagerController()
         {
-            db = new Flight_ManagementEntities();
-            jwt = new JwtManage();
+            _db = new Flight_ManagementEntities();
+            _jwt = new JwtManage();
         }
 
         [HttpGet]
         public ActionResult Dashboard()
         {
-            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-            var dbAirlines = db.Transports.Where(t => t.CreatedBy == user.Id).ToList();
+            AuthPayload user = _jwt.LoggedInUser(Request.Cookies);
+            var dbAirlines = _db.Transports.Where(t => t.CreatedBy == user.Id).ToList();
             List<AirlineModel> airlines = new List<AirlineModel>();
             foreach (var airline in dbAirlines)
             {
@@ -48,7 +46,7 @@ namespace Flight_Management_System.Controllers
                         ToCountry = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.City.Country,
                     });
                 }
-                AirlineModel airlineModel = new AirlineModel()
+                var airlineModel = new AirlineModel()
                 {
                     Id = airline.Id,
                     Name = airline.Name,
@@ -68,11 +66,11 @@ namespace Flight_Management_System.Controllers
 
 
 
-        [HttpGet] 
+        [HttpGet]
         public ActionResult AddAircraftSchedule(int? id)
         {
             if (id == null) return RedirectToAction("Dashboard");
-            var aircraft = db.Transports.FirstOrDefault(t => t.Id == id);
+            var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
             return View(new TransportScheduleModel() { TransportId = aircraft.Id });
         }
@@ -82,83 +80,71 @@ namespace Flight_Management_System.Controllers
         {
 
             if (id == null) return RedirectToAction("Dashboard");
-            var aircraft = db.Transports.FirstOrDefault(t => t.Id == id);
+            var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
-            TransportSchedule schedule = new TransportSchedule() 
-            { 
+            TransportSchedule schedule = new TransportSchedule()
+            {
                 TransportId = aircraft.Id,
                 FromStopageId = transportScheduleModel.FromStopageId,
                 ToStopageId = transportScheduleModel.ToStopageId,
-                Time = Int32.Parse(transportScheduleModel.TimeH.ToString() + transportScheduleModel.TimeM.ToString()),
+                Time = int.Parse(transportScheduleModel.TimeH.ToString() + transportScheduleModel.TimeM.ToString()),
                 Day = transportScheduleModel.Day,
             };
-            db.TransportSchedules.Add(schedule);
-            db.SaveChanges();
+            _db.TransportSchedules.Add(schedule);
+            _db.SaveChanges();
             return RedirectToAction("Dashboard");
         }
 
         [HttpGet]
         public ActionResult DeleteAircraftSchedule(int? id)
         {
-            if (id!=null)
-            {
-                var schedule = db.TransportSchedules.Where(t => t.Id == id).FirstOrDefault();
-                if (schedule != null)
-                {
-                    db.TransportSchedules.Remove(schedule);
-                    db.SaveChanges();
-                }
-            }
+            if (id == null) return RedirectToAction("Dashboard");
+            var schedule = _db.TransportSchedules.FirstOrDefault(t => t.Id == id);
+            if (schedule == null) return RedirectToAction("Dashboard");
+            _db.TransportSchedules.Remove(schedule);
+            _db.SaveChanges();
             return RedirectToAction("Dashboard");
         }
 
         [HttpGet]
         public ActionResult DeleteAircraft(int? id)
         {
-            if (id != null)
-            {
-                var schdules = db.TransportSchedules.Where((t) => t.TransportId == id).ToList();
-                var aircraft = db.Transports.Where(t=>t.Id==id).FirstOrDefault();
-                db.TransportSchedules.RemoveRange(schdules);
-                db.Transports.Remove(aircraft);
-                db.SaveChanges();
-            }
+            if (id == null) return RedirectToAction("Dashboard");
+            var schedules = _db.TransportSchedules.Where((t) => t.TransportId == id).ToList();
+            var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
+            _db.TransportSchedules.RemoveRange(schedules);
+            if (aircraft != null) _db.Transports.Remove(aircraft);
+            _db.SaveChanges();
             return RedirectToAction("Dashboard");
         }
 
         [HttpPost]
         public ActionResult AddAircraft(AirlineModel airline)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(airline);
+            var user = _jwt.LoggedInUser(Request.Cookies);
+            if (user == null) return RedirectToAction("SignIn", "Auth");
+
+            var transportSchedules = airline.TransportSchedules.Select(transportScheduleModel => new TransportSchedule()
             {
-                AuthPayload user = jwt.LoggedInUser(Request.Cookies);
-                if (user == null) return RedirectToAction("SignIn", "Auth");
+                Time = transportScheduleModel.Time,
+                Day = transportScheduleModel.Day,
+                FromStopageId = transportScheduleModel.FromStopageId,
+                ToStopageId = transportScheduleModel.ToStopageId
 
-                List<TransportSchedule> transportSchedules = new List<TransportSchedule>();
-                foreach (TransportScheduleModel transportScheduleModel in airline.TransportSchedules)
-                {
-                    TransportSchedule transportSchedule = new TransportSchedule()
-                    {
-                        Time = transportScheduleModel.Time,
-                        Day = transportScheduleModel.Day,
-                        FromStopageId = transportScheduleModel.FromStopageId,
-                        ToStopageId = transportScheduleModel.ToStopageId
-                    };
-                    transportSchedules.Add(transportSchedule);
-                }
-
-                Transport transport = new Transport()
-                {
-                    Name = airline.Name,
-                    TransportSchedules = transportSchedules,
-                    MaximumSeat = airline.SeatCapacity,
-                    CreatedBy = user.Id
-                };
-                db.Transports.Add(transport);
-                db.SaveChanges();
-                return RedirectToAction("Dashboard");
             }
-            return View(airline);
+            ).ToList();
+
+            var transport = new Transport()
+            {
+                Name = airline.Name,
+                TransportSchedules = transportSchedules,
+                MaximumSeat = airline.SeatCapacity,
+                CreatedBy = user.Id
+            };
+            _db.Transports.Add(transport);
+            _db.SaveChanges();
+            return RedirectToAction("Dashboard");
 
         }
     }
