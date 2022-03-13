@@ -6,15 +6,11 @@
 
 <h2>EditUserProfile</h2>
 
-@if (TempData["msg"] != null)
-{
-    <span class="label-danger">@TempData["msg"]}</span>
-}
 
 <form action="/Admin/EditUserProfile" method="post">
     <input type="hidden" name="Id" value="@Model.Id" />
-    <input type="hidden" name="Password" value="@Model.Password" />
-    <input type="hidden" name="CityId" value="@Model.CityId" />
+    @*<input type="hidden" name="Password" value="@Model.Password" />
+    <input type="hidden" name="CityId" value="@Model.CityId" />*@
 
     <table>
 
@@ -58,9 +54,12 @@
             <th>Role: </th>
             <td>
                 <select name="Role">
-                    <option value="1" @Model.Role==1 ? 'selected' : '' >Admin</option>
-                    <option value="2" @Model.Role==2 ? 'selected' : '' >User</option>
-                    <option value="3" @Model.Role==3 ? 'selected' : '' >Flight manager</option>
+                    @*<option value="1" @Model.Role= =1 ? 'selected' : ''>Admin</option>
+                    <option value="2" @Model.Role= =2 ? 'selected' : ''>User</option>
+                    <option value="3" @Model.Role= =3 ? 'selected' : ''>Flight manager</option>*@
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                    <option value="3">Flight manager</option>
                 </select>
             </td>
         </tr>

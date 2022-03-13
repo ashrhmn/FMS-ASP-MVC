@@ -206,22 +206,6 @@ namespace Flight_Management_System.Controllers
             return View(pdetails);
         }
 
-        public ActionResult UserDetails(int id)
-        {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
-            var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
-            var user = new UserModel();
-            user.Username = data.Username;
-            user.DateOfBirth = data.DateOfBirth;
-            //user.CityName = data.City==null?"Undefined":data.City.Name;
-            //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
-            user.Address = data.Address;
-            user.Email = data.Email;
-            user.Phone = data.Phone;
-
-            return View(user);
-        }
-
         public ActionResult TransportDetails(int id)
         {
             var transport = (from t in db.Transports where t.Id == id select t).FirstOrDefault();
@@ -298,6 +282,23 @@ namespace Flight_Management_System.Controllers
             }
             return View(users);
         }
+        public ActionResult UserDetails(int id)
+        {
+            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
+            var user = new UserModel();
+            user.Id = data.Id;
+            user.Name = data.Name;
+            user.Username = data.Username;
+            user.DateOfBirth = data.DateOfBirth;
+            //user.CityName = data.City==null?"Undefined":data.City.Name;
+            //user.CountryName = data.City == null ? "Undefined" : data.City.Country;
+            user.Address = data.Address;
+            user.Email = data.Email;
+            user.Phone = data.Phone;
+
+            return View(user);
+        }
         [HttpGet]
         public ActionResult EditUserProfile(int id)
         {
@@ -327,12 +328,14 @@ namespace Flight_Management_System.Controllers
             if (ModelState.IsValid)
             {
                 var data = (from u in db.Users where u.Id == user.Id select u).FirstOrDefault();
+                user.Username = data.Username;
                 user.Password = data.Password;
                 user.CityId = data.CityId;
                 user.FamilyId = data.FamilyId;
+
                 //user.Role = data.Role;
-                user.Email = data.Email;
-                user.Phone = data.Phone;
+                //user.Email = data.Email;
+                //user.Phone = data.Phone;
 
                 db.Entry(data).CurrentValues.SetValues(user);
                 db.SaveChanges();
@@ -400,7 +403,7 @@ namespace Flight_Management_System.Controllers
                         CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
                         AvailableSeats = availableSeats,
                         Day = schedule.Day,
-                        Time = schedule.Time
+                        Time = schedule.Time/100
                     });
                 } 
                 
@@ -433,56 +436,52 @@ namespace Flight_Management_System.Controllers
 
 
         
-        [HttpGet]
-        public ActionResult SearchFlight()
-        {
-            var data = (from cs in db.Cities select cs).ToList();
-            var cities = new List<CityModel>();
+        //[HttpGet]
+        //public ActionResult SearchFlight()
+        //{
+        //    var data = (from cs in db.Cities select cs).ToList();
+        //    var cities = new List<CityModel>();
 
-            foreach(var c in data)
-            {
-                cities.Add(new CityModel()
-                {
-                    Name = c.Name,
-                });
-            }
+        //    foreach(var c in data)
+        //    {
+        //        cities.Add(new CityModel()
+        //        {
+        //            Name = c.Name,
+        //        });
+        //    }
 
-            return View(cities);
-        }
-        [HttpPost]
-        public ActionResult SearchFlight(string Date, string From, string Destination)
-        {
+        //    return View(cities);
+        //}
+        //[HttpPost]
+        //public ActionResult SearchFlight(string Date, string From, string Destination)
+        //{
             
-            var cities = (from cs in db.Cities select cs);
-            if (From != null && Destination != null)
-            {
-                var fromcity = cities.Where(cs => cs.Name.Contains(From)).FirstOrDefault();
-                var destinationcity = cities.Where(cs => cs.Name.Contains(Destination)).FirstOrDefault();
-                var flights = (from fs in db.TransportSchedules where fs.FromStopageId == fromcity.Id 
-                               && fs.ToStopageId == destinationcity.Id && fs.Day.Equals(Date) select fs).FirstOrDefault();
+        //    var cities = (from cs in db.Cities select cs);
+        //    if (From != null && Destination != null)
+        //    {
+        //        var fromcity = cities.Where(cs => cs.Name.Contains(From)).FirstOrDefault();
+        //        var destinationcity = cities.Where(cs => cs.Name.Contains(Destination)).FirstOrDefault();
+        //        var flights = (from fs in db.TransportSchedules where fs.FromStopageId == fromcity.Id 
+        //                       && fs.ToStopageId == destinationcity.Id && fs.Day.Equals(Date) select fs).FirstOrDefault();
 
-                if(flights != null)
-                {
-                    var transports = (from t in db.Transports where t.Id == flights.TransportId select t).FirstOrDefault();
-                    var trans = new TransportModel()
-                    {
-                        Name = transports.Name,
-                        Id = flights.TransportId,
-                    };
-                    return View(trans);
+        //        if(flights != null)
+        //        {
+        //            var transports = (from t in db.Transports where t.Id == flights.TransportId select t).FirstOrDefault();
+        //            var trans = new TransportModel()
+        //            {
+        //                Name = transports.Name,
+        //                Id = flights.TransportId,
+        //            };
+        //            return View(trans);
 
-                }
+        //        }
                 
 
-            }
+        //    }
 
-            return View();
-        }
-        public ActionResult FlightSeatDetails()
-        {
-
-            return View();
-        }
+        //    return View();
+        //}
+        
 
         //////////////////// Fahim End ////////////////////////
 
