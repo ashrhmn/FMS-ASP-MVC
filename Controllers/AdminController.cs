@@ -218,10 +218,34 @@ namespace Flight_Management_System.Controllers
 
 
         }
+        [HttpGet]
+        public ActionResult FlightManagerList()
+        {
+            var data = (from u in db.Users where u.Role == 3 select u).ToList();
+            
+            var user = new List<UserModel>();
+            foreach (var u in data)
+            {
+                var trans = (from t in db.Transports where t.CreatedBy == u.Id select t).FirstOrDefault();
+                user.Add(new UserModel()
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Username = u.Username,
+                    PurchasedTickets = trans.TransportSchedules.Select(e => e.Id).ToList(),
+
+                });
+            }
+
+            return View(user);
+
+        }
+
+
 
         public ActionResult UserDetails(int id)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
+
             var data = (from a in db.Users where a.Id == id select a).FirstOrDefault();
             var user = new UserModel();
             user.Id = data.Id;
@@ -253,21 +277,30 @@ namespace Flight_Management_System.Controllers
                 var tostopagecity = (from fs in db.Cities where fs.Id == tostopage.CityId select fs).FirstOrDefault();
 
                 var seatInfo = (from si in db.SeatInfos where si.TicketId == pd.Id select si).FirstOrDefault();
-
-                var seatclass = (from sc in db.SeatClassEnums where sc.Id == seatInfo.SeatClass select sc).FirstOrDefault();
-                var ageclass = (from ac in db.AgeClassEnums where ac.Id == seatInfo.AgeClass select ac).FirstOrDefault();
-                var trans = (from t in db.Transports where t.Id == seatInfo.TransportId select t).FirstOrDefault();
+                SeatClassEnum seatclass=null;
+                AgeClassEnum ageclass=null;
+                if (seatInfo!=null && seatInfo.SeatClass != null)
+                {
+                    seatclass = (from sc in db.SeatClassEnums where sc.Id == seatInfo.SeatClass select sc).FirstOrDefault();
+                }
+                if (seatInfo!=null && seatInfo.AgeClass != null)
+                {
+                    ageclass = (from ac in db.AgeClassEnums where ac.Id == seatInfo.AgeClass select ac).FirstOrDefault();
+                }
+                 //seatclass = (from sc in db.SeatClassEnums where sc.Id == seatInfo.SeatClass select sc).FirstOrDefault() ;
+                 //ageclass = (from ac in db.AgeClassEnums where ac.Id == seatInfo.AgeClass select ac).FirstOrDefault();
+                var trans = seatInfo==null?new Transport(): (from t in db.Transports where t.Id == seatInfo.TransportId select t).FirstOrDefault();
                 var creator = (from cr in db.Users where cr.Id == trans.CreatedBy select cr.Name).FirstOrDefault();
 
                 var FromRootFare = fromstopage.FareFromRoot;
                 var ToRootFare = tostopage.FareFromRoot;
                 var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
                 var cost = 0;
-                if(seatclass.Value == "Business")
+                if(seatclass!=null && seatclass.Value == "Business")
                 {
                     cost = baseFare * 15;
                 }
-                else if (seatclass.Value == "Economic")
+                else if (seatclass!=null && seatclass.Value == "Economic")
                 {
                     cost = baseFare * 10;
                 }
@@ -288,13 +321,13 @@ namespace Flight_Management_System.Controllers
                     ToStopageCityName = tostopagecity.Name,
                     ToStopageCountryName = tostopagecity.Country,
 
-                    StartTime = seatInfo.StartTime,
-                    SeatNo = seatInfo.SeatNo,
-                    SeatClass = seatclass.Value,
-                    AgeClass = ageclass.Value,
+                    StartTime = seatInfo==null?null: seatInfo.StartTime,
+                    SeatNo = seatInfo == null ? null : seatInfo.SeatNo,
+                    SeatClass = seatclass == null ? "Undefined" : seatclass.Value,
+                    AgeClass = ageclass==null?"Undefined": ageclass.Value,
                     TransportCreatedBy = trans.CreatedBy,
                     TransportCreatorName= creator,
-                    TransportName = trans.Name,
+                    TransportName = trans==null?"Undefined": trans.Name,
                     TransportId = trans.Id,
                     Cost = cost
                     
@@ -304,41 +337,63 @@ namespace Flight_Management_System.Controllers
             return View(pdetails);
         }
 
+        
+
         public ActionResult TransportDetails(int id)
         {
             var transport = (from t in db.Transports where t.Id == id select t).FirstOrDefault();
-            if (transport == null)
+            if (transport != null)
             {
-                var user = (from u in db.Users where u.Id == transport.CreatedBy select u).FirstOrDefault();
-                //var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
-                //var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
+                var schedule = (from sc in db.TransportSchedules where sc.TransportId == transport.Id select sc).ToList();
+                var tdetails = new List<TransportScheduleModel>();
+                foreach (var s in schedule)
+                {
+                    var fromstopage = (from fs in db.Stopages where fs.Id == s.FromStopageId select fs).FirstOrDefault();
+                    var fromstopagecity = (from fs in db.Cities where fs.Id == fromstopage.CityId select fs).FirstOrDefault();
+                    var tostopage = (from fs in db.Stopages where fs.Id == s.ToStopageId select fs).FirstOrDefault();
+                    var tostopagecity = (from fs in db.Cities where fs.Id == tostopage.CityId select fs).FirstOrDefault();
+                    //var fromstopage = (from fs in db.Cities where fs.Id == transport.FromStopageId select fs).FirstOrDefault();
+                    //var tostopage = (from ts in db.Cities where ts.Id == transport.ToStopageId select ts).FirstOrDefault();
+                    
+                    
 
-                var trans = new TransportModel();
-                trans.Id = id;
-                trans.Name = transport.Name;
-                //trans.From = fromstopage.Name;
-                //trans.FromCountry = fromstopage.Country;
-                //trans.Destination = tostopage.Name;
-                //trans.DestinationCountry = tostopage.Country;
-                trans.CreatedBy = user.Id;
-                trans.CreatorName = user.Name;
-                trans.MaximumSeat = transport.MaximumSeat;
+                    tdetails.Add(new TransportScheduleModel() 
+                    {
+
+                        Id = s.Id,
+                        Day = s.Day,
+                        Time = s.Time,
+                        FromAirport = fromstopage.Name,
+                        FromCity = fromstopagecity.Name,
+                        FromCountry = fromstopagecity.Country,
+                        ToAirport = tostopage.Name,
+                        ToCity = tostopagecity.Name,
+                        ToCountry = tostopagecity.Country,
+
+                        MaximumSeat = transport.MaximumSeat,
+
+                    });
+
+                    
+                }
+                return View(tdetails);
 
 
-                return View(trans);
             }
             return null;
 
         }
-        public ActionResult CancelTicket(int id)
+        public ActionResult CancelTicket(int? id)
         {
+            if (id == null) return RedirectToAction("PurchasedUserList");
             var ticket = (from t in db.PurchasedTickets where t.Id == id select t).FirstOrDefault();
             var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
 
-            
-            db.SeatInfos.Remove(seat);
-            db.SaveChanges();
-            db.PurchasedTickets.Remove(ticket);
+            if(seat!=null) db.SeatInfos.Remove(seat);
+
+            //db.SaveChanges();
+            if(ticket!=null) db.PurchasedTickets.Remove(ticket);
+
             db.SaveChanges();
 
             //TempData["msg"] = "Ticket Cancel Successfully";

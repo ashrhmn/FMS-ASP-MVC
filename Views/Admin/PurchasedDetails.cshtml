@@ -23,7 +23,7 @@
         <th>This Flight Created By</th>
         <th>Operation</th>
     </tr>
-    <
+    
     @foreach (var pd in Model)
     {
 <tr>
@@ -33,7 +33,7 @@
     <td>@pd.StartTime</td>
     <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
     <td>BDT @pd.Cost</td>
-    <td>Flight Name: @pd.TransportName<br />Flight Id: <a href="/Admin/TransportDetails/@pd.TransportId" class="btn-success">Flight Id: @pd.TransportId</a></td>
+    <td>Flight Name:<a href="/Admin/TransportDetails/@pd.TransportId" class="btn btn-success"> @pd.TransportName <br /> Flight Id: @pd.TransportId</a></td>
     <td><a href="/Admin/UserDetails/@pd.TransportCreatedBy" class="btn-success">@pd.TransportCreatorName</a></td>
     <td><a href="/Admin/CancelTicket/@pd.Id" class="btn btn-danger">Cancel Ticket</td>
     <td><a href="" class="btn btn-danger">Edit Ticket</td>

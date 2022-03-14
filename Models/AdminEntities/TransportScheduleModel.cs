@@ -10,7 +10,7 @@ namespace Flight_Management_System.Models.AdminEntities
     {
         public int Id { get; set; }
         public string Day { get; set; }
-        public int Time { get; set; }
+        public int? Time { get; set; }
         [DisplayName("From Airport")]
         public int? FromStopageId { get; set; }
         [DisplayName("To Airport")]
@@ -21,5 +21,6 @@ namespace Flight_Management_System.Models.AdminEntities
         public string ToCity { get; set; }
         public string FromCountry { get; set; }
         public string ToCountry { get; set; }
+        public int? MaximumSeat { get; set; }
     }
 }
