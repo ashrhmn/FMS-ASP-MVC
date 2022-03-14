@@ -14,7 +14,7 @@ namespace Flight_Management_System.Models.AdminEntities
         public string Password { get; set; }
         [Required]
         public string Name { get; set; }
-        
+        [Required]
         public DateTime? DateOfBirth { get; set; }
         public int? FamilyId { get; set; }
         [Required]
@@ -24,6 +24,7 @@ namespace Flight_Management_System.Models.AdminEntities
         public int? Role { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
         [Required]
@@ -32,10 +33,10 @@ namespace Flight_Management_System.Models.AdminEntities
 
         
         //[DataType(DataType.Password)]
-        [Required]
+        //[Required]
         public string OldPassword { get; set; }
 
-        [Required]
+        //[Required]
         public string ConPassword { get; set; }
 
     }
