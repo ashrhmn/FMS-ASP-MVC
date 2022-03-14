@@ -16,6 +16,7 @@
                 <th>Aircraft Name</th>
                 <th>Schedules</th>
                 <th>Capacity</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -27,13 +28,16 @@
                 <td>
                 @foreach (var schedule in item.TransportSchedules)
                 {
-                    <span> @schedule.FromAirport, @schedule.FromCity, @schedule.FromCountry to @schedule.ToAirport, @schedule.ToCity, @schedule.ToCountry - @schedule.Day - @((int)schedule.Time/100):@((schedule.Time%100).ToString("D2")) </span>
+                    <span> @schedule.FromAirport, @schedule.FromCity, @schedule.FromCountry to @schedule.ToAirport, @schedule.ToCity, @schedule.ToCountry - @schedule.Day - @(((int)schedule.Time/100).ToString("D2")):@((schedule.Time%100).ToString("D2")) </span>
+                    <a href="/FlightManager/DeleteAircraftSchedule/@schedule.Id" class="navbar-link">Delete</a>
                     <br/>
                 }
                 </td>
-                @*<td>@item.FromAirport , @item.FromCity , @item.FromCountry</td>
-                <td>@item.ToAirport , @item.ToCity , @item.ToCountry</td>*@
                 <td>@item.SeatCapacity</td>
+                <td>
+                    <a class="navbar-link" href="/FlightManager/AddAircraftSchedule/@item.Id">Add Schedule</a>
+                    <a class="navbar-link" href="/FlightManager/DeleteAircraft/@item.Id">Delete Aircraft</a>
+                </td>
                 </tr>
             }
         </tbody>

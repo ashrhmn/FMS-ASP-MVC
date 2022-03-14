@@ -22,6 +22,7 @@ namespace Flight_Management_System.Auth
             var token = cookie["token"];
             if (token.Equals("")) return false;
             var decodedObject = jwt.DecodeToken(token);
+            if(decodedObject == null) return false;
             AuthPayload result = JsonConvert.DeserializeObject<AuthPayload>(decodedObject);
             if (result.Role.Equals(role)) return true;
             return false;

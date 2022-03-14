@@ -8,6 +8,9 @@
 @{
     Flight_ManagementEntities db = new Flight_ManagementEntities();
     var stopages = db.Stopages.ToList();
+
+    var transportDetails = db.Transports.Where(t => t.Id == Model.TransportId).First();
+
 }
 
 <h2>AddAircraftSchedule</h2>
@@ -17,88 +20,72 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>TransportScheduleModel</h4>
+        <h4>Add Transport Schedule - @transportDetails.Name</h4>
+        <h5>Max capacity - @transportDetails.MaximumSeat</h5>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Day, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Day, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
+                <select name="Day">
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
             </div>
         </div>
 
+        <input name="TransportId" hidden value="@Model.TransportId"/>
+
         <div class="form-group">
-            @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Time</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
+                <div class="col-md-10">
+                    <select name="TimeH">
+                        @foreach (var hour in Enumerable.Range(1, 23))
+                        {
+                            <option value="@hour">@(hour.ToString("D2"))</option>
+                        }
+                    </select>
+                    <select name="TimeM">
+                        @foreach (var min in Enumerable.Range(1, 60))
+                        {
+                            <option value="@min">@(min.ToString("D2"))</option>
+                        }
+                    </select>
+                </div>
             </div>
         </div>
 
+        
         <div class="form-group">
-            @Html.LabelFor(model => model.FromStopageId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">From Airport</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FromStopageId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FromStopageId, "", new { @class = "text-danger" })
+                <select name="FromStopageId">
+                    @foreach (var airport in stopages)
+                    {
+                        <option value="@airport.Id">@airport.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2">To Airport</label>
+            <div class="col-md-10">
+                <select name="ToStopageId">
+                    @foreach (var airport in stopages)
+                    {
+                        <option value="@airport.Id">@airport.Name</option>
+                    }
+                </select>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ToStopageId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ToStopageId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ToStopageId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FromAirport, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FromAirport, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FromAirport, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ToAirport, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ToAirport, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ToAirport, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FromCity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FromCity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FromCity, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ToCity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ToCity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ToCity, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FromCountry, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FromCountry, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FromCountry, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ToCountry, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ToCountry, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ToCountry, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

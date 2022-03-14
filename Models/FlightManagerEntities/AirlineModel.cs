@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Flight_Management_System.Models.FlightManagerEntities
 {
@@ -17,7 +14,7 @@ namespace Flight_Management_System.Models.FlightManagerEntities
         public List<TransportScheduleModel> TransportSchedules { get; set; }
 
         [Required]
-        [Range(30,int.MaxValue,ErrorMessage ="Capacity must be more than 30")]
+        [Range(30,int.MaxValue,ErrorMessage ="Capacity must be at least 30")]
         public int SeatCapacity { get; set; }
         public AirlineModel()
         {
