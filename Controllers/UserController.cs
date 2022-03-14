@@ -44,6 +44,11 @@ namespace Flight_Management_System.Controllers
             string Day = flMod.Date.ToString("dddd");
             var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
                                && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(Day) select fs).ToList();
+            if ((transports != null) && (!transports.Any()))
+            {
+                TempData["msg"] = "Sorry No Available Flights Found for your Shecdule";
+                return View();
+            }
             var flights = new List<TransportModelSR>();
             foreach (var f in transports) 
             {
