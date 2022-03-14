@@ -5,19 +5,43 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    
+    @Scripts.Render("~/bundles/modernizr")
 </head>
+
 <body>
-    <div>
-        <a href="/Admin/Index" class="btn btn-success">Home</a>
-        <a href="/Admin/Details" class="btn btn-danger">Profile</a>
-        <a href="/Admin/userlist" class="btn btn-success">All users</a>
-        <a href="/Admin/aircrafts" class="btn btn-success">Aircrafts</a>
-        <a href="/Admin/flights" class="btn btn-success">Scheduled Flights</a>
-        <a href="" class="btn btn-danger">Logout</a>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Flight Management System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/Admin/Index">Home</a></li>
+                    <li><a href="/Admin/Details">Profile</a></li>
+                    <li><a href="/Admin/SearchAllUsers">Search users</a></li>
+                    <li><a href="/Admin/userlist">All users</a></li>
+                    <li><a href="/Admin/aircrafts">Aircrafts</a></li>
+                    <li><a href="/Admin/flights">Scheduled Flights</a></li>
+                    <li><a href="/Auth/Logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div>
+    <div class="container body-content">
         @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
     </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>
