@@ -11,7 +11,9 @@ using System.Web.Mvc;
 
 namespace Flight_Management_System.Controllers
 {
+
     [AdminAccess]
+
     public class AdminController : Controller
     {
         private Flight_ManagementEntities db;
@@ -443,9 +445,13 @@ namespace Flight_Management_System.Controllers
             return RedirectToAction("Userlist", "Admin");
         }
         
-        public ActionResult Aircrafts()
+        public ActionResult Aircrafts(string searching)
         {
             var ac = db.Transports.ToList();
+            if (!String.IsNullOrEmpty(searching))
+            {
+                ac = ac.Where(u => u.Name.Contains(searching)).ToList();
+            }
             var acs = new List<TransportModel>();
             foreach (var a in ac)
             {
@@ -456,7 +462,7 @@ namespace Flight_Management_System.Controllers
                    
                     MaximumSeat = a.MaximumSeat,
                     CreatorName = a.CreatedBy == null ? "undefined" : a.User.Name,
-
+                    CreatedBy = a.CreatedBy
                 });
             }
             return View(acs);
@@ -488,6 +494,7 @@ namespace Flight_Management_System.Controllers
                         Destination = (from t in db.Stopages where t.Id == schedule.ToStopageId select t.Name).FirstOrDefault(),
                         MaximumSeat = f.MaximumSeat,
                         CreatorName = f.CreatedBy == null ? "undefined" : f.User.Name,
+                        CreatedBy = f.CreatedBy,
                         AvailableSeats = availableSeats,
                         Day = schedule.Day,
                         Time = schedule.Time/100

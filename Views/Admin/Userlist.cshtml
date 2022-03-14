@@ -3,6 +3,10 @@
     ViewBag.Title = "Userlist";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@if (TempData["msg"] != null)
+{
+    <span class="label-success">@TempData["msg"]}</span>
+}
 <h4>Search</h4>
 @using (Html.BeginForm("Userlist", "Admin", FormMethod.Post))
 {
