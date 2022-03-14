@@ -1,15 +1,13 @@
 ﻿
 @model List<Flight_Management_System.Models.CustomerFlightSR>
     @{
-    ViewBag.Title = "Tickets";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
+        ViewBag.Title = "CanceledTickets";
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
     }
 
-    <h2>Booked Tickets</h2>
-
+    <h2>CanceledTickets</h2>
 @if ((Model != null) && (Model.Any()))
-{ 
-
+{
     <div class="tab-content">
         <table class="table">
             <tr>
@@ -21,7 +19,7 @@
                 <th>Fare</th>
                 <th>Status</th>
                 <th>Action</th>
-                
+
 
             </tr>
             @foreach (var f in Model)
@@ -34,11 +32,14 @@
                     <td>@f.SeatNo</td>
                     <td>@f.TFare</td>
                     <td>@f.Status</td>
-                    <td>@if (f.Status == "Booked"){<a href="/User/Cancel/@f.TktId">Cancel</a>}</td>
+                    <td><a href="/User/Cancel/@f.TktId">Cancel</a></td>
                 </tr>
             }
 
         </table>
     </div>
+
 }
-    <span>No Booked Tickets</span>
+<span>
+    There is no cancelled tickets.
+</span>

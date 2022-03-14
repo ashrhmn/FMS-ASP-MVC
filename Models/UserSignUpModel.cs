@@ -1,5 +1,4 @@
-﻿using Flight_Management_System.Models.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Web;
 
 namespace Flight_Management_System.Models
 {
-    public class UserModelSR
+    public class UserSignUpModel
     {
         public int Id { get; set; }
         [Required]
@@ -15,6 +14,8 @@ namespace Flight_Management_System.Models
         public string Username { get; set; }
 
         [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
+            ErrorMessage = "Password must be of Minimum eight characters and contains at least one uppercase letter, one lowercase letter, one number")]
         public string Password { get; set; }
 
         [Required]
@@ -44,6 +45,7 @@ namespace Flight_Management_System.Models
         public string Email { get; set; }
 
         [Required]
+        [Compare("Password")]
         public string ConfirmPassword { get; set; }
     }
 }
