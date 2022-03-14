@@ -241,6 +241,57 @@ namespace Flight_Management_System.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult FlightManagerList(string Uname)
+        {
+            //List<User> data;
+            if (Uname == "" )
+            {
+                var data = (from u in db.Users where u.Role == 3 select u).ToList();
+
+                var user = new List<UserModel>();
+                foreach (var u in data)
+                {
+                    var trans = (from t in db.Transports where t.CreatedBy == u.Id select t).FirstOrDefault();
+                    user.Add(new UserModel()
+                    {
+                        Id = u.Id,
+                        Name = u.Name,
+                        Username = u.Username,
+                        PurchasedTickets = trans == null ? new List<int>() : trans.TransportSchedules.Select(e => e.Id).ToList(),
+
+                    });
+                }
+
+                return View(user);
+            }
+            else if (Uname != "")
+            {
+                //data = (from u in db.Users where u.Role == 2 && u.Username.Contains(Uname) select u).ToList();
+                var data = (from u in db.Users where u.Role == 3 && u.Username.Contains(Uname) select u).ToList();
+
+                var user = new List<UserModel>();
+                foreach (var u in data)
+                {
+                    var trans = (from t in db.Transports where t.CreatedBy == u.Id select t).FirstOrDefault();
+                    user.Add(new UserModel()
+                    {
+                        Id = u.Id,
+                        Name = u.Name,
+                        Username = u.Username,
+                        PurchasedTickets = trans == null ? new List<int>() : trans.TransportSchedules.Select(e => e.Id).ToList(),
+
+                    });
+                }
+
+                return View(user);
+            }
+            return View();
+        }
+
+
+
+
 
 
         public ActionResult UserDetails(int id)
