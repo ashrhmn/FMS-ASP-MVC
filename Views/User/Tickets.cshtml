@@ -1,6 +1,9 @@
 ﻿
 @model List<Flight_Management_System.Models.CustomerFlightSR>
     @{
+        var Total = 0;
+    }
+    @{
     ViewBag.Title = "Tickets";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
     }
@@ -36,9 +39,11 @@
                     <td>@f.Status</td>
                     <td>@if (f.Status == "Booked"){<a href="/User/Cancel/@f.TktId">Cancel</a>}</td>
                 </tr>
+                Total = Total + f.TFare ?? -1;
             }
 
         </table>
+        <P>Total Spent Amount : @Total</P>
     </div>
 }
-    <span>No Booked Tickets</span>
+else {<span>No Booked Tickets</span> }

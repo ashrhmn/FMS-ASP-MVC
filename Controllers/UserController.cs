@@ -53,7 +53,7 @@ namespace Flight_Management_System.Controllers
             foreach (var f in transports) 
             {
 
-                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.TransportId && s.Status == "Booked" select s).Count();
+                var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.TransportId && s.Status == "Booked"  select s).Count();
                 var maxSeat = (from s in db.Transports where s.Id == f.TransportId select s.MaximumSeat).FirstOrDefault();
                 var availableSeats = maxSeat - occupiedSeats;
                 var FromRootFare = (from t in db.Stopages where t.Id == f.FromStopageId select t.FareFromRoot).FirstOrDefault();
@@ -109,6 +109,9 @@ namespace Flight_Management_System.Controllers
             var transport = (from fs in db.TransportSchedules
                              where fs.Id == Id
                              select fs).FirstOrDefault();
+            var udata = GetUser(uid);
+            var uname = udata.Name;
+            var uphone = udata.Phone;
 
             var occupiedSeats = (from s in db.SeatInfos where s.TransportId == transport.TransportId && s.Status == "Booked" select s).Count();
             var maxSeat = (from s in db.Transports where s.Id == transport.TransportId select s.MaximumSeat).FirstOrDefault();
@@ -148,7 +151,9 @@ namespace Flight_Management_System.Controllers
                 ClassId = (int)Session["classId"],
                 Class = sClass,
                 AvailableSeats = availableSeats,
-                Date = (DateTime)Session["jTime"],//*Possible Error between AM/PM
+                Date = (DateTime)Session["jTime"],
+                Cname = uname,
+                Cphone = uphone,
             };
 
             return View(vFlit);
@@ -172,7 +177,7 @@ namespace Flight_Management_System.Controllers
             var seat = new SeatInfo()
             {
                 SeatNo = flMod.AvailableSeats - 1,
-                StartTime = flMod.Date,
+                StartTime = flMod.MDate,
                 TicketId = tkt.Id,
                 SeatClass = flMod.ClassId,
                 AgeClass = 1,
@@ -194,56 +199,54 @@ namespace Flight_Management_System.Controllers
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
             int uid = user.Id;
             var custTik = new List<CustomerFlightSR>();
-            var udata = GetUser(uid);
-            var tkts = (from t in db.PurchasedTickets where t.PurchasedBy == udata.Id select t).ToList();
-            foreach(var t in tkts)
+            var temp = db.SeatInfos.Where(s => s.PurchasedTicket.User.Id == user.Id && s.Status !="Cancelled").ToList();
+            if (temp != null)
             {
-                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id && s.Status != "Cancelled" select s).FirstOrDefault();
-                var sno = seatIn.SeatNo;
-                var scId = seatIn.SeatClass;
-                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f).FirstOrDefault();
-                var fromN = from.City.Name +","+ from.Name + "," + from.City.Country;
-                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft).FirstOrDefault();
-                var toN = to.City.Name + "," + to.Name + "," + to.City.Country;
-                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft).FirstOrDefault();
-                var sClsN = sCls.Value;
-                var sClsI = sCls.Id;
-                var FromRootFare = from.FareFromRoot;
-                var ToRootFare = to.FareFromRoot;
-                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
-                var sTime = seatIn.StartTime;
-                var tName = (from n in db.Transports where n.Id == seatIn.TransportId select n.Name).FirstOrDefault();
-                var Fare = 0;
-                if (sClsI == 1)
+                foreach (var t in temp)
                 {
-                    Fare = baseFare * 15;
+                    var sno = t.SeatNo;
+                    var scId = t.SeatClass;
+                    var from = t.PurchasedTicket.Stopage.City.Name + " , " + t.PurchasedTicket.Stopage.Name;
+                    var To = t.PurchasedTicket.Stopage1.City.Name + " , " + t.PurchasedTicket.Stopage1.Name;
+                    var scName = t.SeatClassEnum.Value;
+                    var FromRootFare = t.PurchasedTicket.Stopage.FareFromRoot;
+                    var ToRootFare = t.PurchasedTicket.Stopage1.FareFromRoot; ;
+                    var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+                    var sTime = t.StartTime;
+                    var tName = t.Transport.Name;
+                    var Fare = 0;
+                    if (scId == 1)
+                    {
+                        Fare = baseFare * 15;
+
+                    }
+                    else if (scId == 2)
+                    {
+                        Fare = baseFare * 10;
+                    }
+                    else
+                    {
+                        Fare = baseFare * 12;
+                    }
+
+                    custTik.Add(new CustomerFlightSR()
+                    {
+                        TktId = t.TicketId ?? -1,
+                        SeatNo = sno,
+                        StartTime = sTime,
+                        SeatClass = scName,
+                        ToStopage = To,
+                        FromStopage = from,
+                        Status = t.Status,
+                        TName = tName,
+                        TFare = Fare,
+                    });
+
 
                 }
-                else if (sClsI == 2)
-                {
-                    Fare = baseFare * 10;
-                }
-                else
-                {
-                    Fare = baseFare * 12;
-                }
-
-             custTik.Add(new CustomerFlightSR()
-            {
-                TktId = t.Id,
-                SeatNo = sno,
-                StartTime = sTime,
-                SeatClass = sClsN,
-                ToStopage = toN,
-                FromStopage = fromN,
-                Status = seatIn.Status,
-                TName = tName,
-                TFare = Fare,
-            });
-
-
+                return View(custTik);
             }
-            return View(custTik);
+            return View(new List<CustomerFlightSR>());
         }
 
         [HttpGet]
@@ -252,56 +255,54 @@ namespace Flight_Management_System.Controllers
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
             int uid = user.Id;
             var custTik = new List<CustomerFlightSR>();
-            var udata = GetUser(uid);
-            var tkts = (from t in db.PurchasedTickets where t.PurchasedBy == udata.Id select t).ToList();
-            foreach (var t in tkts)
+            var temp = db.SeatInfos.Where(s => s.PurchasedTicket.User.Id == user.Id && s.Status.Equals("Cancelled")).ToList();
+            if (temp != null)
             {
-                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id && s.Status.Equals("Canceled") select s).FirstOrDefault();
-                var sno = seatIn.SeatNo;
-                var scId = seatIn.SeatClass;
-                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f).FirstOrDefault();
-                var fromN = from.City.Name + "," + from.Name + "," + from.City.Country;
-                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft).FirstOrDefault();
-                var toN = to.City.Name + "," + to.Name + "," + to.City.Country;
-                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft).FirstOrDefault();
-                var sClsN = sCls.Value;
-                var sClsI = sCls.Id;
-                var FromRootFare = from.FareFromRoot;
-                var ToRootFare = to.FareFromRoot;
-                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
-                var sTime = seatIn.StartTime;
-                var tName = (from n in db.Transports where n.Id == seatIn.TransportId select n.Name).FirstOrDefault();
-                var Fare = 0;
-                if (sClsI == 1)
+                foreach (var t in temp)
                 {
-                    Fare = baseFare * 15;
+                    var sno = t.SeatNo;
+                    var scId = t.SeatClass;
+                    var from = t.PurchasedTicket.Stopage.City.Name + " , " + t.PurchasedTicket.Stopage.Name;
+                    var To = t.PurchasedTicket.Stopage1.City.Name + " , " + t.PurchasedTicket.Stopage1.Name;
+                    var scName = t.SeatClassEnum.Value;
+                    var FromRootFare = t.PurchasedTicket.Stopage.FareFromRoot;
+                    var ToRootFare = t.PurchasedTicket.Stopage1.FareFromRoot; ;
+                    var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+                    var sTime = t.StartTime;
+                    var tName = t.Transport.Name;
+                    var Fare = 0;
+                    if (scId == 1)
+                    {
+                        Fare = baseFare * 15;
+
+                    }
+                    else if (scId == 2)
+                    {
+                        Fare = baseFare * 10;
+                    }
+                    else
+                    {
+                        Fare = baseFare * 12;
+                    }
+
+                    custTik.Add(new CustomerFlightSR()
+                    {
+                        TktId = t.TicketId ?? -1,
+                        SeatNo = sno,
+                        StartTime = sTime,
+                        SeatClass = scName,
+                        ToStopage = To,
+                        FromStopage = from,
+                        Status = t.Status,
+                        TName = tName,
+                        TFare = Fare,
+                    });
+
 
                 }
-                else if (sClsI == 2)
-                {
-                    Fare = baseFare * 10;
-                }
-                else
-                {
-                    Fare = baseFare * 12;
-                }
-
-                custTik.Add(new CustomerFlightSR()
-                {
-                    TktId = t.Id,
-                    SeatNo = sno,
-                    StartTime = sTime,
-                    SeatClass = sClsN,
-                    ToStopage = toN,
-                    FromStopage = fromN,
-                    Status = seatIn.Status,
-                    TName = tName,
-                    TFare = Fare,
-                });
-
-
+                return View(custTik);
             }
-            return View(custTik);
+            return View(new List<CustomerFlightSR>());
         }
 
         [HttpGet]
@@ -378,7 +379,8 @@ namespace Flight_Management_System.Controllers
                     db.Entry(udata).CurrentValues.SetValues(nwUser);
                     db.SaveChanges();
                 }
-                TempData["msg"] = userModel.ConfirmPassword;
+                else { TempData["msg"] = userModel.ConfirmPassword; }
+                //TempData["msg"] = userModel.ConfirmPassword;
             }
             return View(userModel);
         }

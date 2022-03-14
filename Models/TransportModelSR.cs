@@ -10,6 +10,10 @@ namespace Flight_Management_System.Models
 
         public int Id { get; set; }
         public Nullable<int> TransportId { get; set; }
+
+        public string Cname { get; set; }
+
+        public string Cphone { get; set; }
         public string Name { get; set; }
         public Nullable<int> AvailableSeats { get; set; }
         public string FromStopage { get; set; }
@@ -24,6 +28,8 @@ namespace Flight_Management_System.Models
         public Nullable<int> SFare { get; set; }
 
         public DateTime Date { get; set; }
+
+        public DateTime MDate { get; set; }
 
         public string DateSt { get; set; }
         public Nullable<int> Time { get; set; }
