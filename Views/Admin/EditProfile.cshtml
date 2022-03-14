@@ -6,14 +6,11 @@
 
 <h2>Edit Profile</h2>
 
-@*@if (TempData["msg"] != null)
-{
-    <span class="label-danger">@TempData["msg"]}</span>
-}*@
 
 <form action="/Admin/EditProfile" method="post">
+    <input type="hidden" value="@Model.Id" name="Id" class="form-control" />
     <table>
-        <input type="hidden" value="@Model.Id" name="Id" class="form-control" />
+
 
         <tr>
             <th>Name : </th>
@@ -40,13 +37,12 @@
             <th>Phones : </th>
             <td>
                 <input type="text" value="@Model.Phone" name="Phone" class="form-control" />
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
             <th>Date of Birth : </th>
             <td>
-                <input type="text" value="@Model.DateOfBirth" name="Phonee" class="form-control" />
                 <input type="date" value="@Model.DateOfBirth" name="DateOfBirth" class="form-control" />
                 @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
             </td>
