@@ -20,7 +20,7 @@ namespace Flight_Management_System.Models.AdminEntities
         [Required]
         public string Address { get; set; }
         public int? CityId { get; set; }
-        [Required]
+       // [Required]
         public int? Role { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
