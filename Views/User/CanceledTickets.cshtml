@@ -5,7 +5,7 @@
         Layout = "~/Views/Shared/_UserLayout.cshtml";
     }
 
-    <h2>CanceledTickets</h2>
+    <h2>Cancelled Tickets</h2>
 @if ((Model != null) && (Model.Any()))
 {
     <div class="tab-content">
@@ -18,7 +18,6 @@
                 <th>Seat No</th>
                 <th>Fare</th>
                 <th>Status</th>
-                <th>Action</th>
 
 
             </tr>
@@ -32,7 +31,6 @@
                     <td>@f.SeatNo</td>
                     <td>@f.TFare</td>
                     <td>@f.Status</td>
-                    <td><a href="/User/Cancel/@f.TktId">Cancel</a></td>
                 </tr>
             }
 
@@ -40,6 +38,7 @@
     </div>
 
 }
-<span>
+else { <span>
     There is no cancelled tickets.
-</span>
+</span>}
+

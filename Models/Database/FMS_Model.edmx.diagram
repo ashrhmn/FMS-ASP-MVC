@@ -32,6 +32,8 @@
         <AssociationConnector Association="Flight_ManagementModel.FK_TransportSchedules_Stopages" />
         <AssociationConnector Association="Flight_ManagementModel.FK_TransportSchedules_Stopages1" />
         <AssociationConnector Association="Flight_ManagementModel.FK_TransportSchedules_Transports" />
+        <AssociationConnector Association="Flight_ManagementModel.FK_PurchasedTickets_Stopages" />
+        <AssociationConnector Association="Flight_ManagementModel.FK_PurchasedTickets_Stopages1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -26,5 +26,7 @@ namespace Flight_Management_System.Models.Database
     
         public virtual User User { get; set; }
         public virtual ICollection<SeatInfo> SeatInfos { get; set; }
+        public virtual Stopage Stopage { get; set; }
+        public virtual Stopage Stopage1 { get; set; }
     }
 }

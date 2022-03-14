@@ -33,33 +33,53 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">Date</label>
                 <div class="col-md-10">
-                    <input type="date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" class="form-control" />
+                    <input type="date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" class="form-control" readonly />
                 </div>
             </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="hidden" name="MDate" value="@Model.Date" class="form-control" />
+            </div>
+        </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Time</label>
                 <div class="col-md-10">
-                    <input type="text" name="Time" value="@Model.Date.TimeOfDay" class="form-control" />
+                    <input type="text" name="Time" value="@Model.Date.TimeOfDay" class="form-control" readonly />
                 </div>
             </div>
+
+        <div class="form-group">
+        <label class="col-md-2 control-label">Date</label>
+        <div class="col-md-10">
+            <input type="text" name="Cname" value="@Model.Cname" class="form-control" readonly />
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Date</label>
+            <div class="col-md-10">
+                <input type="text" name="Cphone" value="@Model.Cphone" class="form-control" readonly />
+            </div>
+        </div>
+
             <div class="form-group">
                 <label class="col-md-2 control-label">Name</label>
                 <div class="col-md-10">
-                    <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" />
+                    <input type="text" name="Name" value="@Model.Name" placeholder="Name" class="form-control" readonly />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-2 control-label">From</label>
                 <div class="col-md-10">
-                    <input type="text" name="FromStopage" value="@Model.FromStopage" class="form-control" />
+                    <input type="text" name="FromStopage" value="@Model.FromStopage" class="form-control" readonly />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-2 control-label">To</label>
                 <div class="col-md-10">
-                    <input type="text" name="ToStopage" value="@Model.ToStopage" class="form-control" />
+                    <input type="text" name="ToStopage" value="@Model.ToStopage" class="form-control" readonly />
                 </div>
             </div>
 
@@ -79,7 +99,7 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">Seat Class</label>
                 <div class="col-md-10">
-                    <input type="Text" name="Class" value="@Model.Class" class="form-control" />
+                    <input type="Text" name="Class" value="@Model.Class" class="form-control" readonly />
                 </div>
             </div>
             <div class="form-group">
@@ -92,7 +112,7 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">Fare</label>
                 <div class="col-md-10">
-                    <input type="text" name="SFare" value="@Model.SFare" class="form-control" />
+                    <input type="text" name="SFare" value="@Model.SFare" class="form-control" readonly />
                 </div>
             </div>
 

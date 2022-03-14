@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Flight_ManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Flight_ManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AgeClassEnums">
           <Key>
             <PropertyRef Name="Id" />
@@ -119,6 +119,30 @@
           <Property Name="Phone" Type="varchar" MaxLength="50" />
           <Property Name="Role" Type="int" />
         </EntityType>
+        <Association Name="FK_PurchasedTickets_Stopages">
+          <End Role="Stopages" Type="Self.Stopages" Multiplicity="1" />
+          <End Role="PurchasedTickets" Type="Self.PurchasedTickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stopages">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchasedTickets">
+              <PropertyRef Name="FromStopageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchasedTickets_Stopages1">
+          <End Role="Stopages" Type="Self.Stopages" Multiplicity="1" />
+          <End Role="PurchasedTickets" Type="Self.PurchasedTickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stopages">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchasedTickets">
+              <PropertyRef Name="ToStopageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PurchasedTickets_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PurchasedTickets" Type="Self.PurchasedTickets" Multiplicity="*" />
@@ -288,6 +312,14 @@
           <EntitySet Name="TransportSchedules" EntityType="Self.TransportSchedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoleEnums" EntityType="Self.UserRoleEnums" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PurchasedTickets_Stopages" Association="Self.FK_PurchasedTickets_Stopages">
+            <End Role="Stopages" EntitySet="Stopages" />
+            <End Role="PurchasedTickets" EntitySet="PurchasedTickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchasedTickets_Stopages1" Association="Self.FK_PurchasedTickets_Stopages1">
+            <End Role="Stopages" EntitySet="Stopages" />
+            <End Role="PurchasedTickets" EntitySet="PurchasedTickets" />
+          </AssociationSet>
           <AssociationSet Name="FK_PurchasedTickets_Users" Association="Self.FK_PurchasedTickets_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="PurchasedTickets" EntitySet="PurchasedTickets" />
@@ -381,6 +413,8 @@
           <Property Name="PurchasedBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_PurchasedTickets_Users" FromRole="PurchasedTickets" ToRole="Users" />
           <NavigationProperty Name="SeatInfos" Relationship="Self.FK_Seat_Infos_Purchased_Tickets" FromRole="PurchasedTickets" ToRole="SeatInfos" />
+          <NavigationProperty Name="Stopage" Relationship="Flight_ManagementModel.FK_PurchasedTickets_Stopages" FromRole="PurchasedTicket" ToRole="Stopage" />
+          <NavigationProperty Name="Stopage1" Relationship="Flight_ManagementModel.FK_PurchasedTickets_Stopages1" FromRole="PurchasedTicket" ToRole="Stopage" />
         </EntityType>
         <EntityType Name="SeatClassEnum">
           <Key>
@@ -419,6 +453,8 @@
           <NavigationProperty Name="City" Relationship="Self.FK_Stopages_Cities" FromRole="Stopages" ToRole="Cities" />
           <NavigationProperty Name="TransportSchedules" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages" FromRole="Stopage" ToRole="TransportSchedule" />
           <NavigationProperty Name="TransportSchedules1" Relationship="Flight_ManagementModel.FK_TransportSchedules_Stopages1" FromRole="Stopage" ToRole="TransportSchedule" />
+          <NavigationProperty Name="PurchasedTickets" Relationship="Flight_ManagementModel.FK_PurchasedTickets_Stopages" FromRole="Stopage" ToRole="PurchasedTicket" />
+          <NavigationProperty Name="PurchasedTickets1" Relationship="Flight_ManagementModel.FK_PurchasedTickets_Stopages1" FromRole="Stopage" ToRole="PurchasedTicket" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -644,6 +680,14 @@
             <End Role="Transport" EntitySet="Transports" />
             <End Role="TransportSchedule" EntitySet="TransportSchedules" />
           </AssociationSet>
+          <AssociationSet Name="FK_PurchasedTickets_Stopages" Association="Flight_ManagementModel.FK_PurchasedTickets_Stopages">
+            <End Role="Stopage" EntitySet="Stopages" />
+            <End Role="PurchasedTicket" EntitySet="PurchasedTickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchasedTickets_Stopages1" Association="Flight_ManagementModel.FK_PurchasedTickets_Stopages1">
+            <End Role="Stopage" EntitySet="Stopages" />
+            <End Role="PurchasedTicket" EntitySet="PurchasedTickets" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_Transports_Users">
           <End Type="Flight_ManagementModel.User" Role="User" Multiplicity="0..1" />
@@ -704,6 +748,30 @@
             </Principal>
             <Dependent Role="TransportSchedule">
               <PropertyRef Name="TransportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchasedTickets_Stopages">
+          <End Type="Flight_ManagementModel.Stopage" Role="Stopage" Multiplicity="1" />
+          <End Type="Flight_ManagementModel.PurchasedTicket" Role="PurchasedTicket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stopage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchasedTicket">
+              <PropertyRef Name="FromStopageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchasedTickets_Stopages1">
+          <End Type="Flight_ManagementModel.Stopage" Role="Stopage" Multiplicity="1" />
+          <End Type="Flight_ManagementModel.PurchasedTicket" Role="PurchasedTicket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stopage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PurchasedTicket">
+              <PropertyRef Name="ToStopageId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
