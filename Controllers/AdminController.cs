@@ -469,7 +469,7 @@ namespace Flight_Management_System.Controllers
         }
         public ActionResult Flights(string searching)
         {
-            Flight_ManagementEntities db = new Flight_ManagementEntities();
+            //Flight_ManagementEntities db = new Flight_ManagementEntities();
             var flight = db.Transports.ToList();
             if (!String.IsNullOrEmpty(searching))
             {
@@ -481,7 +481,7 @@ namespace Flight_Management_System.Controllers
                 var occupiedSeats = (from s in db.SeatInfos where s.TransportId == f.Id && s.Status == "Booked" select s).Count();
                 var availableSeats = (f.MaximumSeat - occupiedSeats);
                 var schedule = (from fs in db.TransportSchedules
-                                 where fs.Id == f.Id
+                                 where fs.TransportId == f.Id
                                  select fs).FirstOrDefault();
                 
                 if (schedule != null)
