@@ -45,7 +45,7 @@ namespace Flight_Management_System.Controllers
         {
             AuthPayload loggedInUser = _jwt.LoggedInUser(Request.Cookies);
 
-            if (loggedInUser == null) return View(new UserModelSR());
+            if (loggedInUser == null) return View(new UserLoginModel());
 
             switch (loggedInUser.Role)
             {
@@ -100,9 +100,16 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public ActionResult SignIn(UserModelSR userModel)
+        public ActionResult SignIn(UserLoginModel userModel)
         {
-            var user = _db.Users.First(u => u.Username == userModel.Username);
+            //if ((userModel.Username == null && userModel.Username.Equals("")) || (userModel.Password == null && userModel.Password.Equals(""))) return View(userModel);
+            if (!ModelState.IsValid) return View(userModel);
+            var user = _db.Users.FirstOrDefault(u => u.Username.Equals(userModel.Username));
+
+            if (user == null) {
+                TempData["msg"] = "User does not exist";
+                return View(userModel);
+            };
 
             bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(userModel.Password, user.Password);
 
@@ -128,7 +135,8 @@ namespace Flight_Management_System.Controllers
                 }
                 case false:
                     TempData["msg"] = "Username or password is incorrect";
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
+                    return View(userModel);
             }
 
             return RedirectToAction("SignIn");

@@ -80,7 +80,10 @@ namespace Flight_Management_System.Controllers
         {
 
             if (id == null) return RedirectToAction("Dashboard");
-            if (transportScheduleModel.FromStopageId == transportScheduleModel.ToStopageId) return View(transportScheduleModel);
+            if (transportScheduleModel.FromStopageId == transportScheduleModel.ToStopageId) {
+                TempData["msg"] = "From and To can not have same airport";
+                return View(transportScheduleModel); 
+            }
             var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
             TransportSchedule schedule = new TransportSchedule()

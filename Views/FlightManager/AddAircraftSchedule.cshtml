@@ -24,6 +24,7 @@
         <h5>Max capacity - @transportDetails.MaximumSeat</h5>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <span class="text-danger">@TempData["msg"]</span>
         <div class="form-group">
             @Html.LabelFor(model => model.Day, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
