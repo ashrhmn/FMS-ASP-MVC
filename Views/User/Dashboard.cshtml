@@ -87,6 +87,7 @@
     <div class="form-group">
         <label class="col-md-2 control-label">Confirm Password</label>
         <div class="col-md-10">
+            <span class="text-danger">@TempData["msg"]</span>
             <span>@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })</span>
             <input type="password" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
         </div>

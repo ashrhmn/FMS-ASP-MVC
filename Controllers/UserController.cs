@@ -44,10 +44,10 @@ namespace Flight_Management_System.Controllers
             string Day = flMod.Date.ToString("dddd");
             var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
                                && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(Day) select fs).ToList();
-            if ((transports != null) && (!transports.Any()))
+            if (!transports.Any())
             {
-                TempData["msg"] = "Sorry No Available Flights Found for your Shecdule";
-                return View();
+                TempData["msg"] = "Sorry No Available Flights Found for your schedule";
+                return View(new List<TransportModelSR>());
             }
             var flights = new List<TransportModelSR>();
             foreach (var f in transports) 
@@ -198,7 +198,7 @@ namespace Flight_Management_System.Controllers
             var tkts = (from t in db.PurchasedTickets where t.PurchasedBy == udata.Id select t).ToList();
             foreach(var t in tkts)
             {
-                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id select s).FirstOrDefault();
+                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id && s.Status != "Cancelled" select s).FirstOrDefault();
                 var sno = seatIn.SeatNo;
                 var scId = seatIn.SeatClass;
                 var from = (from f in db.Stopages where f.Id == t.FromStopageId select f).FirstOrDefault();
@@ -247,6 +247,64 @@ namespace Flight_Management_System.Controllers
         }
 
         [HttpGet]
+        public ActionResult CanceledTickets()
+        {
+            AuthPayload user = jwt.LoggedInUser(Request.Cookies);
+            int uid = user.Id;
+            var custTik = new List<CustomerFlightSR>();
+            var udata = GetUser(uid);
+            var tkts = (from t in db.PurchasedTickets where t.PurchasedBy == udata.Id select t).ToList();
+            foreach (var t in tkts)
+            {
+                var seatIn = (from s in db.SeatInfos where s.TicketId == t.Id && s.Status.Equals("Canceled") select s).FirstOrDefault();
+                var sno = seatIn.SeatNo;
+                var scId = seatIn.SeatClass;
+                var from = (from f in db.Stopages where f.Id == t.FromStopageId select f).FirstOrDefault();
+                var fromN = from.City.Name + "," + from.Name + "," + from.City.Country;
+                var to = (from ft in db.Stopages where ft.Id == t.ToStopageId select ft).FirstOrDefault();
+                var toN = to.City.Name + "," + to.Name + "," + to.City.Country;
+                var sCls = (from ft in db.SeatClassEnums where ft.Id == scId select ft).FirstOrDefault();
+                var sClsN = sCls.Value;
+                var sClsI = sCls.Id;
+                var FromRootFare = from.FareFromRoot;
+                var ToRootFare = to.FareFromRoot;
+                var baseFare = Math.Abs((FromRootFare ?? -1) - (ToRootFare ?? -1));
+                var sTime = seatIn.StartTime;
+                var tName = (from n in db.Transports where n.Id == seatIn.TransportId select n.Name).FirstOrDefault();
+                var Fare = 0;
+                if (sClsI == 1)
+                {
+                    Fare = baseFare * 15;
+
+                }
+                else if (sClsI == 2)
+                {
+                    Fare = baseFare * 10;
+                }
+                else
+                {
+                    Fare = baseFare * 12;
+                }
+
+                custTik.Add(new CustomerFlightSR()
+                {
+                    TktId = t.Id,
+                    SeatNo = sno,
+                    StartTime = sTime,
+                    SeatClass = sClsN,
+                    ToStopage = toN,
+                    FromStopage = fromN,
+                    Status = seatIn.Status,
+                    TName = tName,
+                    TFare = Fare,
+                });
+
+
+            }
+            return View(custTik);
+        }
+
+        [HttpGet]
         public ActionResult Cancel(int id)
         {
             AuthPayload user = jwt.LoggedInUser(Request.Cookies);
@@ -263,7 +321,7 @@ namespace Flight_Management_System.Controllers
                 TransportId = seatIn.TransportId,
                 AgeClass = seatIn.AgeClass,
                 SeatClass = seatIn.SeatClass,
-                Status = "Canceled",
+                Status = "Pending Cancelation",
             };
             db.Entry(seatIn).CurrentValues.SetValues(newSeatIn);
             db.SaveChanges();
@@ -302,11 +360,11 @@ namespace Flight_Management_System.Controllers
             {
                 AuthPayload user = jwt.LoggedInUser(Request.Cookies);
                 int uid = user.Id;
-                UserModelSR nwUser = new UserModelSR();
                 var udata = GetUser(uid);
                 bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(userModel.ConfirmPassword, udata.Password);
                 if (isCorrectPassword)
                 {
+                    UserModelSR nwUser = new UserModelSR();
                     nwUser.Id = userModel.Id;
                     nwUser.Name = userModel.Name;
                     nwUser.DateOfBirth = userModel.DateOfBirth;
@@ -320,7 +378,7 @@ namespace Flight_Management_System.Controllers
                     db.Entry(udata).CurrentValues.SetValues(nwUser);
                     db.SaveChanges();
                 }
-                TempData["msg"] = "Incorrect Password";
+                TempData["msg"] = userModel.ConfirmPassword;
             }
             return View(userModel);
         }

@@ -25,7 +25,7 @@ namespace Flight_Management_System.Controllers
         {
             AuthPayload loggedInUser = _jwt.LoggedInUser(Request.Cookies);
 
-            if (loggedInUser == null) return View(new UserModelSR());
+            if (loggedInUser == null) return View(new UserSignUpModel());
 
             switch (loggedInUser.Role)
             {
@@ -36,7 +36,7 @@ namespace Flight_Management_System.Controllers
                 case "flight_manager":
                     return RedirectToAction("Dashboard", "FlightManager");
                 default:
-                    return View(new UserModelSR());
+                    return View(new UserSignUpModel());
             }
         }
 
@@ -62,7 +62,7 @@ namespace Flight_Management_System.Controllers
 
 
         [HttpPost]
-        public ActionResult SignUp(UserModelSR userModel)
+        public ActionResult SignUp(UserSignUpModel userModel)
         {
             var existingUser = _db.Users.FirstOrDefault(u => u.Username == userModel.Username);
             if (existingUser == null)
