@@ -93,7 +93,8 @@ namespace Flight_Management_System.Controllers
             }
             else
             {
-                return null;
+                TempData["msg"] = "Username already in use";
+                return View(userModel);
             }
         }
 

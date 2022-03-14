@@ -232,7 +232,7 @@ namespace Flight_Management_System.Controllers
                     Id = u.Id,
                     Name = u.Name,
                     Username = u.Username,
-                    PurchasedTickets = trans.TransportSchedules.Select(e => e.Id).ToList(),
+                    PurchasedTickets = trans==null?new List<int>(): trans.TransportSchedules.Select(e => e.Id).ToList(),
 
                 });
             }

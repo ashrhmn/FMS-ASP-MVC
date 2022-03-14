@@ -12,6 +12,8 @@
 
 <h1>Sign Up</h1>
 
+<span class="text-danger">@TempData["msg"]</span>
+
 <form action="/Auth/SignUp" method="post" class="form-horizontal">
     <div class="form-group">
         <label class="col-md-2 control-label">Name</label>
@@ -79,7 +81,7 @@
         <label class="col-md-2 control-label">Password</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</span>
-            <input type="text" name="Password" value="@Model.Password" class="form-control" />
+            <input type="password" name="Password" value="@Model.Password" class="form-control" />
         </div>
     </div>
 
@@ -87,7 +89,7 @@
         <label class="col-md-2 control-label">Confirm Password</label>
         <div class="col-md-10">
             <span>@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })</span>
-            <input type="text" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
+            <input type="password" name="ConfirmPassword" value="@Model.ConfirmPassword" class="form-control" />
         </div>
     </div>
 

@@ -80,6 +80,7 @@ namespace Flight_Management_System.Controllers
         {
 
             if (id == null) return RedirectToAction("Dashboard");
+            if (transportScheduleModel.FromStopageId == transportScheduleModel.ToStopageId) return View(transportScheduleModel);
             var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
             TransportSchedule schedule = new TransportSchedule()
