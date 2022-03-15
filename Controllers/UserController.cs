@@ -41,6 +41,15 @@ namespace Flight_Management_System.Controllers
         [HttpPost]
         public ActionResult Flights(TransportModelSR flMod)
         {
+            DateTime CurrentDate = DateTime.Now.Date;
+            DateTime SearchedDate = flMod.Date.Date;
+            int previousDate = DateTime.Compare(SearchedDate, CurrentDate);
+            if (previousDate < 0)
+            {
+                TempData["msg"] = "You Can not search Flight for previous days";
+                return View(new List<TransportModelSR>());
+            }
+
             string Day = flMod.Date.ToString("dddd");
             var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
                                && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(Day) select fs).ToList();
