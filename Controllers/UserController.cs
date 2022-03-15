@@ -3,6 +3,7 @@ using Flight_Management_System.Models;
 using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -401,7 +402,11 @@ namespace Flight_Management_System.Controllers
             return dt.ToString() + transportId.ToString();
         }
 
-        
+        public JsonResult GetAirports(string city) {
+            var cdata = (from a in db.Cities where a.Name.Contains(city) select a).FirstOrDefault();
+            var json = JsonConvert.SerializeObject(cdata);
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
 
         public User GetUser(int uid)
         {

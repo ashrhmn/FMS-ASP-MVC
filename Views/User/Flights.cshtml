@@ -17,8 +17,27 @@
     <span class="text-danger">@TempData["msg"]</span>
 
     <form action="/User/Flights" method="post" class="form-horizontal">
+        
+        <div class="form-group">
+            <label class="col-md-2 control-label">From</label>
+            <div class="col-md-10">
+                <input type="text"  onkeyup="SearchF()" placeholder="Search by City/Airport"/>
+                <div id="fromSug">
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
+            <label class="col-md-2 control-label">To</label>
+            <div class="col-md-10">
+                <input type="text" id="tA" onkeyup="SearchT()" placeholder="Search by City/Airport" />
+                <div id="toSug">
+                </div>
+            </div>
+        </div>
+       
+        
+         <div class="form-group">
             <label class="col-md-2 control-label">From</label>
             <div class="col-md-10">
 
@@ -110,5 +129,37 @@
     </div>
  
       }
+      
+<script>
+    function SearchF(e) {
+        $.ajax({
+            url: "User/GetAirport/e",
+            method: "GET",
+            success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+    },
+    error: function (err){
+        console.error(err);
+    }
+        })
+    }
+
+    function SearchT() {
+        var x = document.getElementById("tA").value;
+        $.ajax({
+            url: "GetAirports/"+x,
+            method: "GET",
+            success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+                $("#toSug").text(data.Name);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    }
+</script>
           
       
