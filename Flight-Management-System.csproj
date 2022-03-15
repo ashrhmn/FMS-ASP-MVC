@@ -166,6 +166,7 @@
     <Compile Include="Models\AdminEntities\SeatInfosModel.cs" />
     <Compile Include="Models\AdminEntities\TransportScheduleModel.cs" />
     <Compile Include="Models\AdminEntities\UserModel.cs" />
+    <Compile Include="Models\AirportModelSR.cs" />
     <Compile Include="Models\AuthEntities\AuthPayload.cs" />
     <Compile Include="Models\CustomerFlightSR.cs" />
     <Compile Include="Models\Database\AgeClassEnum.cs">

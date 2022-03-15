@@ -39,7 +39,7 @@
                     <td>@f.Status</td>
                     <td>@if (f.Status == "Booked"){<a href="/User/Cancel/@f.TktId">Cancel</a>}</td>
                 </tr>
-                Total = Total + f.TFare ?? -1;
+                if (f.Status == "Booked") { Total = Total + f.TFare ?? -1; }
             }
 
         </table>
