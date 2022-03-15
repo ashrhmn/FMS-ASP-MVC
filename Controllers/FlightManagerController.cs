@@ -1,9 +1,7 @@
 ﻿using Flight_Management_System.Auth;
-using Flight_Management_System.Models.AuthEntities;
 using Flight_Management_System.Models.Database;
 using Flight_Management_System.Models.FlightManagerEntities;
 using Flight_Management_System.Utils;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -23,38 +21,25 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public ActionResult Dashboard()
         {
-            AuthPayload user = _jwt.LoggedInUser(Request.Cookies);
+            var user = _jwt.LoggedInUser(Request.Cookies);
             var dbAirlines = _db.Transports.Where(t => t.CreatedBy == user.Id).ToList();
-            List<AirlineModel> airlines = new List<AirlineModel>();
-            foreach (var airline in dbAirlines)
-            {
-                List<TransportScheduleModel> transportSchedules = new List<TransportScheduleModel>();
-                foreach (var transportSchedule in airline.TransportSchedules)
-                {
-                    transportSchedules.Add(new TransportScheduleModel()
-                    {
-                        Id = transportSchedule.Id,
-                        Day = transportSchedule.Day,
-                        Time = transportSchedule.Time ?? 0,
-                        FromStopageId = transportSchedule.FromStopageId,
-                        FromAirport = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.Name,
-                        FromCity = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.City.Name,
-                        FromCountry = transportSchedule.FromStopageId == null ? "Undefined" : transportSchedule.Stopage.City.Country,
-                        ToStopageId = transportSchedule.ToStopageId,
-                        ToAirport = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.Name,
-                        ToCity = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.City.Name,
-                        ToCountry = transportSchedule.ToStopageId == null ? "Undefined" : transportSchedule.Stopage1.City.Country,
-                    });
-                }
-                var airlineModel = new AirlineModel()
-                {
-                    Id = airline.Id,
-                    Name = airline.Name,
-                    TransportSchedules = transportSchedules,
-                    SeatCapacity = airline.MaximumSeat ?? 0
-                };
-                airlines.Add(airlineModel);
-            }
+            var airlines = (from airline in dbAirlines
+                            let transportSchedules = airline.TransportSchedules.Select(transportSchedule => new TransportScheduleModel()
+                            {
+                                Id = transportSchedule.Id,
+                                Day = transportSchedule.Day,
+                                Time = transportSchedule.Time ?? 0,
+                                FromStopageId = transportSchedule.FromStopageId,                        
+                                FromAirport = transportSchedule.Stopage?.Name ?? "Undefined",
+                                FromCity = transportSchedule.Stopage?.City.Name ?? "Undefined",
+                                FromCountry = transportSchedule.Stopage?.City.Country ?? "Undefined",
+                                ToStopageId = transportSchedule.ToStopageId,
+                                ToAirport = transportSchedule.Stopage1?.Name ?? "Undefined",
+                                ToCity = transportSchedule.Stopage1?.City.Name ?? "Undefined",
+                                ToCountry = transportSchedule.Stopage1?.City.Country ?? "Undefined",
+                            })
+                                .ToList()
+                            select new AirlineModel() { Id = airline.Id, Name = airline.Name, TransportSchedules = transportSchedules, SeatCapacity = airline.MaximumSeat ?? 0 }).ToList();
             return View(airlines);
         }
 
@@ -80,13 +65,14 @@ namespace Flight_Management_System.Controllers
         {
 
             if (id == null) return RedirectToAction("Dashboard");
-            if (transportScheduleModel.FromStopageId == transportScheduleModel.ToStopageId) {
-                TempData["msg"] = "From and To can not have same airport";
-                return View(transportScheduleModel); 
+            if (transportScheduleModel.FromStopageId == transportScheduleModel.ToStopageId)
+            {
+                TempData["msg"] = "From and To can not be same airport";
+                return View(transportScheduleModel);
             }
             var aircraft = _db.Transports.FirstOrDefault(t => t.Id == id);
             if (aircraft == null) return RedirectToAction("Dashboard");
-            TransportSchedule schedule = new TransportSchedule()
+            var schedule = new TransportSchedule()
             {
                 TransportId = aircraft.Id,
                 FromStopageId = transportScheduleModel.FromStopageId,
