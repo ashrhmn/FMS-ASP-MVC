@@ -9,29 +9,35 @@
 @if (Model != null)
 {
 
-    <table class="table table-bordered">
+<table class="table table-bordered">
+    <tr>
+        <th>From Stopage</th>
+        <th>Destination</th>
+        <th>Maximum Seat</th>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Operation</th>
+
+    </tr>
+
+
+    @foreach (var ts in Model)
+    {
         <tr>
-            <th>From Stopage</th>
-            <th>Destination</th>
-            <th>Maximum Seat</th>
-            <th>Day</th>
-            <th>Time</th>
+
+            <td>@ts.FromAirport, @ts.FromCity, @ts.FromCountry</td>
+            <td>@ts.ToAirport, @ts.ToCity, @ts.ToCountry</td>
+            <td>@ts.MaximumSeat</td>
+            <td>@ts.Day</td>
+            <td>@ts.Time</td>
+            <td><a href="" class="btn btn-danger">Delete</a></td>
 
         </tr>
-        <tr>
+      }
 
-            @foreach (var ts in Model)
-            {
-                <td>@ts.FromAirport, @ts.FromCity, @ts.FromCountry</td>
-                <td>@ts.ToAirport, @ts.ToCity, @ts.ToCountry</td>
-                <td>@ts.MaximumSeat</td>
-                <td>@ts.Day</td>
-                <td>@ts.Time</td>
-            }
-            
-            
-        </tr>
+
         
+
     </table>
 
    

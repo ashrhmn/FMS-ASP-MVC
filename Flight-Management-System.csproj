@@ -286,6 +286,8 @@
     <Content Include="Views\Admin\Aircrafts.cshtml" />
     <Content Include="Views\Admin\SearchAllUsers.cshtml" />
     <Content Include="Views\Admin\FlightManagerList.cshtml" />
+    <Content Include="Views\Admin\CreatedSchedule.cshtml" />
+    <Content Include="Views\Admin\AddUser.cshtml" />
     <None Include="Views\Home\Index.cshtml.backup" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Auth\SignUp.cshtml" />

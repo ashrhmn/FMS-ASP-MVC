@@ -1,0 +1,92 @@
+﻿@model Flight_Management_System.Models.AdminEntities.UserModel
+@{
+    ViewBag.Title = "AddUser";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Add User</h2>
+
+@if (TempData["msg"] != null)
+{
+    <span class="label-danger">@TempData["msg"]}</span>
+}
+
+
+<form action="/Admin/AddUser" method="post">
+
+    <table>
+
+
+        <tr>
+            <th>Name : </th>
+            <td>
+                <input type="text" value="@Model.Name" name="Name" placeholder="Name" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Username : </th>
+            <td>
+                <input type="text" value="@Model.Username" name="Username" placeholder="Username" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Password : </th>
+            <td>
+                <input type="password" value="@Model.Password" name="Username" placeholder="Password" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Confirm Password : </th>
+            <td>
+                <input type="password" value="@Model.ConPassword" name="ConPassword" placeholder="Confirm Password" class="form-control" />
+                @Html.ValidationMessageFor(model => model.ConPassword, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Emails : </th>
+            <td>
+                <input type="text" value="@Model.Email" name="Email" placeholder="Email" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Phones : </th>
+            <td>
+                <input type="text" value="@Model.Phone" name="Phone" placeholder="Phone" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Date of Birth : </th>
+            <td>
+                <input type="date" value="@Model.DateOfBirth." name="DateOfBirth" class="form-control" />
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Address : </th>
+            <td>
+                <input type="text" value="@Model.Address" name="Address" placeholder="Address" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th>Role: </th>
+            <td>
+                <select name="Role">
+                    @*<option value="1">Admin</option>*@
+                    <option value="2">User</option>
+                    <option value="3">Flight manager</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Update" class="btn btn-danger" /></td>
+        </tr>
+    </table>
+
+</form>
+

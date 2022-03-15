@@ -26,18 +26,18 @@
     
     @foreach (var pd in Model)
     {
-<tr>
-    <td>@pd.Id</td>
-    <td>@pd.FromStopageName, @pd.FromStopageCityName, @pd.FromStopageCountryName</td>
-    <td>@pd.ToStopageName ,@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
-    <td>@pd.StartTime</td>
-    <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
-    <td>BDT @pd.Cost</td>
-    <td>Flight Name:<a href="/Admin/TransportDetails/@pd.TransportId" class="btn btn-success"> @pd.TransportName <br /> Flight Id: @pd.TransportId</a></td>
-    <td><a href="/Admin/UserDetails/@pd.TransportCreatedBy" class="btn-success">@pd.TransportCreatorName</a></td>
-    <td><a href="/Admin/CancelTicket/@pd.Id" class="btn btn-danger">Cancel Ticket</td>
-    <td><a href="" class="btn btn-danger">Edit Ticket</td>
-</tr>
+        <tr>
+            <td>@pd.Id</td>
+            <td>@pd.FromStopageName, @pd.FromStopageCityName, @pd.FromStopageCountryName</td>
+            <td>@pd.ToStopageName ,@pd.ToStopageCityName, @pd.ToStopageCountryName</td>
+            <td>@pd.StartTime</td>
+            <td>No of Seats: @pd.SeatNo<br />Seat Class: @pd.SeatClass<br />Age Class: @pd.AgeClass</td>
+            <td>BDT @pd.Cost</td>
+            <td>Flight Name:<a href="/Admin/TransportDetails/@pd.TransportId" class="btn btn-success"> @pd.TransportName <br /> Flight Id: @pd.TransportId</a></td>
+            <td><a href="/Admin/UserDetails/@pd.TransportCreatedBy" class="btn-success">@pd.TransportCreatorName</a></td>
+            <td><a href="/Admin/CancelTicket/@pd.PurchasedBy/@pd.Id" class="btn btn-danger">Cancel Ticket</td>
+            <td><a href="" class="btn btn-danger">Edit Ticket</td>
+        </tr>
 
     }
 </table>

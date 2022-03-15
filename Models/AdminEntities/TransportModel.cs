@@ -21,5 +21,10 @@ namespace Flight_Management_System.Models.AdminEntities
         public string DestinationCountry { get; set; }
         public string Day { get; set; }
         public int? Time { get; set; }
+        public List<TransportScheduleModel> TransportSchedules { get; set; }
+        public TransportModel()
+        {
+            TransportSchedules = new List<TransportScheduleModel>();
+        }
     }
 }

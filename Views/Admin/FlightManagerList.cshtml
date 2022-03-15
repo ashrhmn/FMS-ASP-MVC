@@ -33,7 +33,7 @@
             <td><a href="/Admin/UserDetails/@u.Id">@u.Username</a></td>
             @if (u.PurchasedTickets.Count() > 0)
             {
-                <td><a href="/Admin/PurchasedDetails/@u.Id" class="btn btn-success">Created Schedule List</a></td>
+                <td><a href="/Admin/CreatedSchedule/@u.Id" class="btn btn-success">Created Schedule List</a></td>
             }
             else
             {
