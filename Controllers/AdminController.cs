@@ -388,6 +388,52 @@ namespace Flight_Management_System.Controllers
             return View(pdetails);
         }
 
+
+        public ActionResult CreatedSchedule(int id)
+        {
+            var trans = (from t in db.Transports where t.CreatedBy == id select t).ToList();
+
+            var transports = new List<TransportModel>();
+            foreach( var t in trans)
+            {
+                var transport = new TransportModel();
+                transport.Id = t.Id;
+                transport.Name = t.Name;
+                transport.MaximumSeat = t.MaximumSeat;
+                var transportSchedules = (from ts in db.TransportSchedules where ts.TransportId == t.Id select ts).ToList();
+
+                //var schedules = new List<TransportScheduleModel>();
+                foreach( var ts in transportSchedules) {
+                    var fromstopage = (from fs in db.Stopages where fs.Id == ts.FromStopageId select fs).FirstOrDefault();
+                    var fromstopagecity = (from fs in db.Cities where fs.Id == fromstopage.CityId select fs).FirstOrDefault();
+                    var tostopage = (from fs in db.Stopages where fs.Id == ts.ToStopageId select fs).FirstOrDefault();
+                    var tostopagecity = (from fs in db.Cities where fs.Id == tostopage.CityId select fs).FirstOrDefault();
+
+                    var schedule = new TransportScheduleModel();
+                    //schedules.Add(new TransportScheduleModel()
+                    //{
+                    schedule.Day = ts.Day;
+                    schedule.FromStopageName = fromstopage.Name;
+                    schedule.FromStopageCityName = fromstopagecity.Name;
+                    schedule.FromStopageCountryName = fromstopagecity.Country;
+                    schedule.ToStopageName = tostopage.Name;
+                    schedule.ToStopageCityName = tostopagecity.Name;
+                    schedule.ToStopageCountryName = tostopagecity.Country;
+                    //});
+
+                    transport.TransportSchedules.Add(schedule);
+
+                }
+
+                transports.Add(transport);
+
+            }
+            return View(transports);
+
+
+        }
+
+
         
 
         public ActionResult TransportDetails(int id)
@@ -434,26 +480,74 @@ namespace Flight_Management_System.Controllers
             return null;
 
         }
-        public ActionResult CancelTicket(int? id)
+        public ActionResult CancelTicket(int id, int tid)
         {
-            if (id == null) return RedirectToAction("PurchasedUserList");
-            var ticket = (from t in db.PurchasedTickets where t.Id == id select t).FirstOrDefault();
-            var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
+            //if (id == null) return RedirectToAction("PurchasedUserList");
+            var tickets = (from t in db.PurchasedTickets where t.PurchasedBy == id select t).ToList();
 
-            if(seat!=null) db.SeatInfos.Remove(seat);
+            if(tickets.Count() > 1)
+            {
+                //var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
 
-            //db.SaveChanges();
-            if(ticket!=null) db.PurchasedTickets.Remove(ticket);
+                //if (seat != null)
+                //{
+                //    db.SeatInfos.Remove(seat);
 
-            db.SaveChanges();
+                    //db.SaveChanges();
+                var ticket = (from t in db.PurchasedTickets where t.Id == tid select t).FirstOrDefault();
+                db.PurchasedTickets.Remove(ticket);
 
-            //TempData["msg"] = "Ticket Cancel Successfully";
+                db.SaveChanges();
+
+                TempData["msg"] = "Ticket Cancel Successfully";
+                return RedirectToAction("PurchasedUserList");
+            }
+
+            TempData["msg"] = "Ticket Cannot be Canceled";
             return RedirectToAction("PurchasedUserList");
-            
-           
 
-            
+
         }
+        [HttpGet]
+        public ActionResult AddUser()
+        {
+            return View(new UserModel());
+        }
+
+        [HttpPost]
+
+        public ActionResult AddUser(UserModel u)
+        {
+            //if (u.Password.Equals(u.ConPassword))
+            //{
+                if (ModelState.IsValid)
+                {
+                    var user = new User()
+                    {
+                        Name = u.Name,
+                        Username = u.Username,
+                        Password = BCrypt.Net.BCrypt.HashPassword(u.Password, 12),
+                        Address = u.Address,
+                        DateOfBirth = u.DateOfBirth,
+                        //CityId = u.CityId,
+                        //FamilyId = u.FamilyId,
+                        Email = u.Email,
+                        Phone = u.Phone,
+                        Role = u.Role
+                    };
+                    db.Users.Add(user);
+                    db.SaveChanges();
+
+
+                    TempData["msg"] = "User Account Created Successfully";
+                    return RedirectToAction("UserDetails", "Admin");
+                }
+
+            //}
+            TempData["msg"] = "User Account Not Created";
+            return View();
+        }
+        
 
         
 

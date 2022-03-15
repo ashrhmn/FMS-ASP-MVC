@@ -1,0 +1,55 @@
+﻿@model List<Flight_Management_System.Models.AdminEntities.TransportModel>
+@{
+    ViewBag.Title = "CreatedSchedule";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CreatedSchedule</h2>
+
+
+@if (Model.Count() > 0)
+{
+
+    foreach (var t in Model)
+    {
+
+
+
+        if (t.TransportSchedules.Count() > 0)
+        {
+            <table class="table table-bordered">
+                <tr>
+                    <th>Transport Name</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Maximum Seat</th>
+                    <th>Day</th>
+                </tr>
+                @foreach (var ts in t.TransportSchedules)
+                {
+
+            <tr>
+                <td>@t.Name</td>
+                <td>@ts.FromStopageName, @ts.FromStopageCityName, @ts.FromStopageCountryName</td>
+                <td>@ts.ToStopageName, @ts.ToStopageCityName, @ts.ToStopageCountryName</td>
+                <td>@t.MaximumSeat</td>
+                <td>@ts.Day</td>
+            </tr>
+
+
+
+
+                }
+            </table>
+
+        }
+
+
+
+    }
+
+
+
+}
+
+
