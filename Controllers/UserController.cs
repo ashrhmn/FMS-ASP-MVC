@@ -52,8 +52,18 @@ namespace Flight_Management_System.Controllers
             }
 
             string Day = flMod.Date.ToString("dddd");
-            var transports = (from fs in db.TransportSchedules where fs.FromStopageId == flMod.FromStopageId 
-                               && fs.ToStopageId == flMod.ToStopageId && fs.Day.Equals(Day) select fs).ToList();
+            var fsi = (from fs in db.Stopages
+                              where fs.Name == flMod.SFS
+                              select fs.Id).FirstOrDefault();
+
+            var tsi = (from fs in db.Stopages
+                       where fs.Name == flMod.STS
+                       select fs.Id).FirstOrDefault();
+
+            var transports = (from fs in db.TransportSchedules
+                              where fs.FromStopageId == fsi
+                               && fs.ToStopageId == tsi && fs.Day.Equals(Day)
+                              select fs).ToList();
             if (!transports.Any())
             {
                 TempData["msg"] = "Sorry No Available Flights Found for your schedule";
@@ -402,10 +412,15 @@ namespace Flight_Management_System.Controllers
             return dt.ToString() + transportId.ToString();
         }
 
-        public JsonResult GetAirports(string city) {
-            var cdata = (from a in db.Cities where a.Name.Contains(city) select a).FirstOrDefault();
-            var json = JsonConvert.SerializeObject(cdata);
-            return Json(json, JsonRequestBehavior.AllowGet);
+        public JsonResult GetAirports(string search)
+        {
+            List <AirportModelSR> allsearch = db.Stopages.Where(x => x.Name.Contains(search)).Select(x => new AirportModelSR
+            {
+                Aid = x.Id,
+                Aname = x.Name,
+                Acity = x.City.Name
+            }).ToList();
+            return new JsonResult { Data = allsearch, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         public User GetUser(int uid)

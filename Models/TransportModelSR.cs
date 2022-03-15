@@ -19,6 +19,9 @@ namespace Flight_Management_System.Models
         public string FromStopage { get; set; }
         public string ToStopage { get; set; }
 
+        public string SFS { get; set; }
+        public string STS { get; set; }
+
         public string Class { get; set; }
         public int FromStopageId { get; set; }
         public Nullable<int> ClassId { get; set; }

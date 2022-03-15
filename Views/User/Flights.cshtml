@@ -21,51 +21,19 @@
         <div class="form-group">
             <label class="col-md-2 control-label">From</label>
             <div class="col-md-10">
-                <input type="text"  onkeyup="SearchF()" placeholder="Search by City/Airport"/>
-                <div id="fromSug">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-2 control-label">To</label>
-            <div class="col-md-10">
-                <input type="text" id="tA" onkeyup="SearchT()" placeholder="Search by City/Airport" />
-                <div id="toSug">
-                </div>
-            </div>
-        </div>
-       
-        
-         <div class="form-group">
-            <label class="col-md-2 control-label">From</label>
-            <div class="col-md-10">
-
-                <select name="FromStopageId">
-                    @foreach (var fs in fstopage)
-                    {
-                        <option  selected value="@fs.Id">@fs.City.Name , @fs.Name , @fs.City.Country</option>
-                    }
-
-
-                </select>
+                <input name="SFS" class="form-control" id="searchInput" placeholder="Search by City/Airport" />
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-md-2 control-label">Destination</label>
             <div class="col-md-10">
-
-                <select name="ToStopageId">
-                    @foreach (var ts in fstopage)
-                    {
-                        <option selected value="@ts.Id">@ts.City.Name , @ts.Name , @ts.City.Country</option>
-                    }
-
-                </select>
+                <input name="STS" class="form-control" id="searchInputt" placeholder="Search by City/Airport" />
             </div>
         </div>
-
+       
+        
+         
         <div class="form-group">
             <label class="col-md-2 control-label">Select Seat Class</label>
             <div class="col-md-10">
@@ -130,36 +98,48 @@
  
       }
       
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+      
 <script>
-    function SearchF(e) {
-        $.ajax({
-            url: "User/GetAirport/e",
-            method: "GET",
-            success: function (data) {
-                console.log(data);
-                data = JSON.parse(data);
-    },
-    error: function (err){
-        console.error(err);
-    }
-        })
-    }
 
-    function SearchT() {
-        var x = document.getElementById("tA").value;
-        $.ajax({
-            url: "GetAirports/"+x,
-            method: "GET",
-            success: function (data) {
-                console.log(data);
-                data = JSON.parse(data);
-                $("#toSug").text(data.Name);
-            },
-            error: function (err) {
-                console.error(err);
-            }
-        })
-    }
+    $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "GetAirports",
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.Acity+","+item.Aname, value: item.Aname };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    });
+
+    $("#searchInputt").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "GetAirports",
+                dataType: "json",
+                data: { search: $("#searchInputt").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.Acity + "," + item.Aname, value: item.Aname };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    });
+
 </script>
           
       
