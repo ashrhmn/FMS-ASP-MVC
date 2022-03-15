@@ -56,7 +56,7 @@ namespace Flight_Management_System.Controllers
                 case "flight_manager":
                     return RedirectToAction("Dashboard", "FlightManager");
                 default:
-                    return View(new UserModelSR());
+                    return View(new UserLoginModel());
             }
         }
 
@@ -65,51 +65,42 @@ namespace Flight_Management_System.Controllers
         public ActionResult SignUp(UserSignUpModel userModel)
         {
             var existingUser = _db.Users.FirstOrDefault(u => u.Username == userModel.Username);
-            if (existingUser == null)
-            {
-
-                if (ModelState.IsValid)
-                {
-                    var user = new User()
-                    {
-                        Name = userModel.Name,
-                        Username = userModel.Username,
-                        Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password, 12),
-                        Address = userModel.Address,
-                        DateOfBirth = userModel.DateOfBirth,
-                        CityId = userModel.CityId,
-                        FamilyId = userModel.FamilyId,
-                        Email = userModel.Email,
-                        Phone = userModel.Phone,
-                        Role = 2
-                    };
-                    _db.Users.Add(user);
-                    _db.SaveChanges();
-
-                    return RedirectToAction("SignIn");
-                    //Ends
-                }
-                return View(userModel);
-            }
-            else
+            if (existingUser != null)
             {
                 TempData["msg"] = "Username already in use";
                 return View(userModel);
             }
+            if (!ModelState.IsValid) return View(userModel);
+            var user = new User()
+            {
+                Name = userModel.Name,
+                Username = userModel.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password, 12),
+                Address = userModel.Address,
+                DateOfBirth = userModel.DateOfBirth,
+                CityId = userModel.CityId,
+                FamilyId = userModel.FamilyId,
+                Email = userModel.Email,
+                Phone = userModel.Phone,
+                Role = 2
+            };
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
+            return RedirectToAction("SignIn");
         }
 
 
         [HttpPost]
         public ActionResult SignIn(UserLoginModel userModel)
         {
-            //if ((userModel.Username == null && userModel.Username.Equals("")) || (userModel.Password == null && userModel.Password.Equals(""))) return View(userModel);
             if (!ModelState.IsValid) return View(userModel);
             var user = _db.Users.FirstOrDefault(u => u.Username.Equals(userModel.Username));
 
             if (user == null) {
                 TempData["msg"] = "User does not exist";
                 return View(userModel);
-            };
+            }
 
             bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(userModel.Password, user.Password);
 
@@ -125,17 +116,16 @@ namespace Flight_Management_System.Controllers
                     };
 
                     var token = _jwt.EncodeToken(payload);
-                    HttpCookie cookie = new HttpCookie("session")
+                    var cookie = new HttpCookie("session")
                     {
-                        Expires = DateTime.Now.AddDays(10)
+                        Expires = DateTime.Now.AddDays(10),
+                        ["token"] = token
                     };
-                    cookie["token"] = token;
                     Response.Cookies.Add(cookie);
                     break;
                 }
                 case false:
                     TempData["msg"] = "Username or password is incorrect";
-                    //return RedirectToAction("Index", "Home");
                     return View(userModel);
             }
 
@@ -146,19 +136,16 @@ namespace Flight_Management_System.Controllers
         [HttpGet]
         public string Token()
         {
-            HttpCookie cookie = Request.Cookies["session"];
-            if (cookie != null) return cookie["token"];
-            return null;
+            var cookie = Request.Cookies["session"];
+            return cookie?["token"];
         }
         [HttpGet]
         public ActionResult Logout()
         {
-            HttpCookie cookie = Request.Cookies["session"];
-            if (cookie != null)
-            {
-                cookie.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(cookie);
-            }
+            var cookie = Request.Cookies["session"];
+            if (cookie == null) return RedirectToAction("SignIn");
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(cookie);
             return RedirectToAction("SignIn");
         }
 
