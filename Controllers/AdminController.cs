@@ -625,6 +625,7 @@ namespace Flight_Management_System.Controllers
                     SeatClassName = s.SeatClass == null ? "undefined" : s.SeatClassEnum.Value,
                     PurchasedById = s.TicketId == null ? 0 : s.PurchasedTicket.PurchasedBy,
                     PurchasedByName = s.TicketId == null ? "undefined" : s.PurchasedTicket.User.Name,
+                    TicketId = s.TicketId == null ? 0 : s.TicketId,
                     Status = s.Status,
                     AircraftName = s.Transport.Name,
                 });
@@ -632,10 +633,30 @@ namespace Flight_Management_System.Controllers
 
             return View(seats);
         }
-        
+        public ActionResult TicketCancel(int? id)
+        {
+            if (id == null) return RedirectToAction("Flights");
+            var ticket = (from t in db.PurchasedTickets where t.Id == id select t).FirstOrDefault();
+            var seat = (from s in db.SeatInfos where s.TicketId == id select s).FirstOrDefault();
+
+            if (seat != null) db.SeatInfos.Remove(seat);
+
+            //db.SaveChanges();
+            if (ticket != null) db.PurchasedTickets.Remove(ticket);
+
+            db.SaveChanges();
+
+            //TempData["msg"] = "Ticket Cancel Successfully";
+            return RedirectToAction("Flights");
 
 
-        
+
+
+        }
+
+
+
+
         //[HttpGet]
         //public ActionResult SearchFlight()
         //{
@@ -655,7 +676,7 @@ namespace Flight_Management_System.Controllers
         //[HttpPost]
         //public ActionResult SearchFlight(string Date, string From, string Destination)
         //{
-            
+
         //    var cities = (from cs in db.Cities select cs);
         //    if (From != null && Destination != null)
         //    {
@@ -675,13 +696,13 @@ namespace Flight_Management_System.Controllers
         //            return View(trans);
 
         //        }
-                
+
 
         //    }
 
         //    return View();
         //}
-        
+
 
         //////////////////// Fahim End ////////////////////////
 

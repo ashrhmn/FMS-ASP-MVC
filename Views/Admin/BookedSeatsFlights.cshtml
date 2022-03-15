@@ -12,6 +12,7 @@
         <th>Seat Class</th>
         <th>Purchased By</th>
         <th>Status</th>
+        <th>Action</th>
     </tr>
     @foreach (var f in Model)
     {
@@ -21,7 +22,9 @@
     <td>@f.SeatNo</td>
     <td>@f.SeatClassName</td>
     <td><a href="/Admin/UserDetails/@f.PurchasedById">@f.PurchasedByName</a></td>
+
     <td>@f.Status</td>
+    <td><a href="/Admin/TicketCancel/@f.TicketId" class="btn btn-danger">Cancel Ticket</td>
 
 
 </tr>
