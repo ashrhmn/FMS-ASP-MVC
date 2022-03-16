@@ -6,12 +6,17 @@
 
 <h2>Purchased User List</h2>
 
+@if (TempData["msg"] != null)
+{
+    <span class="label-danger">@TempData["msg"]}</span>
+}
+
 <form action="/Admin/PurchasedUserList" method="post">
 
     <table>
         <tr>
             <td><input type="checkbox" name="Purchase" value="true" />Purchased Ticket</td>
-            
+
         </tr>
         <tr>
             <td><input type="text" name="Uname" /></td>
@@ -28,26 +33,27 @@
         <th>Username</th>
         <th>Operation</th>
     </tr>
-    
+
     @foreach (var u in Model)
     {
         @*if(u.PurchasedTickets.Count() > 0)
-        {*@
-            <tr>
-                <td>@u.Name</td>
-                <td><a href="/Admin/UserDetails/@u.Id">@u.Username</a></td>
-                @if(u.PurchasedTickets.Count() > 0)
-                {
-                    <td><a href="/Admin/PurchasedDetails/@u.Id" class="btn btn-success">Purchased Details</a></td>
-                }
-                else { 
-                    <td>No Ticket Purchased</td>
-                }
-                
-            </tr>
-        
+            {*@
+        <tr>
+            <td>@u.Name</td>
+            <td><a href="/Admin/UserDetails/@u.Id">@u.Username</a></td>
+            @if (u.PurchasedTickets.Count() > 0)
+            {
+                <td><a href="/Admin/PurchasedDetails/@u.Id" class="btn btn-success">Purchased Details</a></td>
+            }
+            else
+            {
+                <td>No Ticket Purchased</td>
+            }
+
+        </tr>
+
     }
 
-    
+
 </table>
 

@@ -480,8 +480,10 @@ namespace Flight_Management_System.Controllers
             return null;
 
         }
+        [HttpPost]
         public ActionResult CancelTicket(int id, int tid)
         {
+            
             //if (id == null) return RedirectToAction("PurchasedUserList");
             var tickets = (from t in db.PurchasedTickets where t.PurchasedBy == id select t).ToList();
 
@@ -494,8 +496,18 @@ namespace Flight_Management_System.Controllers
                 //    db.SeatInfos.Remove(seat);
 
                     //db.SaveChanges();
-                var ticket = (from t in db.PurchasedTickets where t.Id == tid select t).FirstOrDefault();
-                db.PurchasedTickets.Remove(ticket);
+                //var ticket = (from t in db.PurchasedTickets where t.Id == tid select t).FirstOrDefault();
+                //db.PurchasedTickets.Remove(ticket);
+
+                //db.SaveChanges();
+
+                var tickett = (from t in db.PurchasedTickets where t.Id == tid select t).FirstOrDefault();
+                var seat = (from s in db.SeatInfos where s.TicketId == tid select s).FirstOrDefault();
+
+                if (seat != null) db.SeatInfos.Remove(seat);
+
+                //db.SaveChanges();
+                if (tickett != null) db.PurchasedTickets.Remove(tickett);
 
                 db.SaveChanges();
 
@@ -529,8 +541,8 @@ namespace Flight_Management_System.Controllers
                         Password = BCrypt.Net.BCrypt.HashPassword(u.Password, 12),
                         Address = u.Address,
                         DateOfBirth = u.DateOfBirth,
-                        //CityId = u.CityId,
-                        //FamilyId = u.FamilyId,
+                        CityId = null,
+                        FamilyId = null,
                         Email = u.Email,
                         Phone = u.Phone,
                         Role = u.Role
@@ -540,7 +552,7 @@ namespace Flight_Management_System.Controllers
 
 
                     TempData["msg"] = "User Account Created Successfully";
-                    return RedirectToAction("UserDetails", "Admin");
+                    return RedirectToAction("SearchAllUsers", "Admin");
                 }
 
             //}
