@@ -6,6 +6,12 @@
 
 <h2>Search All Users</h2>
 
+@if (TempData["msg"] != null)
+{
+<span class="label-danger">@TempData["msg"]}</span>
+}
+
+
 <a href="/Admin/PurchasedUserList" class="btn btn-success">Search Customer</a>
 <a href="/Admin/FlightManagerList" class="btn btn-success">Search Flicht Mangers</a>
 

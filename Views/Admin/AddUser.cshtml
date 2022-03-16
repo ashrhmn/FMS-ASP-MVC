@@ -34,7 +34,7 @@
         <tr>
             <th>Password : </th>
             <td>
-                <input type="password" value="@Model.Password" name="Username" placeholder="Password" class="form-control" />
+                <input type="password" value="@Model.Password" name="Password" placeholder="Password" class="form-control" />
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </td>
         </tr>
@@ -84,7 +84,7 @@
             </td>
         </tr>
         <tr>
-            <td><input type="submit" value="Update" class="btn btn-danger" /></td>
+            <td><input type="submit" value="Add User" class="btn btn-danger" /></td>
         </tr>
     </table>
 
